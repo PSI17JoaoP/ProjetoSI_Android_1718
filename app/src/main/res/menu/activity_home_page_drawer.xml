@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="@string/navigation_drawer_itemHomePage" />
+        <item
+            android:id="@+id/nav_meusAnuncios"
+            android:icon="@drawable/ic_portrait_black_24dp"
+            android:title="@string/navigation_drawer_itemMeusAnuncios" />
+        <item
+            android:id="@+id/nav_pesquisar"
+            android:icon="@drawable/ic_search_black_24dp"
+            android:title="@string/navigation_drawer_itemPesquisarAnuncios" />
+        <item
+            android:id="@+id/nav_historico"
+            android:icon="@drawable/ic_history_black_24dp"
+            android:title="@string/navigation_drawer_itemHistorico" />
+    </group>
+
+</menu>
