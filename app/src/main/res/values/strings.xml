@@ -11,4 +11,11 @@
     <string name="navigation_drawer_itemHistorico">Histórico</string>
     <string name="navigation_drawer_itemLogout">Sair</string>
 
+    <string name="homePage_lblPropostas">Propostas Recebidas</string>
+    <string name="homePage_lblSugestoes">Anúncios Sugeridos</string>
+
+    <string name="item_btnAceitar">Aceitar</string>
+    <string name="item_btnRecusar">Recusar</string>
+    <string name="item_btnVer">Ver</string>
+
 </resources>
