@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TabHost;
 
 import java.util.List;
 
@@ -35,36 +36,24 @@ public class MainActivity extends NavDrawerActivity {
         //setContentView(R.layout.activity_main);
         View.inflate(this, R.layout.activity_main, (ViewGroup) findViewById(R.id.app_content));
 
+        //Tab control
 
-        LinearLayout layout = findViewById(R.id.layoutMain);
-        layout.getLayoutTransition().enableTransitionType(LayoutTransition.CHANGING);
+        TabHost host = (TabHost)findViewById(R.id.tabMain);
+        host.setup();
 
-        //Animar lvPropostas
-        View lblPropostas = findViewById(R.id.lblPropostas);
+        //Tab 1
+        TabHost.TabSpec spec = host.newTabSpec("Propostas");
+        spec.setContent(R.id.tab1);
+        spec.setIndicator("Propostas");
+        host.addTab(spec);
 
-        lblPropostas.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ViewGroup.LayoutParams params = lvPropostas.getLayoutParams();
-                params.height = params.height == 0 ? ViewGroup.LayoutParams.WRAP_CONTENT : 0;
-                lvPropostas.setLayoutParams(params);
-            }
-        });
+        //Tab 2
+        spec = host.newTabSpec("Anúncios Sugeridos");
+        spec.setContent(R.id.tab2);
+        spec.setIndicator("Anúncios Sugeridos");
+        host.addTab(spec);
 
-        //Animar lvAnuncios
-        View lblAnuncios = findViewById(R.id.lblAnuncios);
-
-        lblAnuncios.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ViewGroup.LayoutParams params = lvAnuncios.getLayoutParams();
-                params.height = params.height == 0 ? ViewGroup.LayoutParams.WRAP_CONTENT : 0;
-                lvAnuncios.setLayoutParams(params);
-            }
-        });
-
-
-
+        //------------------------------------
 
         /*if (savedInstanceState == null)
         {*/
