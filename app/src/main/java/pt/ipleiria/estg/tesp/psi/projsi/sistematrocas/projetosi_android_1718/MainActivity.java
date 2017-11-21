@@ -1,28 +1,17 @@
 package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718;
 
-import android.animation.LayoutTransition;
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TabHost;
 
-import java.util.List;
-
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.adaptadores.AnunciosAdapter;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.adaptadores.PropostasAdapter;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.GestorAnuncios;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.GestorPropostas;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.SingletonAnuncios;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.SingletonPropostas;
 
 public class MainActivity extends NavDrawerActivity {
-
-    private GestorAnuncios gestorAnuncios;
-    private GestorPropostas gestorPropostas;
 
     private ListView lvAnuncios;
     private ListView lvPropostas;
@@ -59,25 +48,20 @@ public class MainActivity extends NavDrawerActivity {
         {*/
 
 
-            //--------------
-            gestorAnuncios = new GestorAnuncios();
-            gestorPropostas = new GestorPropostas();
-
             lvAnuncios = findViewById(R.id.lvAnuncios);
             lvPropostas = findViewById(R.id.lvPropostas);
 
-            //------
-            propostasAdapter = new PropostasAdapter(this, gestorPropostas.getListaPropostas());
+
+            propostasAdapter = new PropostasAdapter(this, SingletonPropostas.getInstance().getPropostas());
             lvPropostas.setAdapter(propostasAdapter);
 
-            //------
-            anunciosAdapter = new AnunciosAdapter(this, gestorAnuncios.getListaAnuncios());
+            anunciosAdapter = new AnunciosAdapter(this, SingletonAnuncios.getInstance().getAnuncios());
             lvAnuncios.setAdapter(anunciosAdapter);
             //--------------
 
         /*}else{
-            // this.gestorAnuncios = (GestorAnuncios) savedInstanceState.getSerializable(...);
-            // this.gestorPropostas = (GestorPropostas) savedInstanceState.getSerializable(...);
+            // this.gestorAnuncios =  ... savedInstanceState.getSerializable(...);
+            // this.gestorPropostas =  ... savedInstanceState.getSerializable(...);
         }*/
 
     }

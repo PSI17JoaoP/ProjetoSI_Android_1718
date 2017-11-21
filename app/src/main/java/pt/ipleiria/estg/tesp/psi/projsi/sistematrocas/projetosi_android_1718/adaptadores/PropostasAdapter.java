@@ -11,8 +11,8 @@ import java.util.List;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.R;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Anuncio;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.GestorAnuncios;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Proposta;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.SingletonAnuncios;
 
 
 /**
@@ -24,13 +24,11 @@ public class PropostasAdapter extends BaseAdapter {
     private List<Proposta> listaPropostas;
     private Context context;
     private LayoutInflater inflater;
-    private GestorAnuncios gestorAnuncios;
 
     public PropostasAdapter(Context context, List<Proposta> listaPropostas) {
         this.context = context;
         this.listaPropostas = listaPropostas;
 
-        this.gestorAnuncios = new GestorAnuncios();
     }
 
     @Override
@@ -66,7 +64,7 @@ public class PropostasAdapter extends BaseAdapter {
         TextView txtPropostaTitle = item.findViewById(R.id.txtProposta);
 
         Proposta proposta = listaPropostas.get(i);
-        Anuncio anuncioProposta = gestorAnuncios.getAnuncioById(proposta.getIdAnuncio());
+        Anuncio anuncioProposta = SingletonAnuncios.getInstance().pesquisarAnuncioID(proposta.getIdAnuncio());
 
         txtOfertaTitle.setText(anuncioProposta.getTitulo());
         txtPropostaTitle.setText(""+proposta.getCatProposta());
