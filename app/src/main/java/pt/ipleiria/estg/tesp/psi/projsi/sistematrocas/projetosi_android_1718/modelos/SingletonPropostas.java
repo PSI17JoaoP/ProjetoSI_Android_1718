@@ -54,6 +54,10 @@ public class SingletonPropostas {
         return propostas;
     }
 
+    public Integer getPropostasCount(){
+        return propostas.size();
+    }
+
 
     public boolean adicionarProposta(Proposta proposta)
     {

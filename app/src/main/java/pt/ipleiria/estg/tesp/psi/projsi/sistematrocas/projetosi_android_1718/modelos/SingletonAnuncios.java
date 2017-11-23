@@ -53,6 +53,9 @@ public class SingletonAnuncios {
         return anuncios;
     }
 
+    public Integer getAnunciosCount() {
+        return anuncios.size();
+    }
 
     public boolean adicionarAnuncio(Anuncio anuncio)
     {
