@@ -21,7 +21,9 @@
         <activity
             android:name=".NavDrawerActivity"
             android:label="@string/title_activity_home_page"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".LoginActivity" />
     </application>
 
 </manifest>
