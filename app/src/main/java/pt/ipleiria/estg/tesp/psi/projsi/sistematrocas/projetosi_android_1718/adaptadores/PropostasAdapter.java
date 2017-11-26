@@ -12,7 +12,7 @@ import java.util.List;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.R;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Anuncio;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Proposta;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.SingletonAnuncios;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonAnuncios;
 
 
 /**

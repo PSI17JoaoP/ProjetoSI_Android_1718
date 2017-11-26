@@ -1,7 +1,9 @@
-package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos;
+package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Cliente;
 
 /**
  * Created by leona on 24/11/2017.
