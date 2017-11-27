@@ -50,16 +50,25 @@ public class NavDrawerActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_home) {
-            // Handle the camera action
-        } else if (id == R.id.nav_meusAnuncios) {
+        switch (id)
+        {
+            case R.id.nav_home:
 
-        } else if (id == R.id.nav_pesquisar) {
+                break;
 
-        } else if (id == R.id.nav_historico) {
+            case R.id.nav_meusAnuncios:
 
-        } else if (id == R.id.nav_logout) {
+                break;
 
+            case R.id.nav_pesquisar:
+
+                break;
+
+            case R.id.nav_historico:
+
+                break;
+
+            case R.id.nav_logout:
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

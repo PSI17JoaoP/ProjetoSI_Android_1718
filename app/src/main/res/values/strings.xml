@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Sistema de Trocas</string>
-    <string name="title_activity_home_page">HomePageActivity</string>
+    <string name="title_activity_home_page">Página Inicial</string>
 
     <string name="navigation_drawer_open">Abrir menu</string>
     <string name="navigation_drawer_close">Fechar menu</string>
@@ -17,5 +17,10 @@
     <string name="item_btnAceitar">Aceitar</string>
     <string name="item_btnRecusar">Recusar</string>
     <string name="item_btnVer">Ver</string>
+
+    <string name="hint_login">PIN</string>
+    <string name="btn_pin_login">Entrar</string>
+    <string name="text_login_inserir_pin">Insira o PIN de autenticação</string>
+    <string name="text_view_login_mensagem">Após inserir o PIN,\na aplicação irá lembrar-se no futuro</string>
 
 </resources>
