@@ -1,4 +1,4 @@
-package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718;
+package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -20,25 +20,20 @@ import java.io.UnsupportedEncodingException;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonAPIManager;
 
-/**
- * Created by leona on 26/11/2017.
- */
-
-public class Utilities
+public class APIManager
 {
     private Context context;
-    private String baseUrl;
+    private static final String baseUrl = "http://localhost:8888/";
 
-    public Utilities(Context contexto) {
+    public APIManager(Context contexto) {
         this.context = contexto;
-        this.baseUrl = "http://localhost:8888/";
     }
 
     /**
      * Verifica se está ou não ligado à internet
      * @return boolean
      */
-    public boolean ligadoInternet()
+    private boolean ligadoInternet()
     {
         ConnectivityManager connManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo internet = null;
@@ -64,15 +59,15 @@ public class Utilities
     /**
      * Pede 1 objeto ao url, depois é trabalhado através da função 'usar'
      * Exemplo url: "post/1"
-     * @param url
-     * @param usar
+     * @param url O url dos dados
+     * @param usar Interface de resposta de um objeto JSON da API
      */
     public void pedirObjetoAPI(String url, final APIJsonResposta usar)
     {
         if (ligadoInternet())
         {
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                    Request.Method.GET, baseUrl+url,null,
+                    Request.Method.GET, baseUrl + url,null,
                     new Response.Listener<JSONObject>()
                     {
                         @Override
@@ -96,10 +91,10 @@ public class Utilities
     /**
      * Envia um objeto para a API e devolve o código de resposta. Nota: Criar o objeto json 1º
      * Exemplo url: "post/1"
-     * @param url
-     * @param tipoPedido
-     * @param jsonBody
-     * @param usar
+     * @param url O url dos dados
+     * @param tipoPedido Tipo de pedido, ou verbo HTTP (GET, POST, PUT, DELETE, ...)
+     * @param jsonBody O body do json a enviar
+     * @param usar Interface de resposta de uma string da API
      */
     public void enviarObjetoAPI(String url, Integer tipoPedido, JSONObject jsonBody, final APIStringResposta usar)
     {
@@ -107,12 +102,15 @@ public class Utilities
         {
             final String requestBody = jsonBody.toString();
 
-            StringRequest stringRequest = new StringRequest(tipoPedido, baseUrl+url, new Response.Listener<String>() {
+            StringRequest stringRequest = new StringRequest(tipoPedido, baseUrl+url,
+
+            new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     usar.onSucess(response);
                 }
-            }, new Response.ErrorListener() {
+            },
+            new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     //Log.e("VOLLEY", error.toString());
@@ -140,12 +138,12 @@ public class Utilities
                         responseString = String.valueOf(response.statusCode);
                         // can get more details such as response.headers
                     }
+
                     return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
                 }
             };
 
             SingletonAPIManager.getInstance(context).getRequestQueue().add(stringRequest);
         }
-
     }
 }

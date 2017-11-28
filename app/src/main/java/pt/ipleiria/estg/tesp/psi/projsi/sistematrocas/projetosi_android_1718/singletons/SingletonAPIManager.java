@@ -5,18 +5,15 @@ import android.content.Context;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
-/**
- * Created by leona on 26/11/2017.
- */
-
 public class SingletonAPIManager {
+
     private static SingletonAPIManager INSTANCE = null;
     private RequestQueue requestQueue;
     private static Context context;
 
     public static synchronized SingletonAPIManager getInstance(Context contexto) {
-        if (INSTANCE == null)
-        {
+
+        if (INSTANCE == null) {
             INSTANCE = new SingletonAPIManager(contexto);
         }
 
@@ -25,14 +22,15 @@ public class SingletonAPIManager {
 
     private SingletonAPIManager(Context contexto) {
         context = contexto;
-
         requestQueue = getRequestQueue();
     }
 
     public RequestQueue getRequestQueue() {
+
         if (requestQueue == null) {
             requestQueue = Volley.newRequestQueue(context.getApplicationContext());
         }
+
         return requestQueue;
     }
 }
