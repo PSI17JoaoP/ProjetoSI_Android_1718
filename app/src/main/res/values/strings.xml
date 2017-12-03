@@ -22,5 +22,7 @@
     <string name="btn_pin_login">Entrar</string>
     <string name="text_login_inserir_pin">Insira o PIN de autenticação</string>
     <string name="text_view_login_mensagem">Após inserir o PIN,\na aplicação irá lembrar-se no futuro</string>
+    <string name="mensagem_pin_vazio">Não introduziu um PIN.\nIntroduza para efetuar o login.</string>
+    <string name="mensagem_pin_incorreto">O PIN inserido é incorreto.\nVerifique o PIN nas definições da sua conta, na aplicação Web.</string>
 
 </resources>
