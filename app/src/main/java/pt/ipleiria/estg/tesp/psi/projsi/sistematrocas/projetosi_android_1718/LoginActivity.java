@@ -42,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
             textViewMensagem.setTextColor(Color.RED);
         } else {
 
-            JsonArrayRequest user = SingletonAPIManager.getInstance(this).pedirVariosAPI("http://192.168.1.2:8888/clientes/pin/" + pinString, new SingletonAPIManager.APIJsonArrayResposta() {
+            JsonArrayRequest user = SingletonAPIManager.getInstance(this).pedirVariosAPI("http://localhost:8888/clientes/pin/" + pinString, new SingletonAPIManager.APIJsonArrayResposta() {
                 @Override
                 public void Sucesso(JSONArray result) {
                     try {
