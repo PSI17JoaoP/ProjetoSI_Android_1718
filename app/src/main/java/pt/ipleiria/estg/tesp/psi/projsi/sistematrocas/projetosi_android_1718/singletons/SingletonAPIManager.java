@@ -76,7 +76,7 @@ public class SingletonAPIManager {
         void Erro(VolleyError erro);
     }
 
-    public interface APIJsonXResposta {
+    public interface APIJsonArrayResposta {
         void Sucesso(JSONArray resultados);
         void Erro(VolleyError erro);
     }
@@ -89,8 +89,8 @@ public class SingletonAPIManager {
     /**
      * Recebe o URI para fazer o pedido GET a 1 objeto e implementa a função 'usar'
      * para trabalhar a resposta
-     * @param url
-     * @param usar
+     * @param url O url do pedido
+     * @param usar Interface de Resposta
      * @return mixed
      */
     public JsonObjectRequest pedirAPI(String url, final APIJsonResposta usar)
@@ -124,11 +124,11 @@ public class SingletonAPIManager {
     /**
      * Recebe o URI para fazer o pedido GET a vários objetos e implementa a função 'usar'
      * para trabalhar a resposta
-     * @param url
-     * @param usar
+     * @param url O url do pedido
+     * @param usar Interface de Resposta
      * @return mixed
      */
-    public JsonArrayRequest pedirVariosAPI(String url, final APIJsonXResposta usar)
+    public JsonArrayRequest pedirVariosAPI(String url, final APIJsonArrayResposta usar)
     {
         if (ligadoInternet())
         {
@@ -159,10 +159,10 @@ public class SingletonAPIManager {
     /**
      * Recebe o URI, o tipo de pedido (exemplo: Request.Methdd.POST), o objeto Json a enviar e
      * implementa a função 'usar' para verificar a resposta
-     * @param url
-     * @param tipoPedido
-     * @param jsonBody
-     * @param usar
+     * @param url O url do pedido
+     * @param tipoPedido Tipo de pedido
+     * @param jsonBody O corpo da mensagem
+     * @param usar Interface de Resposta
      * @return mixed
      */
     public StringRequest enviarAPI(String url, Integer tipoPedido, JSONObject jsonBody, final APIStringResposta usar)

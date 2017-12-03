@@ -2,18 +2,20 @@ package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.APIManager;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonAPIManager;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -40,29 +42,33 @@ public class LoginActivity extends AppCompatActivity {
             textViewMensagem.setTextColor(Color.RED);
         } else {
 
-            APIManager gestorAPI = new APIManager(getApplicationContext());
-            gestorAPI.pedirObjetoAPI("/clientes/pin/" + pinString, new APIManager.APIJsonResposta() {
-
+            JsonArrayRequest user = SingletonAPIManager.getInstance(this).pedirVariosAPI("http://192.168.1.2:8888/clientes/pin/" + pinString, new SingletonAPIManager.APIJsonArrayResposta() {
                 @Override
-                public void onSucess(JSONObject result) {
+                public void Sucesso(JSONArray result) {
                     try {
-                        JSONArray user = result.getJSONArray("User");
+                        String username = result.getString(0);
+                        String email = result.getString(1);
 
-                        if(user != null) {
-                            String username = user.getString(0);
-                            String email = user.getString(1);
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        intent.putExtra(DADOS_USERNAME, username);
+                        intent.putExtra(DADOS_EMAIL, email);
+                        startActivity(intent);
 
-                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                            intent.putExtra(DADOS_USERNAME, username);
-                            intent.putExtra(DADOS_EMAIL, email);
-                            startActivity(intent);
-
-                        } else {
-                            textViewMensagem.setText(R.string.mensagem_pin_incorreto);
-                            textViewMensagem.setTextColor(Color.RED);
-                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void Erro(VolleyError erro) {
+
+                    //TODO: Switch para vários tipos de erros.
+                    if(erro.networkResponse.statusCode == 404) {
+                        textViewMensagem.setText(R.string.mensagem_pin_incorreto);
+                        textViewMensagem.setTextColor(Color.RED);
+                    } else {
+                        Snackbar snackbar = Snackbar.make(findViewById(R.id.loginCoordinatorLayout), getString(R.string.mensagem_login_erro) + " (" + erro.networkResponse.statusCode + ").", Snackbar.LENGTH_LONG);
+                        snackbar.show();
                     }
                 }
             });

@@ -24,5 +24,6 @@
     <string name="text_view_login_mensagem">Após inserir o PIN,\na aplicação irá lembrar-se no futuro</string>
     <string name="mensagem_pin_vazio">Não introduziu um PIN.\nIntroduza para efetuar o login.</string>
     <string name="mensagem_pin_incorreto">O PIN inserido é incorreto.\nVerifique o PIN nas definições da sua conta, na aplicação Web.</string>
+    <string name="mensagem_login_erro">Ocorreu um erro na autenticação</string>
 
 </resources>
