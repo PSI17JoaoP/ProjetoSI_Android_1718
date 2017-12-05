@@ -25,9 +25,8 @@ public class MainActivity extends NavDrawerActivity {
         //setContentView(R.layout.activity_main);
         View.inflate(this, R.layout.activity_main, (ViewGroup) findViewById(R.id.app_content));
 
-        //Tab control
-
-        TabHost host = (TabHost)findViewById(R.id.tabMain);
+        //Tab Control
+        TabHost host = findViewById(R.id.tabMain);
         host.setup();
 
         //Tab 1
@@ -44,24 +43,19 @@ public class MainActivity extends NavDrawerActivity {
 
         //------------------------------------
 
-        /*if (savedInstanceState == null)
-        {*/
-
-
+        /*if (savedInstanceState == null) {*/
             lvAnuncios = findViewById(R.id.lvAnuncios);
             lvPropostas = findViewById(R.id.lvPropostas);
-
 
             propostasAdapter = new PropostasAdapter(this, SingletonPropostas.getInstance().getPropostas());
             lvPropostas.setAdapter(propostasAdapter);
 
             anunciosAdapter = new AnunciosAdapter(this, SingletonAnuncios.getInstance().getAnuncios());
             lvAnuncios.setAdapter(anunciosAdapter);
-            //--------------
 
         /*}else{
-            // this.gestorAnuncios =  ... savedInstanceState.getSerializable(...);
-            // this.gestorPropostas =  ... savedInstanceState.getSerializable(...);
+            this.gestorAnuncios =  ... savedInstanceState.getSerializable(...);
+            this.gestorPropostas =  ... savedInstanceState.getSerializable(...);
         }*/
 
     }

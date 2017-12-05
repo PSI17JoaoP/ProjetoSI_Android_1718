@@ -72,6 +72,8 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 }
             });
+
+            SingletonAPIManager.getInstance(this).getRequestQueue().add(user);
         }
     }
 }

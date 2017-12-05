@@ -98,21 +98,21 @@ public class SingletonAPIManager {
         if (ligadoInternet())
         {
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                    Request.Method.GET, url,null,
-                    new Response.Listener<JSONObject>()
-                    {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            usar.Sucesso(response);
-                        }
-                    },
-                    new Response.ErrorListener()
-                    {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            usar.Erro(error);
-                        }
+                Request.Method.GET, url,null,
+                new Response.Listener<JSONObject>()
+                {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        usar.Sucesso(response);
                     }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        usar.Erro(error);
+                    }
+                }
             );
 
             return jsonObjectRequest;
@@ -133,21 +133,21 @@ public class SingletonAPIManager {
         if (ligadoInternet())
         {
             JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
-                    Request.Method.GET, url, null,
-                    new Response.Listener<JSONArray>()
-                    {
-                        @Override
-                        public void onResponse(JSONArray response) {
-                            usar.Sucesso(response);
-                        }
-                    },
-                    new Response.ErrorListener()
-                    {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            usar.Erro(error);
-                        }
+                Request.Method.GET, url, null,
+                new Response.Listener<JSONArray>()
+                {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        usar.Sucesso(response);
                     }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        usar.Erro(error);
+                    }
+                }
             );
 
             return jsonArrayRequest;
