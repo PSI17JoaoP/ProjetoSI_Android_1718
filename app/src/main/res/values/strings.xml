@@ -25,5 +25,10 @@
     <string name="mensagem_pin_vazio">Não introduziu um PIN.\nIntroduza para efetuar o login.</string>
     <string name="mensagem_pin_incorreto">O PIN inserido é incorreto.\nVerifique o PIN nas definições da sua conta, na aplicação Web.</string>
     <string name="mensagem_login_erro">Ocorreu um erro na autenticação</string>
+    <string name="title_activity_criar_anuncio">Criar Anuncio</string>
+    <string name="criar_anuncio_titulo">Titulo</string>
+    <string name="criar_anuncio_imagem_opcional">Imagem (opcional)</string>
+    <string name="criar_anuncio_text_view_troco">Quero trocar:</string>
+    <string name="criar_anuncio_text_view_por">Quero receber:</string>
 
 </resources>
