@@ -8,12 +8,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonAPIManager;
 
@@ -41,13 +44,16 @@ public class LoginActivity extends AppCompatActivity {
             textViewMensagem.setText(R.string.mensagem_pin_vazio);
             textViewMensagem.setTextColor(Color.RED);
         } else {
-
-            JsonArrayRequest user = SingletonAPIManager.getInstance(this).pedirVariosAPI("http://localhost:8888/clientes/pin/" + pinString, new SingletonAPIManager.APIJsonArrayResposta() {
+            String url = "http://10.0.2.2:8888/clientes/pin/" + pinString;
+            JsonObjectRequest user = SingletonAPIManager.getInstance(this).pedirAPI(url, new SingletonAPIManager.APIJsonResposta() {
                 @Override
-                public void Sucesso(JSONArray result) {
+                public void Sucesso(JSONObject resultado) {
                     try {
-                        String username = result.getString(0);
-                        String email = result.getString(1);
+
+                        JSONObject userResult = resultado.getJSONObject("User");
+
+                        String username = userResult.getString("Username");
+                        String email = userResult.getString("Email");
 
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         intent.putExtra(DADOS_USERNAME, username);
@@ -61,7 +67,6 @@ public class LoginActivity extends AppCompatActivity {
 
                 @Override
                 public void Erro(VolleyError erro) {
-
                     //TODO: Switch para vários tipos de erros.
                     if(erro.networkResponse.statusCode == 404) {
                         textViewMensagem.setText(R.string.mensagem_pin_incorreto);
@@ -72,6 +77,8 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 }
             });
+
+            SingletonAPIManager.getInstance(this).getRequestQueue().add(user);
         }
     }
 }
