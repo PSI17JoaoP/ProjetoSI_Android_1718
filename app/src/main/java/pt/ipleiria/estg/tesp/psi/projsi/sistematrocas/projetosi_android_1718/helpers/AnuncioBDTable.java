@@ -7,7 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
  * Created by JAPorelo on 06-12-2017.
  */
 
-public class AnuncioBDTable extends BDHelper{
+public class AnuncioBDTable extends BDHelper {
+
+    private SQLiteDatabase database;
 
     static final String TABLE_NAME = "anuncios";
 
@@ -24,10 +26,11 @@ public class AnuncioBDTable extends BDHelper{
 
     protected AnuncioBDTable(Context context) {
         super(context);
+        this.database = this.getWritableDatabase();
     }
 
     @Override
-    public void onCreate(SQLiteDatabase sqLiteDatabase) {
+    public void onCreate(SQLiteDatabase db) {
         String createTableAnuncios = "CREATE TABLE " + TABLE_NAME +
                 "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 TITULO_ANUNCIO + " TEXT NOT NULL," +
@@ -38,16 +41,22 @@ public class AnuncioBDTable extends BDHelper{
                 QUANT_RECEBER_ANUNCIO + " INTEGER NOT NULL," +
                 ESTADO_ANUNCIO + " TEXT NOT NULL," +
                 COMENTARIOS_ANUNCIO + " TEXT NOT NULL," +
-                DATA_CRIACAO_ANUNCIO + "DATE DEFAULT CURRENT_DATE," +
-                DATA_CONCLUSAO_ANUNCIO + "DATE," +
+                DATA_CRIACAO_ANUNCIO + " DATE DEFAULT CURRENT_DATE," +
+                DATA_CONCLUSAO_ANUNCIO + " DATE," +
                 "FOREIGN KEY(" + ID_USER_ANUNCIO + ") REFERENCES " +
-                UserBDTable.TABLE_NAME + "(id)";    //TODO: Não está completo. Falta as foreign key para as categorias. Completar ASAP.
+                UserBDTable.TABLE_NAME + "(id)," +
+                "FOREIGN KEY(" + ID_CAT_OFERECER_ANUNCIO + ") REFERENCES " +
+                CategoriaBDHelper.TABLE_NAME + "(id)," +
+                "FOREIGN KEY(" + ID_CAT_RECEBER_ANUNCIO + ") REFERENCES " +
+                CategoriaBDHelper.TABLE_NAME + "(id));";
+
+        db.execSQL(createTableAnuncios);
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         String dropTableAnuncios = "DROP TABLE IF EXISTS " + TABLE_NAME;
-        sqLiteDatabase.execSQL(dropTableAnuncios);
-        this.onCreate(sqLiteDatabase);
+        db.execSQL(dropTableAnuncios);
+        this.onCreate(db);
     }
 }
