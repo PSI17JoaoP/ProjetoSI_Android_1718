@@ -45,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
             textViewMensagem.setTextColor(Color.RED);
         } else {
             String url = "http://10.0.2.2:8888/clientes/pin/" + pinString;
+
             JsonObjectRequest user = SingletonAPIManager.getInstance(this).pedirAPI(url, new SingletonAPIManager.APIJsonResposta() {
                 @Override
                 public void Sucesso(JSONObject resultado) {
