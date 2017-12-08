@@ -9,15 +9,12 @@ import android.database.sqlite.SQLiteDatabase;
 
 public class CategoriaBDTable extends BDHelper {
 
-    private SQLiteDatabase database;
-
     static final String TABLE_NAME = "categorias";
 
     private static final String NOME_CATEGORIA = "nome";
 
-    protected CategoriaBDTable(Context context) {
+    CategoriaBDTable(Context context) {
         super(context);
-        this.database = this.getWritableDatabase();
     }
 
     @Override

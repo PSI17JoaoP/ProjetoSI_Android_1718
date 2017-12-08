@@ -9,18 +9,15 @@ import android.database.sqlite.SQLiteDatabase;
 
 public class RoupaBDTable extends BDHelper {
 
-    private SQLiteDatabase database;
-
     private static final String TABLE_NAME = "cat_roupa";
 
     private static final String ID_CATEGORIA_CAT_ROUPA = "id_categoria";
     private static final String MARCA_CAT_ROUPA = "marca";
     private static final String TAMANHO_CAT_ROUPA = "tamanho";
-    private static final String ID_TIPO_ROUPA_CAT_ROUPA = "idTipo";
+    private static final String ID_TIPO_ROUPA_CAT_ROUPA = "id_tipo";
 
-    RoupaBDTable(Context context) {
+    public RoupaBDTable(Context context) {
         super(context);
-        this.database = this.getWritableDatabase();
     }
 
     @Override
@@ -29,6 +26,7 @@ public class RoupaBDTable extends BDHelper {
                 "(" + ID_CATEGORIA_CAT_ROUPA + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 MARCA_CAT_ROUPA + " TEXT NOT NULL," +
                 TAMANHO_CAT_ROUPA + " TEXT NOT NULL," +
+                ID_TIPO_ROUPA_CAT_ROUPA + " INTEGER NOT NULL" +
                 "FOREIGN KEY(" + ID_TIPO_ROUPA_CAT_ROUPA + ") REFERENCES " +
                 TipoRoupaBDTable.TABLE_NAME + "(id)," +
                 "FOREIGN KEY(" + ID_CATEGORIA_CAT_ROUPA + ") REFERENCES " +

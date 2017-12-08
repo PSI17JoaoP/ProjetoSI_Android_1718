@@ -9,15 +9,12 @@ import android.database.sqlite.SQLiteDatabase;
 
 public class TipoRoupaBDTable extends BDHelper {
 
-    private SQLiteDatabase database;
-
     static final String TABLE_NAME = "tipo_roupa";
 
     private static final String NOME_TIPO_ROUPA = "nome";
 
-    TipoRoupaBDTable(Context context) {
+    public TipoRoupaBDTable(Context context) {
         super(context);
-        this.database = this.getWritableDatabase();
     }
 
     @Override

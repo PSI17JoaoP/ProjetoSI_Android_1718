@@ -9,8 +9,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 public class PropostaBDTable extends BDHelper {
 
-    private SQLiteDatabase database;
-
     static final String TABLE_NAME = "propostas";
 
     private static final String ID_CAT_PROPOSTA_PROPOSTA = "catProposta";
@@ -20,9 +18,8 @@ public class PropostaBDTable extends BDHelper {
     private static final String ESTADO_PROPOSTA = "estado";
     private static final String DATA_PROPOSTA_PROPOSTA = "dataProposta";
 
-    protected PropostaBDTable(Context context) {
+    PropostaBDTable(Context context) {
         super(context);
-        this.database = this.getWritableDatabase();
     }
 
     @Override

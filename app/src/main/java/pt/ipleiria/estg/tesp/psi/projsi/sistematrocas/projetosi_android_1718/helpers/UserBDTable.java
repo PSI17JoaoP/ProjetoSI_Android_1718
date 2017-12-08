@@ -9,8 +9,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 public class UserBDTable extends BDHelper {
 
-    private SQLiteDatabase database;
-
     static final String TABLE_NAME = "users";
 
     private static final String USERNAME_USER = "username";
@@ -20,8 +18,6 @@ public class UserBDTable extends BDHelper {
 
     public UserBDTable(Context context) {
         super(context);
-        this.database = this.getWritableDatabase();
-
     }
 
     @Override

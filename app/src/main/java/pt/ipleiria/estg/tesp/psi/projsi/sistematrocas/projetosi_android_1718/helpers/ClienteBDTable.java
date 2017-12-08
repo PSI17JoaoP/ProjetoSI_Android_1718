@@ -9,20 +9,17 @@ import android.database.sqlite.SQLiteDatabase;
 
 public class ClienteBDTable extends BDHelper {
 
-    private SQLiteDatabase database;
-
     private static final String TABLE_NAME = "clientes";
 
-    private static final String ID_USER_CLIENTE = "idUser";
-    private static final String NOME_COMPLETO_CLIENTE = "nomeCompleto";
-    private static final String DATA_NASC_CLIENTE = "dataNasc";
+    private static final String ID_USER_CLIENTE = "id_user";
+    private static final String NOME_COMPLETO_CLIENTE = "nome_completo";
+    private static final String DATA_NASCIMENTO_CLIENTE = "data_nascimento";
     private static final String TELEFONE_CLIENTE = "telefone";
     private static final String REGIAO_CLIENTE = "regiao";
     private static final String PIN_CLIENTE = "pin";
 
-    protected ClienteBDTable(Context context) {
+    public ClienteBDTable(Context context) {
         super(context);
-        this.database = this.getWritableDatabase();
     }
 
     @Override
@@ -30,7 +27,7 @@ public class ClienteBDTable extends BDHelper {
         String createTableClientes = "CREATE TABLE " + TABLE_NAME +
                 "(" + ID_USER_CLIENTE + "INTEGER PRIMARY KEY AUTOINCREMENT," +
                 NOME_COMPLETO_CLIENTE + " TEXT NOT NULL," +
-                DATA_NASC_CLIENTE+ " DATE NOT NULL," +
+                DATA_NASCIMENTO_CLIENTE+ " DATE NOT NULL," +
                 TELEFONE_CLIENTE + " INTEGER NOT NULL," +
                 REGIAO_CLIENTE + " TEXT NOT NULL," +
                 PIN_CLIENTE + " INTEGER NOT NULL," +

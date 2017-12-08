@@ -9,8 +9,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 public class AnuncioBDTable extends BDHelper {
 
-    private SQLiteDatabase database;
-
     static final String TABLE_NAME = "anuncios";
 
     private static final String TITULO_ANUNCIO = "titulo";
@@ -24,9 +22,8 @@ public class AnuncioBDTable extends BDHelper {
     private static final String DATA_CRIACAO_ANUNCIO = "dataCriacao";
     private static final String DATA_CONCLUSAO_ANUNCIO = "dataConclusao";
 
-    protected AnuncioBDTable(Context context) {
+    AnuncioBDTable(Context context) {
         super(context);
-        this.database = this.getWritableDatabase();
     }
 
     @Override
