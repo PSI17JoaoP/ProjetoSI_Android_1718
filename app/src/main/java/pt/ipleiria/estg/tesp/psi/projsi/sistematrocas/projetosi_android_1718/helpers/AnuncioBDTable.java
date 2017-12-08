@@ -46,9 +46,9 @@ public class AnuncioBDTable extends BDHelper {
                 "FOREIGN KEY(" + ID_USER_ANUNCIO + ") REFERENCES " +
                 UserBDTable.TABLE_NAME + "(id)," +
                 "FOREIGN KEY(" + ID_CAT_OFERECER_ANUNCIO + ") REFERENCES " +
-                CategoriaBDHelper.TABLE_NAME + "(id)," +
+                CategoriaBDTable.TABLE_NAME + "(id)," +
                 "FOREIGN KEY(" + ID_CAT_RECEBER_ANUNCIO + ") REFERENCES " +
-                CategoriaBDHelper.TABLE_NAME + "(id));";
+                CategoriaBDTable.TABLE_NAME + "(id));";
 
         db.execSQL(createTableAnuncios);
     }

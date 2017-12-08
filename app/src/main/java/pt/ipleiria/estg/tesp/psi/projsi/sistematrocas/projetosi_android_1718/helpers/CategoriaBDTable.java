@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
  * Created by JAPorelo on 07-12-2017.
  */
 
-public class CategoriaBDHelper extends BDHelper {
+public class CategoriaBDTable extends BDHelper {
 
     private SQLiteDatabase database;
 
@@ -15,7 +15,7 @@ public class CategoriaBDHelper extends BDHelper {
 
     private static final String NOME_CATEGORIA = "nome";
 
-    protected CategoriaBDHelper(Context context) {
+    protected CategoriaBDTable(Context context) {
         super(context);
         this.database = this.getWritableDatabase();
     }

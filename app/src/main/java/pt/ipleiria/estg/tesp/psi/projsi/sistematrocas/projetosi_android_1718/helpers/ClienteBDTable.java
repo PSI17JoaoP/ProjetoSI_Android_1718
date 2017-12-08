@@ -9,7 +9,10 @@ import android.database.sqlite.SQLiteDatabase;
 
 public class ClienteBDTable extends BDHelper {
 
-    static final String TABLE_NAME = "clientes";
+    private SQLiteDatabase database;
+
+    private static final String TABLE_NAME = "clientes";
+
     private static final String ID_USER_CLIENTE = "idUser";
     private static final String NOME_COMPLETO_CLIENTE = "nomeCompleto";
     private static final String DATA_NASC_CLIENTE = "dataNasc";
@@ -19,6 +22,7 @@ public class ClienteBDTable extends BDHelper {
 
     protected ClienteBDTable(Context context) {
         super(context);
+        this.database = this.getWritableDatabase();
     }
 
     @Override

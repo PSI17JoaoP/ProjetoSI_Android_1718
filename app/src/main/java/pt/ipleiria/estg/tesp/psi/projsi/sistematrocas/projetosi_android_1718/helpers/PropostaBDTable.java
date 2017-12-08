@@ -36,7 +36,7 @@ public class PropostaBDTable extends BDHelper {
                 ESTADO_PROPOSTA + " TEXT NOT NULL," +
                 DATA_PROPOSTA_PROPOSTA + " DATE DEFAULT CURRENT_DATE," +
                 "FOREIGN KEY(" + ID_CAT_PROPOSTA_PROPOSTA + ") REFERENCES " +
-                CategoriaBDHelper.TABLE_NAME + "(id)," +
+                CategoriaBDTable.TABLE_NAME + "(id)," +
                 "FOREIGN KEY(" + ID_USER_PROPOSTA + ") REFERENCES " +
                 UserBDTable.TABLE_NAME + "(id)," +
                 "FOREIGN KEY(" + ID_ANUNCIO_PROPOSTA + ") REFERENCES " +
