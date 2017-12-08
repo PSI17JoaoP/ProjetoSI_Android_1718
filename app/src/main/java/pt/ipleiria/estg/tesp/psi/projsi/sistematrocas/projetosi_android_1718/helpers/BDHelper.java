@@ -4,19 +4,56 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+
 /**
  * Created by JAPorelo on 06-12-2017.
  */
 
-abstract class BDHelper extends SQLiteOpenHelper {
+
+/**
+ * Cria a base de dados SQLite, caso não estiver criada.
+ * Implementa os métodos abstratos para a execução de queries de CRUD (SELECT, INSERT, UPDATE, DELETE).
+ * Estes métodos terão diferentes implementações nas respetivas sub-classes. Recebem o tipo genérico de objeto definido por T.
+ *
+ * @param <T> Tipo de objeto a ser manipulado. Correspondente aos modelos da aplicação.
+ */
+abstract class BDHelper<T> extends SQLiteOpenHelper /*implements QueryInterface<T>*/{
 
     private static final String BD_NAME = "SisTrocasBD";
     private static int BD_VERSION = 1;
 
-    private SQLiteDatabase database;
+    protected SQLiteDatabase database;
 
     BDHelper(Context context) {
         super(context, BD_NAME, null, BD_VERSION);
         this.database = this.getWritableDatabase();
     }
+
+    /**
+     * Método de seleção de dados (SELECT).
+     * @return Lista de objetos do tipo T.
+     */
+    public abstract ArrayList<T> select();
+
+    /**
+     * Método de inserção de um objeto numa tabela (INSERT).
+     * @param type Objeto do Tipo T.
+     * @return Objeto que foi inserido, com o id correspondente ao mesmo da tabela.
+     */
+    public abstract T insert(T type);
+
+    /**
+     * Método de alteração de um objeto existente numa tabela (UPDATE).
+     * @param type Objeto do Tipo T.
+     * @return True, caso seja bem sucedido. False, caso tenha ocorrido um erro.
+     */
+    public abstract boolean update(T type);
+
+    /**
+     * Método de eliminação de um objeto existente numa tabela (DELETE).
+     * @param id ID do objeto a ser eliminado
+     * @return True, caso seja bem sucedido. False, caso tenha ocorrido um erro.
+     */
+    public abstract boolean delete(Long id);
 }
