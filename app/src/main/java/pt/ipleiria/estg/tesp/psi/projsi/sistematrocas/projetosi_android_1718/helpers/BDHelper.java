@@ -18,7 +18,7 @@ import java.util.ArrayList;
  *
  * @param <T> Tipo de objeto a ser manipulado. Correspondente aos modelos da aplicação.
  */
-abstract class BDHelper<T> extends SQLiteOpenHelper /*implements QueryInterface<T>*/{
+abstract class BDHelper<T> extends SQLiteOpenHelper {
 
     private static final String BD_NAME = "SisTrocasBD";
     private static int BD_VERSION = 1;
