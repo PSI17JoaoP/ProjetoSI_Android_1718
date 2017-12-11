@@ -5,19 +5,19 @@ package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.mo
  */
 
 public class GeneroJogo {
-    private Integer id;
+    private Long id;
     private String nome;
 
-    public GeneroJogo(Integer id, String nome) {
+    public GeneroJogo(Long id, String nome) {
         this.id = id;
         this.nome = nome;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

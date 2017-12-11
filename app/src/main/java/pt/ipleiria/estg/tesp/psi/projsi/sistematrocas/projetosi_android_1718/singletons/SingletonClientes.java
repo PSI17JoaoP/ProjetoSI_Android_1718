@@ -46,10 +46,7 @@ public class SingletonClientes {
     {
         Cliente updatedCliente = clientes.set(clientes.indexOf(oldCliente), newCliente);
 
-        if (clientes.contains(updatedCliente))
-            return true;
-        else
-            return false;
+        return clientes.contains(updatedCliente);
     }
 
     public Cliente searchClientesID(Integer id)

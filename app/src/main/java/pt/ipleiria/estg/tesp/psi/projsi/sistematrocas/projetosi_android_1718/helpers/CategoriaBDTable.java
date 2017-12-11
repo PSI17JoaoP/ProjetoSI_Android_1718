@@ -11,6 +11,7 @@ import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.mod
 
 /**
  * Created by JAPorelo on 07-12-2017.
+ * Project ProjetoSI_Android_1718 - pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.helpers
  */
 
 public class CategoriaBDTable extends BDHelper<Categoria> {
@@ -19,7 +20,7 @@ public class CategoriaBDTable extends BDHelper<Categoria> {
 
     private static final String NOME_CATEGORIA = "nome";
 
-    CategoriaBDTable(Context context) {
+    public CategoriaBDTable(Context context) {
         super(context);
     }
 
@@ -52,12 +53,7 @@ public class CategoriaBDTable extends BDHelper<Categoria> {
 
             do
             {
-                Categoria categoria = new Categoria(
-                        cursor.getString(1)
-                );
-
-                categoria.setId(cursor.getLong(0));
-
+                Categoria categoria = new Categoria(cursor.getLong(0), cursor.getString(1));
                 categorias.add(categoria);
             }
             while (cursor.moveToNext());
@@ -66,6 +62,51 @@ public class CategoriaBDTable extends BDHelper<Categoria> {
         }
 
         return categorias;
+    }
+
+    @Override
+    public ArrayList<Categoria> select(String whereClause, String[] whereArgs) {
+
+        ArrayList<Categoria> categorias = new ArrayList<>();
+
+        String selectCategorias = "SELECT * FROM " + TABLE_NAME + whereClause;
+
+        Cursor cursor = database.rawQuery(selectCategorias, whereArgs);
+
+        if(cursor.moveToFirst()) {
+
+            do
+            {
+                Categoria categoria = new Categoria(cursor.getLong(0), cursor.getString(1));
+                categorias.add(categoria);
+            }
+            while (cursor.moveToNext());
+
+            cursor.close();
+        }
+
+        return categorias;
+    }
+
+    @Override
+    public Categoria selectByID(Long id) {
+
+        String selectCategorias = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?";
+
+        Cursor cursor = database.rawQuery(selectCategorias, new String[] {id.toString()});
+
+        if(cursor.moveToFirst()) {
+
+            Categoria categoria = new Categoria(cursor.getLong(0), cursor.getString(1));
+
+            cursor.close();
+
+            return categoria;
+        }
+
+        cursor.close();
+
+        return null;
     }
 
     @Override

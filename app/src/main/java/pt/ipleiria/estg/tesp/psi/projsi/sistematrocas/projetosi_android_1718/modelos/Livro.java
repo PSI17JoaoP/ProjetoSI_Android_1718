@@ -5,12 +5,14 @@ package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.mo
  */
 
 public class Livro extends Categoria {
+
     private String titulo;
     private String editora;
     private String autor;
     private Integer isbn;
 
-    public Livro(Integer id, String nome, String titulo, String editora, String autor, Integer isbn) {
+    public Livro(Long id, String nome, String titulo, String editora, String autor, Integer isbn) {
+
         super(id, nome);
         this.titulo = titulo;
         this.editora = editora;

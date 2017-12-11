@@ -5,15 +5,18 @@ package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.mo
  */
 
 public class Proposta {
-    private Integer id;
-    private Integer catProposta;
+
+    private Long id;
+    private Long catProposta;
     private Integer quant;
-    private Integer idUser;
-    private Integer idAnuncio;
+    private Long idUser;
+    private Long idAnuncio;
     private String estado;
     private String dataProposta;
 
-    public Proposta(Integer id, Integer catProposta, Integer quant, Integer idUser, Integer idAnuncio, String estado, String dataProposta) {
+    public Proposta(Long id, Long catProposta, Integer quant, Long idUser,
+                    Long idAnuncio, String estado, String dataProposta) {
+
         this.id = id;
         this.catProposta = catProposta;
         this.quant = quant;
@@ -23,19 +26,19 @@ public class Proposta {
         this.dataProposta = dataProposta;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Integer getCatProposta() {
+    public Long getCatProposta() {
         return catProposta;
     }
 
-    public void setCatProposta(Integer catProposta) {
+    public void setCatProposta(Long catProposta) {
         this.catProposta = catProposta;
     }
 
@@ -47,19 +50,19 @@ public class Proposta {
         this.quant = quant;
     }
 
-    public Integer getIdUser() {
+    public Long getIdUser() {
         return idUser;
     }
 
-    public void setIdUser(Integer idUser) {
+    public void setIdUser(Long idUser) {
         this.idUser = idUser;
     }
 
-    public Integer getIdAnuncio() {
+    public Long getIdAnuncio() {
         return idAnuncio;
     }
 
-    public void setIdAnuncio(Integer idAnuncio) {
+    public void setIdAnuncio(Long idAnuncio) {
         this.idAnuncio = idAnuncio;
     }
 

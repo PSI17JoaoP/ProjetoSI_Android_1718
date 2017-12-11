@@ -46,10 +46,7 @@ public class SingletonCategorias {
     {
         Categoria updatedCategoria = categorias.set(categorias.indexOf(oldCategoria), newCategoria);
 
-        if (categorias.contains(updatedCategoria))
-            return true;
-        else
-            return false;
+        return categorias.contains(updatedCategoria);
     }
 
     public Categoria searchCategoriaID(Integer id)

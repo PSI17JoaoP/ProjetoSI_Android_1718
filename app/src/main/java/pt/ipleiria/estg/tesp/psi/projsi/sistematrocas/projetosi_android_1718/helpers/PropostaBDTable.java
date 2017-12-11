@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 /**
  * Created by JAPorelo on 07-12-2017.
+ * Project ProjetoSI_Android_1718 - pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.helpers
  */
 
 public class PropostaBDTable extends BDHelper {
@@ -18,7 +19,7 @@ public class PropostaBDTable extends BDHelper {
     private static final String ESTADO_PROPOSTA = "estado";
     private static final String DATA_PROPOSTA_PROPOSTA = "dataProposta";
 
-    PropostaBDTable(Context context) {
+    public PropostaBDTable(Context context) {
         super(context);
     }
 

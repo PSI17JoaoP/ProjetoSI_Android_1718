@@ -5,20 +5,22 @@ package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.mo
  */
 
 public class Jogo extends Brinquedo {
-    private Integer idGenero;
+
+    private Long idGenero;
     private String produtora;
 
-    public Jogo(Integer id, String nome, String editora, Integer faixaEtaria, String descricao, Integer idGenero, String produtora) {
+    public Jogo(Long id, String nome, String editora, Integer faixaEtaria, String descricao, Long idGenero, String produtora) {
+
         super(id, nome, editora, faixaEtaria, descricao);
         this.idGenero = idGenero;
         this.produtora = produtora;
     }
 
-    public Integer getIdGenero() {
+    public Long getIdGenero() {
         return idGenero;
     }
 
-    public void setIdGenero(Integer idGenero) {
+    public void setIdGenero(Long idGenero) {
         this.idGenero = idGenero;
     }
 

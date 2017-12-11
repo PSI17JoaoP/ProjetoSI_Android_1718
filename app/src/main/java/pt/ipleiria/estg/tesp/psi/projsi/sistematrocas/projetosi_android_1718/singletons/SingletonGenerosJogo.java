@@ -47,10 +47,7 @@ public class SingletonGenerosJogo {
     {
         GeneroJogo updatedGenero = generoJogos.set(generoJogos.indexOf(oldGenero), newGenero);
 
-        if (generoJogos.contains(updatedGenero))
-            return true;
-        else
-            return false;
+        return generoJogos.contains(updatedGenero);
     }
 
     public GeneroJogo searchGeneroJogosID(Integer id)

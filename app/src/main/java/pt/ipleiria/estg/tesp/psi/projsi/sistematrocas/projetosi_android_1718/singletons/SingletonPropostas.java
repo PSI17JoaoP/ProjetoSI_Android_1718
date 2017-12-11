@@ -33,14 +33,14 @@ public class SingletonPropostas {
     private void gerarFakeData(){
         String data = "05/11/2017";
 
-        Proposta fProposta1 = new Proposta(1, 1, 2, 1, 1, "ativo", data);
-        Proposta fProposta2 = new Proposta(2, 1, 2, 1, 1, "ativo", data);
-        Proposta fProposta3 = new Proposta(3, 1, 2, 1, 1, "ativo", data);
-        Proposta fProposta4 = new Proposta(4, 1, 2, 1, 1, "ativo", data);
-        Proposta fProposta5 = new Proposta(5, 1, 2, 1, 1, "ativo", data);
-        Proposta fProposta6 = new Proposta(6, 1, 2, 1, 1, "ativo", data);
-        Proposta fProposta7 = new Proposta(7, 1, 2, 1, 1, "ativo", data);
-        Proposta fProposta8 = new Proposta(8, 1, 2, 1, 1, "ativo", data);
+        Proposta fProposta1 = new Proposta(Long.valueOf("1"), Long.valueOf("1"), 2, Long.valueOf("1"), Long.valueOf("1"), "ativo", data);
+        Proposta fProposta2 = new Proposta(Long.valueOf("2"), Long.valueOf("1"), 2, Long.valueOf("1"), Long.valueOf("1"), "ativo", data);
+        Proposta fProposta3 = new Proposta(Long.valueOf("3"), Long.valueOf("1"), 2, Long.valueOf("1"), Long.valueOf("1"), "ativo", data);
+        Proposta fProposta4 = new Proposta(Long.valueOf("4"), Long.valueOf("1"), 2, Long.valueOf("1"), Long.valueOf("1"), "ativo", data);
+        Proposta fProposta5 = new Proposta(Long.valueOf("5"), Long.valueOf("1"), 2, Long.valueOf("1"), Long.valueOf("1"), "ativo", data);
+        Proposta fProposta6 = new Proposta(Long.valueOf("6"), Long.valueOf("1"), 2, Long.valueOf("1"), Long.valueOf("1"), "ativo", data);
+        Proposta fProposta7 = new Proposta(Long.valueOf("7"), Long.valueOf("1"), 2, Long.valueOf("1"), Long.valueOf("1"), "ativo", data);
+        Proposta fProposta8 = new Proposta(Long.valueOf("8"), Long.valueOf("1"), 2, Long.valueOf("1"), Long.valueOf("1"), "ativo", data);
 
         this.propostas.add(fProposta1);
         this.propostas.add(fProposta2);
@@ -60,7 +60,6 @@ public class SingletonPropostas {
         return propostas.size();
     }
 
-
     public boolean adicionarProposta(Proposta proposta)
     {
         return propostas.add(proposta);
@@ -73,12 +72,9 @@ public class SingletonPropostas {
 
     public boolean editarProposta(Proposta proposta)
     {
-        Proposta novaProposta = propostas.set(proposta.getId(), proposta);
+        Proposta novaProposta = propostas.set(proposta.getId().intValue(), proposta);
 
-        if (propostas.contains(novaProposta))
-            return true;
-        else
-            return false;
+        return propostas.contains(novaProposta);
     }
 
     public Proposta pesquisarPropostaID(Integer id)

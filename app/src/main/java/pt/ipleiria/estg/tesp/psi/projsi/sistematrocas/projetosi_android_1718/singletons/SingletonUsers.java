@@ -46,10 +46,7 @@ public class SingletonUsers {
     {
         User updatedUser = users.set(users.indexOf(oldUser), newUser);
 
-        if (users.contains(updatedUser))
-            return true;
-        else
-            return false;
+        return users.contains(updatedUser);
     }
 
     public User searchUserID(Integer id)

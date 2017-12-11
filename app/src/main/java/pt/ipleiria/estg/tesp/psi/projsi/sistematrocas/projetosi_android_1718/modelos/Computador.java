@@ -5,6 +5,7 @@ package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.mo
  */
 
 public class Computador extends Eletronica {
+
     private String processador;
     private String ram;
     private String hdd;
@@ -12,7 +13,9 @@ public class Computador extends Eletronica {
     private String os;
     private Integer portatil;
 
-    public Computador(Integer id, String nome, String descricao, String marca, String processador, String ram, String hdd, String gpu, String os, Integer portatil) {
+    public Computador(Long id, String nome, String descricao, String marca, String processador,
+                      String ram, String hdd, String gpu, String os, Integer portatil) {
+
         super(id, nome, descricao, marca);
         this.processador = processador;
         this.ram = ram;

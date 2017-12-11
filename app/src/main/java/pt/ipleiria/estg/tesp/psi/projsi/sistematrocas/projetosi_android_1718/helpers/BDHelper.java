@@ -8,8 +8,8 @@ import java.util.ArrayList;
 
 /**
  * Created by JAPorelo on 06-12-2017.
+ * Project ProjetoSI_Android_1718 - pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.helpers
  */
-
 
 /**
  * Cria a base de dados SQLite, caso não estiver criada.
@@ -31,10 +31,23 @@ abstract class BDHelper<T> extends SQLiteOpenHelper {
     }
 
     /**
-     * Método de seleção de dados (SELECT).
+     * Métodos de seleção de dados (SELECT).
      * @return Lista de objetos do tipo T.
      */
     public abstract ArrayList<T> select();
+
+    /**
+     * @param whereClause Query WHERE para filtragem de dados.
+     * @param whereArgs Argumentos a passar em parâmetro.
+     * @return Lista de objetos do tipo T, correspondentes aos dados de filtro passados.
+     */
+    public abstract ArrayList<T> select(String whereClause, String[] whereArgs);
+
+    /**
+     * @param id ID do Objeto.
+     * @return Objeto do tipo T.
+     */
+    public abstract T selectByID(Long id);
 
     /**
      * Método de inserção de um objeto numa tabela (INSERT).

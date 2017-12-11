@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 /**
  * Created by JAPorelo on 07-12-2017.
+ * Project ProjetoSI_Android_1718 - pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.helpers
  */
 
 public class LivroBDTable extends BDHelper {
@@ -17,7 +18,7 @@ public class LivroBDTable extends BDHelper {
     private static final String AUTOR_CAT_LIVROS = "autor";
     private static final String ISBN_CAT_LIVROS = "isbn";
 
-    LivroBDTable(Context context) {
+    public LivroBDTable(Context context) {
         super(context);
     }
 

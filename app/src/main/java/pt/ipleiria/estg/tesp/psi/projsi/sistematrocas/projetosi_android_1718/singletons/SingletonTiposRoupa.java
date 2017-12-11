@@ -46,10 +46,7 @@ public class SingletonTiposRoupa {
     {
         TipoRoupa updatedTipo = tiposRoupa.set(tiposRoupa.indexOf(oldTipo), newTipo);
 
-        if (tiposRoupa.contains(updatedTipo))
-            return true;
-        else
-            return false;
+        return tiposRoupa.contains(updatedTipo);
     }
 
     public TipoRoupa searchTipoRoupaID(Integer id)

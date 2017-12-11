@@ -14,7 +14,7 @@ public class EletronicaBDTable extends BDHelper {
     private static final String MARCA_CAT_ELETRONICA = "marca";
     private static final String DESCRICAO_CAT_ELETRONICA = "descricao";
 
-    EletronicaBDTable(Context context) {
+    public EletronicaBDTable(Context context) {
         super(context);
     }
 

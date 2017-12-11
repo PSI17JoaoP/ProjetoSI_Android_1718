@@ -8,7 +8,7 @@ public class Eletronica extends Categoria {
     private String descricao;
     private String marca;
 
-    public Eletronica(Integer id, String nome, String descricao, String marca) {
+    public Eletronica(Long id, String nome, String descricao, String marca) {
         super(id, nome);
         this.descricao = descricao;
         this.marca = marca;

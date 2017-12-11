@@ -5,11 +5,13 @@ package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.mo
  */
 
 public class Brinquedo extends Categoria {
+
     private String editora;
     private Integer faixaEtaria;
     private String descricao;
 
-    public Brinquedo(Integer id, String nome, String editora, Integer faixaEtaria, String descricao) {
+    public Brinquedo(Long id, String nome, String editora, Integer faixaEtaria, String descricao) {
+
         super(id, nome);
         this.editora = editora;
         this.faixaEtaria = faixaEtaria;

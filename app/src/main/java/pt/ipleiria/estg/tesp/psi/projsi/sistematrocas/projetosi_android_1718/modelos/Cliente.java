@@ -5,14 +5,16 @@ package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.mo
  */
 
 public class Cliente {
-    private Integer idUser;
+
+    private Long idUser;
     private String nomeCompleto;
     private String dataNasc;
     private Integer telefone;
     private String regiao;
-    private Integer pin;
+    private String pin;
 
-    public Cliente(Integer idUser, String nomeCompleto, String dataNasc, Integer telefone, String regiao, Integer pin) {
+    public Cliente(Long idUser, String nomeCompleto, String dataNasc, Integer telefone, String regiao, String pin) {
+
         this.idUser = idUser;
         this.nomeCompleto = nomeCompleto;
         this.dataNasc = dataNasc;
@@ -21,11 +23,11 @@ public class Cliente {
         this.pin = pin;
     }
 
-    public Integer getIdUser() {
+    public Long getIdUser() {
         return idUser;
     }
 
-    public void setIdUser(Integer idUser) {
+    public void setIdUser(Long idUser) {
         this.idUser = idUser;
     }
 
@@ -61,11 +63,11 @@ public class Cliente {
         this.regiao = regiao;
     }
 
-    public Integer getPin() {
+    public String getPin() {
         return pin;
     }
 
-    public void setPin(Integer pin) {
+    public void setPin(String pin) {
         this.pin = pin;
     }
 }

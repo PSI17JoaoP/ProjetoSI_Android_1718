@@ -32,15 +32,15 @@ public class SingletonAnuncios {
     private void gerarFakeData(){
         String data = "05/11/2017";
 
-        Anuncio fAnuncio1 = new Anuncio(1, "Anuncio1", 1, 1, 1,
+        Anuncio fAnuncio1 = new Anuncio(Long.valueOf("1"), "Anuncio1", 1, 1, 1,
                 2, 1, "ativo", data , "");
-        Anuncio fAnuncio2 = new Anuncio(2, "Anuncio2", 1, 1, 1,
+        Anuncio fAnuncio2 = new Anuncio(Long.valueOf("2"), "Anuncio2", 1, 1, 1,
                 2, 1, "ativo", data , "");
-        Anuncio fAnuncio3 = new Anuncio(3, "Anuncio3", 1, 1, 1,
+        Anuncio fAnuncio3 = new Anuncio(Long.valueOf("3"), "Anuncio3", 1, 1, 1,
                 2, 1, "ativo", data , "");
-        Anuncio fAnuncio4 = new Anuncio(4, "Anuncio4", 1, 1, 1,
+        Anuncio fAnuncio4 = new Anuncio(Long.valueOf("4"), "Anuncio4", 1, 1, 1,
                 2, 1, "ativo", data , "");
-        Anuncio fAnuncio5 = new Anuncio(5, "Anuncio5", 1, 1, 1,
+        Anuncio fAnuncio5 = new Anuncio(Long.valueOf("5"), "Anuncio5", 1, 1, 1,
                 2, 1, "ativo", data , "");
 
         this.anuncios.add(fAnuncio1);
@@ -71,12 +71,9 @@ public class SingletonAnuncios {
 
     public boolean editarAnuncio(Anuncio anuncio)
     {
-        Anuncio novoAnuncio = anuncios.set(anuncio.getId(), anuncio);
+        Anuncio novoAnuncio = anuncios.set(anuncio.getId().intValue(), anuncio);
 
-        if (anuncios.contains(novoAnuncio))
-            return true;
-        else
-            return false;
+        return anuncios.contains(novoAnuncio);
     }
 
     public Anuncio pesquisarAnuncioID(Integer id)

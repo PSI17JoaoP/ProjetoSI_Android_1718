@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 /**
  * Created by JAPorelo on 08-12-2017.
+ * Project ProjetoSI_Android_1718 - pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.helpers
  */
 
 public class JogoBDTable extends BDHelper {
