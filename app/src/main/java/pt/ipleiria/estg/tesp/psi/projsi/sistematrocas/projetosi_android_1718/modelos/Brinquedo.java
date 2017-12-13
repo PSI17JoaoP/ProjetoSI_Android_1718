@@ -10,9 +10,9 @@ public class Brinquedo extends Categoria {
     private Integer faixaEtaria;
     private String descricao;
 
-    public Brinquedo(Long id, String nome, String editora, Integer faixaEtaria, String descricao) {
+    public Brinquedo(String nome, String editora, Integer faixaEtaria, String descricao) {
 
-        super(id, nome);
+        super(nome);
         this.editora = editora;
         this.faixaEtaria = faixaEtaria;
         this.descricao = descricao;

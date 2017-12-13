@@ -20,6 +20,8 @@ import java.util.ArrayList;
  */
 abstract class BDHelper<T> extends SQLiteOpenHelper {
 
+    public Context context;
+
     private static final String BD_NAME = "SisTrocasBD";
     private static int BD_VERSION = 1;
 
@@ -28,6 +30,7 @@ abstract class BDHelper<T> extends SQLiteOpenHelper {
     BDHelper(Context context) {
         super(context, BD_NAME, null, BD_VERSION);
         this.database = this.getWritableDatabase();
+        this.context = context;
     }
 
     /**

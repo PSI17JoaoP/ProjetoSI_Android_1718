@@ -3,12 +3,14 @@ package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.he
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Computador;
+
 /**
  * Created by JAPorelo on 08-12-2017.
  * Project ProjetoSI_Android_1718 - pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.helpers
  */
 
-public class ComputadorBDTable extends BDHelper {
+public class ComputadorBDTable extends BDHelper<Computador> {
 
     private static final String TABLE_NAME = "cat_computador";
 

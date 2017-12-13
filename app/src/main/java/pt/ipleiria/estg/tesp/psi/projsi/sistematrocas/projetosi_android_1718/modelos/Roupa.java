@@ -10,9 +10,9 @@ public class Roupa extends Categoria {
     private String tamanho;
     private Long idTipo;
 
-    public Roupa(Long id, String nome, String marca, String tamanho, Long idTipo) {
+    public Roupa(String nome, String marca, String tamanho, Long idTipo) {
 
-        super(id, nome);
+        super(nome);
         this.marca = marca;
         this.tamanho = tamanho;
         this.idTipo = idTipo;

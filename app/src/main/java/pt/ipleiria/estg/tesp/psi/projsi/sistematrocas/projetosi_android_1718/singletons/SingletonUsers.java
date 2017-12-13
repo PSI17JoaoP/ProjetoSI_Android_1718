@@ -49,8 +49,8 @@ public class SingletonUsers {
         return users.contains(updatedUser);
     }
 
-    public User searchUserID(Integer id)
+    public User searchUserID(Long id)
     {
-        return users.get(id);
+        return users.get(id.intValue());
     }
 }

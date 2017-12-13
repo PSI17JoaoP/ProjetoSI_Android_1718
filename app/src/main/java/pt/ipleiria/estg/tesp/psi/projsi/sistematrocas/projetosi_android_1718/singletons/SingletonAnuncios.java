@@ -32,16 +32,22 @@ public class SingletonAnuncios {
     private void gerarFakeData(){
         String data = "05/11/2017";
 
-        Anuncio fAnuncio1 = new Anuncio(Long.valueOf("1"), "Anuncio1", 1, 1, 1,
-                2, 1, "ativo", data , "");
-        Anuncio fAnuncio2 = new Anuncio(Long.valueOf("2"), "Anuncio2", 1, 1, 1,
-                2, 1, "ativo", data , "");
-        Anuncio fAnuncio3 = new Anuncio(Long.valueOf("3"), "Anuncio3", 1, 1, 1,
-                2, 1, "ativo", data , "");
-        Anuncio fAnuncio4 = new Anuncio(Long.valueOf("4"), "Anuncio4", 1, 1, 1,
-                2, 1, "ativo", data , "");
-        Anuncio fAnuncio5 = new Anuncio(Long.valueOf("5"), "Anuncio5", 1, 1, 1,
-                2, 1, "ativo", data , "");
+        Anuncio fAnuncio1 = new Anuncio("Anuncio1", 1L, 1L, 1,
+                2L, 1, "ativo", data , "");
+        Anuncio fAnuncio2 = new Anuncio("Anuncio2", 1L, 1L, 1,
+                2L, 1, "ativo", data , "");
+        Anuncio fAnuncio3 = new Anuncio("Anuncio3", 1L, 1L, 1,
+                2L, 1, "ativo", data , "");
+        Anuncio fAnuncio4 = new Anuncio("Anuncio4", 1L, 1L, 1,
+                2L, 1, "ativo", data , "");
+        Anuncio fAnuncio5 = new Anuncio("Anuncio5", 1L, 1L, 1,
+                2L, 1, "ativo", data , "");
+
+        fAnuncio1.setId(Long.valueOf("1"));
+        fAnuncio2.setId(Long.valueOf("2"));
+        fAnuncio3.setId(Long.valueOf("3"));
+        fAnuncio4.setId(Long.valueOf("4"));
+        fAnuncio5.setId(Long.valueOf("5"));
 
         this.anuncios.add(fAnuncio1);
         this.anuncios.add(fAnuncio2);
@@ -76,8 +82,8 @@ public class SingletonAnuncios {
         return anuncios.contains(novoAnuncio);
     }
 
-    public Anuncio pesquisarAnuncioID(Integer id)
+    public Anuncio pesquisarAnuncioID(Long id)
     {
-        return anuncios.get(id);
+        return anuncios.get(id.intValue());
     }
 }

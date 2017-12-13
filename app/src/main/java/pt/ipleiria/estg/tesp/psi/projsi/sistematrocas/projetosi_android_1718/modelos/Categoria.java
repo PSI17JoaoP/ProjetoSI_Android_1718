@@ -8,8 +8,7 @@ public class Categoria {
     private Long id;
     private String nome;
 
-    public Categoria(Long id, String nome) {
-        this.id = id;
+    public Categoria(String nome) {
         this.nome = nome;
     }
 

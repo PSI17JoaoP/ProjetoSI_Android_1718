@@ -9,9 +9,9 @@ public class Jogo extends Brinquedo {
     private Long idGenero;
     private String produtora;
 
-    public Jogo(Long id, String nome, String editora, Integer faixaEtaria, String descricao, Long idGenero, String produtora) {
+    public Jogo(String nome, String editora, Integer faixaEtaria, String descricao, Long idGenero, String produtora) {
 
-        super(id, nome, editora, faixaEtaria, descricao);
+        super(nome, editora, faixaEtaria, descricao);
         this.idGenero = idGenero;
         this.produtora = produtora;
     }

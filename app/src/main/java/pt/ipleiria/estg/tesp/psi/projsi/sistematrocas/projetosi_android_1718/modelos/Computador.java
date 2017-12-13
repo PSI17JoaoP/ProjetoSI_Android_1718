@@ -13,10 +13,10 @@ public class Computador extends Eletronica {
     private String os;
     private Integer portatil;
 
-    public Computador(Long id, String nome, String descricao, String marca, String processador,
+    public Computador(String nome, String descricao, String marca, String processador,
                       String ram, String hdd, String gpu, String os, Integer portatil) {
 
-        super(id, nome, descricao, marca);
+        super(nome, descricao, marca);
         this.processador = processador;
         this.ram = ram;
         this.hdd = hdd;

@@ -59,7 +59,9 @@ public class UserBDTable extends BDHelper<User> {
 
             do
             {
-                User user = new User(cursor.getLong(0), cursor.getString(1), cursor.getString(2),cursor.getString(3), cursor.getInt(4));
+                User user = new User(cursor.getString(1), cursor.getString(2),cursor.getString(3), cursor.getInt(4));
+                user.setId(cursor.getLong(0));
+
                 users.add(user);
             }
             while (cursor.moveToNext());
@@ -83,7 +85,9 @@ public class UserBDTable extends BDHelper<User> {
 
             do
             {
-                User user = new User(cursor.getLong(0), cursor.getString(1), cursor.getString(2),cursor.getString(3), cursor.getInt(4));
+                User user = new User(cursor.getString(1), cursor.getString(2),cursor.getString(3), cursor.getInt(4));
+                user.setId(cursor.getLong(0));
+
                 users.add(user);
             }
             while (cursor.moveToNext());
@@ -103,7 +107,8 @@ public class UserBDTable extends BDHelper<User> {
 
         if(cursor.moveToFirst()) {
 
-            User user = new User(cursor.getLong(0), cursor.getString(1), cursor.getString(2),cursor.getString(3), cursor.getInt(4));
+            User user = new User(cursor.getString(1), cursor.getString(2),cursor.getString(3), cursor.getInt(4));
+            user.setId(cursor.getLong(0));
 
             cursor.close();
 
@@ -117,6 +122,7 @@ public class UserBDTable extends BDHelper<User> {
 
     @Override
     public User insert(User user) {
+
         ContentValues values = new ContentValues();
 
         values.put(USERNAME_USER, user.getUsername());
@@ -136,6 +142,7 @@ public class UserBDTable extends BDHelper<User> {
 
     @Override
     public boolean update(User user) {
+
         ContentValues values = new ContentValues();
 
         values.put(USERNAME_USER, user.getUsername());

@@ -49,8 +49,8 @@ public class SingletonClientes {
         return clientes.contains(updatedCliente);
     }
 
-    public Cliente searchClientesID(Integer id)
+    public Cliente searchClientesID(Long id)
     {
-        return clientes.get(id);
+        return clientes.get(id.intValue());
     }
 }

@@ -49,8 +49,8 @@ public class SingletonTiposRoupa {
         return tiposRoupa.contains(updatedTipo);
     }
 
-    public TipoRoupa searchTipoRoupaID(Integer id)
+    public TipoRoupa searchTipoRoupaID(Long id)
     {
-        return tiposRoupa.get(id);
+        return tiposRoupa.get(id.intValue());
     }
 }

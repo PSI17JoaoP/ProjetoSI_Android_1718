@@ -53,7 +53,9 @@ public class CategoriaBDTable extends BDHelper<Categoria> {
 
             do
             {
-                Categoria categoria = new Categoria(cursor.getLong(0), cursor.getString(1));
+                Categoria categoria = new Categoria(cursor.getString(1));
+                categoria.setId(cursor.getLong(0));
+
                 categorias.add(categoria);
             }
             while (cursor.moveToNext());
@@ -77,7 +79,9 @@ public class CategoriaBDTable extends BDHelper<Categoria> {
 
             do
             {
-                Categoria categoria = new Categoria(cursor.getLong(0), cursor.getString(1));
+                Categoria categoria = new Categoria(cursor.getString(1));
+                categoria.setId(cursor.getLong(0));
+
                 categorias.add(categoria);
             }
             while (cursor.moveToNext());
@@ -97,7 +101,8 @@ public class CategoriaBDTable extends BDHelper<Categoria> {
 
         if(cursor.moveToFirst()) {
 
-            Categoria categoria = new Categoria(cursor.getLong(0), cursor.getString(1));
+            Categoria categoria = new Categoria(cursor.getString(1));
+            categoria.setId(cursor.getLong(0));
 
             cursor.close();
 
@@ -111,6 +116,7 @@ public class CategoriaBDTable extends BDHelper<Categoria> {
 
     @Override
     public Categoria insert(Categoria categoria) {
+
         ContentValues values = new ContentValues();
 
         values.put(NOME_CATEGORIA, categoria.getNome());

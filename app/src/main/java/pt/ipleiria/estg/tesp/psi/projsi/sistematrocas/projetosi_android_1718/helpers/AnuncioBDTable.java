@@ -77,12 +77,11 @@ public class AnuncioBDTable extends BDHelper<Anuncio> {
 
             do
             {
-                Anuncio anuncio = null;
+                Anuncio anuncio;
 
                 if(cursor.getString(10) != null) {
 
                     anuncio = new Anuncio(
-                            cursor.getLong(0),
                             cursor.getString(1),
                             cursor.getLong(2),
                             cursor.getLong(3),
@@ -97,7 +96,6 @@ public class AnuncioBDTable extends BDHelper<Anuncio> {
                 } else {
 
                     anuncio = new Anuncio(
-                            cursor.getLong(0),
                             cursor.getString(1),
                             cursor.getLong(2),
                             cursor.getLong(3),
@@ -109,6 +107,8 @@ public class AnuncioBDTable extends BDHelper<Anuncio> {
                             cursor.getString(9)
                     );
                 }
+
+                anuncio.setId(cursor.getLong(0));
 
                 anuncios.add(anuncio);
             }
@@ -133,12 +133,11 @@ public class AnuncioBDTable extends BDHelper<Anuncio> {
 
             do
             {
-                Anuncio anuncio = null;
+                Anuncio anuncio;
 
                 if(cursor.getString(10) != null) {
 
                     anuncio = new Anuncio(
-                            cursor.getLong(0),
                             cursor.getString(1),
                             cursor.getLong(2),
                             cursor.getLong(3),
@@ -153,7 +152,6 @@ public class AnuncioBDTable extends BDHelper<Anuncio> {
                 } else {
 
                     anuncio = new Anuncio(
-                            cursor.getLong(0),
                             cursor.getString(1),
                             cursor.getLong(2),
                             cursor.getLong(3),
@@ -165,6 +163,8 @@ public class AnuncioBDTable extends BDHelper<Anuncio> {
                             cursor.getString(9)
                     );
                 }
+
+                anuncio.setId(cursor.getLong(0));
 
                 anuncios.add(anuncio);
             }
@@ -185,12 +185,11 @@ public class AnuncioBDTable extends BDHelper<Anuncio> {
 
         if(cursor.moveToFirst()) {
 
-            Anuncio anuncio = null;
+            Anuncio anuncio;
 
             if(cursor.getString(10) != null) {
 
                 anuncio = new Anuncio(
-                        cursor.getLong(0),
                         cursor.getString(1),
                         cursor.getLong(2),
                         cursor.getLong(3),
@@ -205,7 +204,6 @@ public class AnuncioBDTable extends BDHelper<Anuncio> {
             } else {
 
                 anuncio = new Anuncio(
-                        cursor.getLong(0),
                         cursor.getString(1),
                         cursor.getLong(2),
                         cursor.getLong(3),
@@ -217,6 +215,8 @@ public class AnuncioBDTable extends BDHelper<Anuncio> {
                         cursor.getString(9)
                 );
             }
+
+            anuncio.setId(cursor.getLong(0));
 
             cursor.close();
 
@@ -230,6 +230,7 @@ public class AnuncioBDTable extends BDHelper<Anuncio> {
 
     @Override
     public Anuncio insert(Anuncio anuncio) {
+
         ContentValues values = new ContentValues();
 
         values.put(TITULO_ANUNCIO, anuncio.getTitulo());

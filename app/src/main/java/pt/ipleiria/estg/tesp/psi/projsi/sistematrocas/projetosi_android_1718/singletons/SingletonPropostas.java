@@ -33,14 +33,23 @@ public class SingletonPropostas {
     private void gerarFakeData(){
         String data = "05/11/2017";
 
-        Proposta fProposta1 = new Proposta(Long.valueOf("1"), Long.valueOf("1"), 2, Long.valueOf("1"), Long.valueOf("1"), "ativo", data);
-        Proposta fProposta2 = new Proposta(Long.valueOf("2"), Long.valueOf("1"), 2, Long.valueOf("1"), Long.valueOf("1"), "ativo", data);
-        Proposta fProposta3 = new Proposta(Long.valueOf("3"), Long.valueOf("1"), 2, Long.valueOf("1"), Long.valueOf("1"), "ativo", data);
-        Proposta fProposta4 = new Proposta(Long.valueOf("4"), Long.valueOf("1"), 2, Long.valueOf("1"), Long.valueOf("1"), "ativo", data);
-        Proposta fProposta5 = new Proposta(Long.valueOf("5"), Long.valueOf("1"), 2, Long.valueOf("1"), Long.valueOf("1"), "ativo", data);
-        Proposta fProposta6 = new Proposta(Long.valueOf("6"), Long.valueOf("1"), 2, Long.valueOf("1"), Long.valueOf("1"), "ativo", data);
-        Proposta fProposta7 = new Proposta(Long.valueOf("7"), Long.valueOf("1"), 2, Long.valueOf("1"), Long.valueOf("1"), "ativo", data);
-        Proposta fProposta8 = new Proposta(Long.valueOf("8"), Long.valueOf("1"), 2, Long.valueOf("1"), Long.valueOf("1"), "ativo", data);
+        Proposta fProposta1 = new Proposta(Long.valueOf("1"), 2, Long.valueOf("1"), Long.valueOf("1"), "ativo", data);
+        Proposta fProposta2 = new Proposta(Long.valueOf("1"), 2, Long.valueOf("1"), Long.valueOf("1"), "ativo", data);
+        Proposta fProposta3 = new Proposta(Long.valueOf("1"), 2, Long.valueOf("1"), Long.valueOf("1"), "ativo", data);
+        Proposta fProposta4 = new Proposta(Long.valueOf("1"), 2, Long.valueOf("1"), Long.valueOf("1"), "ativo", data);
+        Proposta fProposta5 = new Proposta(Long.valueOf("1"), 2, Long.valueOf("1"), Long.valueOf("1"), "ativo", data);
+        Proposta fProposta6 = new Proposta(Long.valueOf("1"), 2, Long.valueOf("1"), Long.valueOf("1"), "ativo", data);
+        Proposta fProposta7 = new Proposta(Long.valueOf("1"), 2, Long.valueOf("1"), Long.valueOf("1"), "ativo", data);
+        Proposta fProposta8 = new Proposta(Long.valueOf("1"), 2, Long.valueOf("1"), Long.valueOf("1"), "ativo", data);
+
+        fProposta1.setId(Long.valueOf("1"));
+        fProposta2.setId(Long.valueOf("2"));
+        fProposta3.setId(Long.valueOf("3"));
+        fProposta4.setId(Long.valueOf("4"));
+        fProposta5.setId(Long.valueOf("5"));
+        fProposta6.setId(Long.valueOf("6"));
+        fProposta7.setId(Long.valueOf("7"));
+        fProposta8.setId(Long.valueOf("8"));
 
         this.propostas.add(fProposta1);
         this.propostas.add(fProposta2);
@@ -77,8 +86,8 @@ public class SingletonPropostas {
         return propostas.contains(novaProposta);
     }
 
-    public Proposta pesquisarPropostaID(Integer id)
+    public Proposta pesquisarPropostaID(Long id)
     {
-        return propostas.get(id);
+        return propostas.get(id.intValue());
     }
 }

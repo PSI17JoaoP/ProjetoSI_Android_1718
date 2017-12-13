@@ -3,12 +3,14 @@ package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.he
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Jogo;
+
 /**
  * Created by JAPorelo on 08-12-2017.
  * Project ProjetoSI_Android_1718 - pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.helpers
  */
 
-public class JogoBDTable extends BDHelper {
+public class JogoBDTable extends BDHelper<Jogo> {
 
     private static final String TABLE_NAME = "cat_jogo";
 

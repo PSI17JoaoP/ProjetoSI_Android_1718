@@ -50,8 +50,8 @@ public class SingletonGenerosJogo {
         return generoJogos.contains(updatedGenero);
     }
 
-    public GeneroJogo searchGeneroJogosID(Integer id)
+    public GeneroJogo searchGeneroJogosID(Long id)
     {
-        return generoJogos.get(id);
+        return generoJogos.get(id.intValue());
     }
 }

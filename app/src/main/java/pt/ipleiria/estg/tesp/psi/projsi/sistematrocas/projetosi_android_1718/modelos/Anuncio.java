@@ -18,10 +18,9 @@ public class Anuncio {
     private String dataConclusao;
     private String comentarios;
 
-    public Anuncio(Long id, String titulo, Long idUser, Long idCatOferecer, Integer quantOferecer,
+    public Anuncio(String titulo, Long idUser, Long idCatOferecer, Integer quantOferecer,
                    Long idCatReceber, Integer quantReceber, String estado, String dataCriacao, String comentarios) {
 
-        this.id = id;
         this.titulo = titulo;
         this.idUser = idUser;
         this.idCatOferecer = idCatOferecer;
@@ -34,11 +33,10 @@ public class Anuncio {
         this.comentarios = comentarios;
     }
 
-    public Anuncio(Long id, String titulo, Long idUser, Long idCatOferecer,
+    public Anuncio(String titulo, Long idUser, Long idCatOferecer,
                    Integer quantOferecer, Long idCatReceber, Integer quantReceber,
                    String estado, String dataCriacao, String dataConclusao, String comentarios) {
 
-        this.id = id;
         this.titulo = titulo;
         this.idUser = idUser;
         this.idCatOferecer = idCatOferecer;

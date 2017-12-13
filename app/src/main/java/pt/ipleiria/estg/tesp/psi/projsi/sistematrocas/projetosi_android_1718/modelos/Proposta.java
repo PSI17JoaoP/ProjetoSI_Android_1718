@@ -14,10 +14,9 @@ public class Proposta {
     private String estado;
     private String dataProposta;
 
-    public Proposta(Long id, Long catProposta, Integer quant, Long idUser,
+    public Proposta(Long catProposta, Integer quant, Long idUser,
                     Long idAnuncio, String estado, String dataProposta) {
 
-        this.id = id;
         this.catProposta = catProposta;
         this.quant = quant;
         this.idUser = idUser;

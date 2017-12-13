@@ -15,9 +15,8 @@ public class User {
     private Integer status;
     private List<CategoriaPreferida> categoriasPreferidas;
 
-    public User(Long id, String username, String password_hash, String email, Integer status) {
+    public User(String username, String password_hash, String email, Integer status) {
 
-        this.id = id;
         this.username = username;
         this.password_hash = password_hash;
         this.email = email;

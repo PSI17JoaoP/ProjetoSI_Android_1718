@@ -11,9 +11,9 @@ public class Livro extends Categoria {
     private String autor;
     private Integer isbn;
 
-    public Livro(Long id, String nome, String titulo, String editora, String autor, Integer isbn) {
+    public Livro(String nome, String titulo, String editora, String autor, Integer isbn) {
 
-        super(id, nome);
+        super(nome);
         this.titulo = titulo;
         this.editora = editora;
         this.autor = autor;

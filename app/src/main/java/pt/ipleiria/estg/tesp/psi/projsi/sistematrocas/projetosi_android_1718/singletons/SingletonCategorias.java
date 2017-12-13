@@ -49,9 +49,9 @@ public class SingletonCategorias {
         return categorias.contains(updatedCategoria);
     }
 
-    public Categoria searchCategoriaID(Integer id)
+    public Categoria searchCategoriaID(Long id)
     {
-        return categorias.get(id);
+        return categorias.get(id.intValue());
     }
 
 }
