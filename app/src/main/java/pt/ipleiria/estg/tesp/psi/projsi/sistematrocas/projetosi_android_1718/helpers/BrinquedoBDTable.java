@@ -186,6 +186,7 @@ public class BrinquedoBDTable extends BDHelper<Brinquedo> {
         CategoriaBDTable categoriaBDTable = new CategoriaBDTable(super.context);
 
         Categoria categoriaBrinquedo = new Categoria(brinquedo.getNome());
+        categoriaBrinquedo.setId(brinquedo.getId());
 
         if(categoriaBDTable.update(categoriaBrinquedo)) {
 

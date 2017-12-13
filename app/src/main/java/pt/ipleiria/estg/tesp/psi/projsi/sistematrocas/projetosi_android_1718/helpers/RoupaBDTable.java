@@ -189,6 +189,7 @@ public class RoupaBDTable extends BDHelper<Roupa> {
         CategoriaBDTable categoriaBDTable = new CategoriaBDTable(super.context);
 
         Categoria categoriaRoupa = new Categoria(roupa.getNome());
+        categoriaRoupa.setId(roupa.getId());
 
         if(categoriaBDTable.update(categoriaRoupa)) {
 

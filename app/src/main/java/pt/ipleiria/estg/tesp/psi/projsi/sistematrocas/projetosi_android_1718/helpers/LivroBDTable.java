@@ -193,6 +193,7 @@ public class LivroBDTable extends BDHelper<Livro> {
         CategoriaBDTable categoriaBDTable = new CategoriaBDTable(super.context);
 
         Categoria categoriaLivro = new Categoria(livro.getNome());
+        categoriaLivro.setId(livro.getId());
 
         if (categoriaBDTable.update(categoriaLivro)) {
 

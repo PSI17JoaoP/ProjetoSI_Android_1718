@@ -180,6 +180,7 @@ public class EletronicaBDTable extends BDHelper<Eletronica> {
         CategoriaBDTable categoriaBDTable = new CategoriaBDTable(super.context);
 
         Categoria categoriaEletronica = new Categoria(eletronica.getNome());
+        categoriaEletronica.setId(eletronica.getId());
 
         if(categoriaBDTable.update(categoriaEletronica)) {
 

@@ -256,6 +256,7 @@ public class AnuncioBDTable extends BDHelper<Anuncio> {
 
     @Override
     public boolean update(Anuncio anuncio) {
+
         ContentValues values = new ContentValues();
 
         values.put(TITULO_ANUNCIO, anuncio.getTitulo());
