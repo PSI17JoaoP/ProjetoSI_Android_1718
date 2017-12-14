@@ -1,6 +1,5 @@
 package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -8,21 +7,28 @@ import java.util.List;
  */
 
 public class User {
+
+    private Long id;
     private String username;
     private String password_hash;
     private String email;
-    private Integer telefone;
     private Integer status;
-    private List<Categoria> categoriasPreferidas;
+    private List<CategoriaPreferida> categoriasPreferidas;
 
-    public User(String username, String password_hash, String email, Integer telefone, Integer status) {
+    public User(String username, String password_hash, String email, Integer status) {
+
         this.username = username;
         this.password_hash = password_hash;
         this.email = email;
-        this.telefone = telefone;
         this.status = status;
+    }
 
-        categoriasPreferidas = new ArrayList<>();
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -33,11 +39,11 @@ public class User {
         this.username = username;
     }
 
-    public String getPassword_hash() {
+    public String getPasswordHash() {
         return password_hash;
     }
 
-    public void setPassword_hash(String password_hash) {
+    public void setPasswordHash(String password_hash) {
         this.password_hash = password_hash;
     }
 
@@ -49,14 +55,6 @@ public class User {
         this.email = email;
     }
 
-    public Integer getTelefone() {
-        return telefone;
-    }
-
-    public void setTelefone(Integer telefone) {
-        this.telefone = telefone;
-    }
-
     public Integer getStatus() {
         return status;
     }
@@ -65,20 +63,20 @@ public class User {
         this.status = status;
     }
 
-    public List<Categoria> getCategoriasPreferidas() {
+    public List<CategoriaPreferida> getCategoriasPreferidas() {
         return categoriasPreferidas;
     }
 
-    public void setCategoriasPreferidas(List<Categoria> categoriasPreferidas) {
+    public void setCategoriasPreferidas(List<CategoriaPreferida> categoriasPreferidas) {
         this.categoriasPreferidas = categoriasPreferidas;
     }
 
-    public boolean addCategoriaPrerefida(Categoria categoria)
+    public boolean addCategoriaPrerefida(CategoriaPreferida categoria)
     {
         return categoriasPreferidas.add(categoria);
     }
 
-    public boolean removeCategoriaPreferida(Categoria categoria)
+    public boolean removeCategoriaPreferida(CategoriaPreferida categoria)
     {
         return categoriasPreferidas.remove(categoria);
     }

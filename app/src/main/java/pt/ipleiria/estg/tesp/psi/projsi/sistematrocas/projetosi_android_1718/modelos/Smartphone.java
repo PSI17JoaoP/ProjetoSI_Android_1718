@@ -5,14 +5,16 @@ package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.mo
  */
 
 public class Smartphone extends Eletronica {
+
     private String processador;
     private String ram;
     private String hdd;
     private String os;
     private String tamanho;
 
-    public Smartphone(Integer id, String nome, String descricao, String marca, String processador, String ram, String hdd, String os, String tamanho) {
-        super(id, nome, descricao, marca);
+    public Smartphone(String nome, String descricao, String marca, String processador, String ram, String hdd, String os, String tamanho) {
+
+        super(nome, descricao, marca);
         this.processador = processador;
         this.ram = ram;
         this.hdd = hdd;

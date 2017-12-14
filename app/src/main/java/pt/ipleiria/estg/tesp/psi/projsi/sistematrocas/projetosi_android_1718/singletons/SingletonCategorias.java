@@ -1,8 +1,11 @@
 package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.helpers.CategoriaBDTable;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Categoria;
 
 /**
@@ -11,50 +14,56 @@ import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.mod
 
 public class SingletonCategorias {
     private static SingletonCategorias INSTANCE = null;
-    private List<Categoria> categorias;
+    private ArrayList<Categoria> categorias;
+    private CategoriaBDTable bdTable;
 
-    public static SingletonCategorias getInstance() {
+    public static SingletonCategorias getInstance(Context context) {
         if (INSTANCE == null)
-            INSTANCE = new SingletonCategorias();
+            INSTANCE = new SingletonCategorias(context);
 
         return INSTANCE;
     }
 
-    private SingletonCategorias() {
+    private SingletonCategorias(Context context) {
         categorias = new ArrayList<>();
+        bdTable = new CategoriaBDTable(context);
+        categorias = bdTable.select();
     }
 
-    public List<Categoria> getCategorias() {
+    public ArrayList<Categoria> getCategorias() {
         return categorias;
     }
 
-    public void setCategorias(List<Categoria> categorias) {
+    public void setCategorias(ArrayList<Categoria> categorias) {
         this.categorias = categorias;
     }
 
-    public boolean addCategoria(Categoria categoria)
+    public boolean adicionarCategoria(Categoria categoria)
     {
-        return categorias.add(categoria);
+        Categoria categoriaInserida = bdTable.insert(categoria);
+
+        return categoriaInserida != null && categorias.add(categoriaInserida);
     }
 
-    public boolean removeCategoria(Categoria categoria)
+    public boolean removerCategoria(Categoria categoria)
     {
-        return categorias.remove(categoria);
+        return bdTable.delete(categoria.getId()) && categorias.remove(categoria);
     }
 
-    public boolean editCategoria(Categoria oldCategoria, Categoria newCategoria)
+    public boolean editarCategoria(Categoria categoria)
     {
-        Categoria updatedCategoria = categorias.set(categorias.indexOf(oldCategoria), newCategoria);
+        if(bdTable.update(categoria)) {
+            Categoria novaCategoria = categorias.set(categoria.getId().intValue(), categoria);
 
-        if (categorias.contains(updatedCategoria))
-            return true;
-        else
+            return categorias.contains(novaCategoria);
+        } else {
             return false;
+        }
     }
 
-    public Categoria searchCategoriaID(Integer id)
+    public Categoria pesquisarCategoriaID(Long id)
     {
-        return categorias.get(id);
+        return categorias.get(id.intValue());
     }
 
 }

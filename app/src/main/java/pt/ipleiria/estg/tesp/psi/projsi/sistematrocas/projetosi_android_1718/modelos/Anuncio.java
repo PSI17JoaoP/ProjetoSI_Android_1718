@@ -6,21 +6,21 @@ package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.mo
 
 public class Anuncio {
 
-    private Integer id;
+    private Long id;
     private String titulo;
-    private Integer idUser;
-    private Integer idCatOferecer;
+    private Long idUser;
+    private Long idCatOferecer;
     private Integer quantOferecer;
-    private Integer idCatReceber;
+    private Long idCatReceber;
     private Integer quantReceber;
     private String estado;
     private String dataCriacao;
     private String dataConclusao;
     private String comentarios;
 
-    public Anuncio(Integer id, String titulo, Integer idUser, Integer idCatOferecer, Integer quantOferecer,
-                   Integer idCatReceber, Integer quantReceber, String estado, String dataCriacao, String comentarios) {
-        this.id = id;
+    public Anuncio(String titulo, Long idUser, Long idCatOferecer, Integer quantOferecer,
+                   Long idCatReceber, Integer quantReceber, String estado, String dataCriacao, String comentarios) {
+
         this.titulo = titulo;
         this.idUser = idUser;
         this.idCatOferecer = idCatOferecer;
@@ -29,15 +29,31 @@ public class Anuncio {
         this.quantReceber = quantReceber;
         this.estado = estado;
         this.dataCriacao = dataCriacao;
-        this.dataConclusao = "";
+        this.dataConclusao = null;
         this.comentarios = comentarios;
     }
 
-    public Integer getId() {
+    public Anuncio(String titulo, Long idUser, Long idCatOferecer,
+                   Integer quantOferecer, Long idCatReceber, Integer quantReceber,
+                   String estado, String dataCriacao, String dataConclusao, String comentarios) {
+
+        this.titulo = titulo;
+        this.idUser = idUser;
+        this.idCatOferecer = idCatOferecer;
+        this.quantOferecer = quantOferecer;
+        this.idCatReceber = idCatReceber;
+        this.quantReceber = quantReceber;
+        this.estado = estado;
+        this.dataCriacao = dataCriacao;
+        this.dataConclusao = dataConclusao;
+        this.comentarios = comentarios;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -49,19 +65,19 @@ public class Anuncio {
         this.titulo = titulo;
     }
 
-    public Integer getIdUser() {
+    public Long getIdUser() {
         return idUser;
     }
 
-    public void setIdUser(Integer idUser) {
+    public void setIdUser(Long idUser) {
         this.idUser = idUser;
     }
 
-    public Integer getIdCatOferecer() {
+    public Long getIdCatOferecer() {
         return idCatOferecer;
     }
 
-    public void setIdCatOferecer(Integer idCatOferecer) {
+    public void setIdCatOferecer(Long idCatOferecer) {
         this.idCatOferecer = idCatOferecer;
     }
 
@@ -73,11 +89,11 @@ public class Anuncio {
         this.quantOferecer = quantOferecer;
     }
 
-    public Integer getIdCatReceber() {
+    public Long getIdCatReceber() {
         return idCatReceber;
     }
 
-    public void setIdCatReceber(Integer idCatReceber) {
+    public void setIdCatReceber(Long idCatReceber) {
         this.idCatReceber = idCatReceber;
     }
 

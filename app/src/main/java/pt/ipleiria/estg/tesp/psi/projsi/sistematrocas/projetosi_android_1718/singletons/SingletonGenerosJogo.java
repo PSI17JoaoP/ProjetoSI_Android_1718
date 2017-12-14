@@ -1,8 +1,11 @@
 package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.helpers.GeneroJogoBDTable;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.GeneroJogo;
 
 /**
@@ -11,50 +14,55 @@ import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.mod
 
 public class SingletonGenerosJogo {
     private static SingletonGenerosJogo INSTANCE = null;
-    private List<GeneroJogo> generoJogos;
+    private ArrayList<GeneroJogo> generosJogos;
+    private GeneroJogoBDTable bdTable;
 
-    public static SingletonGenerosJogo getInstance() {
+    public static SingletonGenerosJogo getInstance(Context context) {
         if (INSTANCE == null)
-            INSTANCE = new SingletonGenerosJogo();
+            INSTANCE = new SingletonGenerosJogo(context);
 
         return INSTANCE;
     }
 
-    private SingletonGenerosJogo() {
-        generoJogos = new ArrayList<>();
-
+    private SingletonGenerosJogo(Context context) {
+        generosJogos = new ArrayList<>();
+        bdTable = new GeneroJogoBDTable(context);
+        generosJogos = bdTable.select();
     }
 
-    public List<GeneroJogo> getGeneroJogos() {
-        return generoJogos;
+    public ArrayList<GeneroJogo> getGeneroJogos() {
+        return generosJogos;
     }
 
-    public void setGeneroJogos(List<GeneroJogo> generoJogos) {
-        this.generoJogos = generoJogos;
+    public void setGeneroJogos(ArrayList<GeneroJogo> generosJogos) {
+        this.generosJogos = generosJogos;
     }
 
-    public boolean addGenero(GeneroJogo genero)
+    public boolean adicionarGenero(GeneroJogo genero)
     {
-        return generoJogos.add(genero);
+        GeneroJogo generoInserido = bdTable.insert(genero);
+
+        return generoInserido != null && generosJogos.add(generoInserido);
     }
 
-    public boolean removeGenero(GeneroJogo genero)
+    public boolean removerGenero(GeneroJogo genero)
     {
-        return generoJogos.remove(genero);
+        return bdTable.delete(genero.getId()) && generosJogos.remove(genero);
     }
 
-    public boolean editGenero(GeneroJogo oldGenero, GeneroJogo newGenero)
+    public boolean editarGenero(GeneroJogo generoJogo)
     {
-        GeneroJogo updatedGenero = generoJogos.set(generoJogos.indexOf(oldGenero), newGenero);
+        if(bdTable.update(generoJogo)) {
+            GeneroJogo novoGenero = generosJogos.set(generoJogo.getId().intValue(), generoJogo);
 
-        if (generoJogos.contains(updatedGenero))
-            return true;
-        else
+            return generosJogos.contains(novoGenero);
+        } else {
             return false;
+        }
     }
 
-    public GeneroJogo searchGeneroJogosID(Integer id)
+    public GeneroJogo pesquisarGeneroJogosID(Long id)
     {
-        return generoJogos.get(id);
+        return generosJogos.get(id.intValue());
     }
 }

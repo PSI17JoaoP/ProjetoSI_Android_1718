@@ -1,8 +1,10 @@
 package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.content.Context;
 
+import java.util.ArrayList;
+
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.helpers.AnuncioBDTable;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Anuncio;
 
 /**
@@ -11,76 +13,88 @@ import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.mod
 
 public class SingletonAnuncios {
     private static SingletonAnuncios INSTANCE = null;
-    private List<Anuncio> anuncios;
+    private ArrayList<Anuncio> anuncios;
+    private AnuncioBDTable bdTable;
 
-    public static synchronized SingletonAnuncios getInstance() {
+    public static synchronized SingletonAnuncios getInstance(Context context) {
         if (INSTANCE == null)
-            INSTANCE = new SingletonAnuncios();
+            INSTANCE = new SingletonAnuncios(context);
 
         return INSTANCE;
     }
 
-    private SingletonAnuncios() {
+    private SingletonAnuncios(Context context) {
         anuncios = new ArrayList<>();
+        bdTable = new AnuncioBDTable(context);
+        anuncios = bdTable.select();
 
-        gerarFakeData();
+        //gerarFakeData();
     }
 
     /**
      * Provisório. Eliminar no futuro
      */
-    private void gerarFakeData(){
+    /*private void gerarFakeData(){
         String data = "05/11/2017";
 
-        Anuncio fAnuncio1 = new Anuncio(1, "Anuncio1", 1, 1, 1,
-                2, 1, "ativo", data , "");
-        Anuncio fAnuncio2 = new Anuncio(2, "Anuncio2", 1, 1, 1,
-                2, 1, "ativo", data , "");
-        Anuncio fAnuncio3 = new Anuncio(3, "Anuncio3", 1, 1, 1,
-                2, 1, "ativo", data , "");
-        Anuncio fAnuncio4 = new Anuncio(4, "Anuncio4", 1, 1, 1,
-                2, 1, "ativo", data , "");
-        Anuncio fAnuncio5 = new Anuncio(5, "Anuncio5", 1, 1, 1,
-                2, 1, "ativo", data , "");
+        Anuncio fAnuncio1 = new Anuncio("Anuncio1", 1L, 1L, 1,
+                2L, 1, "ativo", data , "");
+        Anuncio fAnuncio2 = new Anuncio("Anuncio2", 1L, 1L, 1,
+                2L, 1, "ativo", data , "");
+        Anuncio fAnuncio3 = new Anuncio("Anuncio3", 1L, 1L, 1,
+                2L, 1, "ativo", data , "");
+        Anuncio fAnuncio4 = new Anuncio("Anuncio4", 1L, 1L, 1,
+                2L, 1, "ativo", data , "");
+        Anuncio fAnuncio5 = new Anuncio("Anuncio5", 1L, 1L, 1,
+                2L, 1, "ativo", data , "");
+
+        fAnuncio1.setId(Long.valueOf("1"));
+        fAnuncio2.setId(Long.valueOf("2"));
+        fAnuncio3.setId(Long.valueOf("3"));
+        fAnuncio4.setId(Long.valueOf("4"));
+        fAnuncio5.setId(Long.valueOf("5"));
 
         this.anuncios.add(fAnuncio1);
         this.anuncios.add(fAnuncio2);
         this.anuncios.add(fAnuncio3);
         this.anuncios.add(fAnuncio4);
         this.anuncios.add(fAnuncio5);
-    }
+    }*/
 
-
-    public List<Anuncio> getAnuncios() {
+    public ArrayList<Anuncio> getAnuncios() {
         return anuncios;
     }
 
-    public Integer getAnunciosCount() {
+    public Integer getAnunciosCount()
+    {
         return anuncios.size();
     }
 
     public boolean adicionarAnuncio(Anuncio anuncio)
     {
-        return anuncios.add(anuncio);
+        Anuncio anuncioInserido = bdTable.insert(anuncio);
+
+        return anuncioInserido != null && anuncios.add(anuncioInserido);
     }
 
     public boolean removerAnuncio(Anuncio anuncio)
     {
-        return anuncios.remove(anuncio);
+        return bdTable.delete(anuncio.getId()) && anuncios.remove(anuncio);
     }
 
     public boolean editarAnuncio(Anuncio anuncio)
     {
-        Anuncio novoAnuncio = anuncios.set(anuncio.getId(), anuncio);
+        if(bdTable.update(anuncio)) {
+            Anuncio novoAnuncio = anuncios.set(anuncio.getId().intValue(), anuncio);
 
-        if (anuncios.contains(novoAnuncio))
-            return true;
-        else
+            return anuncios.contains(novoAnuncio);
+        } else {
             return false;
+        }
     }
 
-    public Anuncio pesquisarAnuncioID(Integer id)
+    public Anuncio pesquisarAnuncioID(Long id)
     {
-        return anuncios.get(id);
+        return anuncios.get(id.intValue());
     }
 }

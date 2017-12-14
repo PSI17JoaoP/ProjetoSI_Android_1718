@@ -1,8 +1,11 @@
 package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.helpers.UserBDTable;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.User;
 
 /**
@@ -11,49 +14,55 @@ import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.mod
 
 public class SingletonUsers {
     private static SingletonUsers INSTANCE = null;
-    private List<User> users;
+    private ArrayList<User> users;
+    private UserBDTable bdTable;
 
-    public static SingletonUsers getInstance() {
+    public static SingletonUsers getInstance(Context context) {
         if (INSTANCE == null)
-            INSTANCE = new SingletonUsers();
+            INSTANCE = new SingletonUsers(context);
 
         return INSTANCE;
     }
 
-    private SingletonUsers() {
+    private SingletonUsers(Context context) {
         users = new ArrayList<>();
+        bdTable = new UserBDTable(context);
+        users = bdTable.select();
     }
 
-    public List<User> getUsers() {
+    public ArrayList<User> getUsers() {
         return users;
     }
 
-    public void setUsers(List<User> users) {
+    public void setUsers(ArrayList<User> users) {
         this.users = users;
     }
 
-    public boolean addUser(User user)
+    public boolean adicionarUser(User user)
     {
-        return users.add(user);
+        User userInserido = bdTable.insert(user);
+
+        return userInserido != null && users.add(userInserido);
     }
 
-    public boolean removeUser(User user)
+    public boolean removerUser(User user)
     {
-        return users.remove(user);
+        return bdTable.delete(user.getId()) && users.remove(user);
     }
 
-    public boolean editUser(User oldUser, User newUser)
+    public boolean editarUser(User user)
     {
-        User updatedUser = users.set(users.indexOf(oldUser), newUser);
+        if(bdTable.update(user)) {
+            User novoUser = users.set(user.getId().intValue(), user);
 
-        if (users.contains(updatedUser))
-            return true;
-        else
+            return users.contains(user);
+        } else {
             return false;
+        }
     }
 
-    public User searchUserID(Integer id)
+    public User pesquisarUserID(Long id)
     {
-        return users.get(id);
+        return users.get(id.intValue());
     }
 }

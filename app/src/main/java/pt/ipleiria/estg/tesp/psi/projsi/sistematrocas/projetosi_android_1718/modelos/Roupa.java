@@ -5,12 +5,14 @@ package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.mo
  */
 
 public class Roupa extends Categoria {
+
     private String marca;
     private String tamanho;
-    private Integer idTipo;
+    private Long idTipo;
 
-    public Roupa(Integer id, String nome, String marca, String tamanho, Integer idTipo) {
-        super(id, nome);
+    public Roupa(String nome, String marca, String tamanho, Long idTipo) {
+
+        super(nome);
         this.marca = marca;
         this.tamanho = tamanho;
         this.idTipo = idTipo;
@@ -32,11 +34,11 @@ public class Roupa extends Categoria {
         this.tamanho = tamanho;
     }
 
-    public Integer getIdTipo() {
+    public Long getIdTipo() {
         return idTipo;
     }
 
-    public void setIdTipo(Integer idTipo) {
+    public void setIdTipo(Long idTipo) {
         this.idTipo = idTipo;
     }
 }
