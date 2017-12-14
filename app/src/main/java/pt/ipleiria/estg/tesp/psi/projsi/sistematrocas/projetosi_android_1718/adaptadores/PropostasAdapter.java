@@ -64,7 +64,7 @@ public class PropostasAdapter extends BaseAdapter {
         TextView txtPropostaTitle = item.findViewById(R.id.txtProposta);
 
         Proposta proposta = listaPropostas.get(i);
-        Anuncio anuncioProposta = SingletonAnuncios.getInstance().pesquisarAnuncioID(proposta.getIdAnuncio());
+        Anuncio anuncioProposta = SingletonAnuncios.getInstance(view.getContext()).pesquisarAnuncioID(proposta.getIdAnuncio());
 
         txtOfertaTitle.setText(anuncioProposta.getTitulo());
         txtPropostaTitle.setText(""+proposta.getCatProposta());

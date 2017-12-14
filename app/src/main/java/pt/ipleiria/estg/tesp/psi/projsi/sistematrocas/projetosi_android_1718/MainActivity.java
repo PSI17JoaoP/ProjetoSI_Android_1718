@@ -52,10 +52,10 @@ public class MainActivity extends NavDrawerActivity {
             lvPropostas = findViewById(R.id.lvPropostas);
 
 
-            propostasAdapter = new PropostasAdapter(this, SingletonPropostas.getInstance().getPropostas());
+            propostasAdapter = new PropostasAdapter(this, SingletonPropostas.getInstance(this).getPropostas());
             lvPropostas.setAdapter(propostasAdapter);
 
-            anunciosAdapter = new AnunciosAdapter(this, SingletonAnuncios.getInstance().getAnuncios());
+            anunciosAdapter = new AnunciosAdapter(this, SingletonAnuncios.getInstance(this).getAnuncios());
             lvAnuncios.setAdapter(anunciosAdapter);
             //--------------
 
