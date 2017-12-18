@@ -1,0 +1,79 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context="pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms.BrinquedosFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="UselessParent">
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLayoutNomeBrinquedos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/textInputEditTextNomeBrinquedos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/fragment_brinquedos_nome" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLayoutFaixaEtariaBrinquedos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textInputLayoutNomeBrinquedos"
+            android:layout_below="@+id/textInputLayoutNomeBrinquedos"
+            android:layout_marginTop="10dp">
+
+            <EditText
+                android:id="@+id/editTextFaixaEtariaBrinquedos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="@string/fragment_brinquedos_faixa_etaria"
+                android:inputType="number" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLayoutEditoraBrinquedos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textInputLayoutFaixaEtariaBrinquedos"
+            android:layout_below="@+id/textInputLayoutFaixaEtariaBrinquedos"
+            android:layout_marginTop="10dp">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/textInputEditTextEditoraBrinquedos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/fragment_brinquedos_editora" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLayoutDescricaoBrinquedos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textInputLayoutEditoraBrinquedos"
+            android:layout_below="@+id/textInputLayoutEditoraBrinquedos"
+            android:layout_marginTop="10dp">
+
+            <EditText
+                android:id="@+id/editTextDescricaoBrinquedos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="@string/fragment_brinquedos_descricao"
+                android:inputType="textMultiLine" />
+        </android.support.design.widget.TextInputLayout>
+    </RelativeLayout>
+</FrameLayout>

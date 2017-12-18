@@ -1,0 +1,91 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context="pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms.LivrosFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="UselessParent">
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLayoutNomeLivros"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/textInputEditTextNomeLivros"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/fragment_livros_nome" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLayoutTituloLivros"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textInputLayoutNomeLivros"
+            android:layout_below="@+id/textInputLayoutNomeLivros"
+            android:layout_marginTop="10dp">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/textInputEditTextTituloLivros"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/fragment_livros_titulo" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLayoutEditoraLivros"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textInputLayoutTituloLivros"
+            android:layout_below="@+id/textInputLayoutTituloLivros"
+            android:layout_marginTop="10dp">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/textInputEditTextEditoraLivros"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/fragment_livros_editora" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLayoutAutorLivros"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textInputLayoutEditoraLivros"
+            android:layout_below="@+id/textInputLayoutEditoraLivros"
+            android:layout_marginTop="10dp">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/textInputEditTextAutorLivros"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/fragment_livros_autor" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputEditTextISBNLivros"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textInputLayoutAutorLivros"
+            android:layout_below="@+id/textInputLayoutAutorLivros"
+            android:layout_marginTop="10dp">
+
+            <EditText
+                android:id="@+id/editTextISBNLivros"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="@string/fragment_livros_isbn"
+                android:inputType="number" />
+        </android.support.design.widget.TextInputLayout>
+    </RelativeLayout>
+</FrameLayout>

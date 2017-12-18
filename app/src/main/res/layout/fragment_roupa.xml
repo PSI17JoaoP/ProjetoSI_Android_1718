@@ -1,0 +1,67 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context="pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms.RoupaFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="UselessParent">
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLayoutNomeRoupa"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/textInputEditTextNomeRoupa"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/fragment_roupa_nome" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLayoutMarcaRoupa"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textInputLayoutNomeRoupa"
+            android:layout_below="@+id/textInputLayoutNomeRoupa"
+            android:layout_marginTop="10dp">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/textInputEditTextMarcaRoupa"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/fragment_roupa_marca" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLayoutTamanhoRoupa"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textInputLayoutMarcaRoupa"
+            android:layout_below="@+id/textInputLayoutMarcaRoupa"
+            android:layout_marginTop="10dp">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/textInputEditTextTamanhoRoupa"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/fragment_roupa_tamanho" />
+        </android.support.design.widget.TextInputLayout>
+
+        <Spinner
+            android:id="@+id/spinnerTamanhoRoupa"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textInputLayoutTamanhoRoupa"
+            android:layout_below="@+id/textInputLayoutTamanhoRoupa"
+            android:layout_marginTop="10dp" />
+
+    </RelativeLayout>
+</FrameLayout>

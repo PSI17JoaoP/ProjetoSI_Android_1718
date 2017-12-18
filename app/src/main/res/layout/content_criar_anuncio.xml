@@ -105,8 +105,14 @@
                     android:layout_height="wrap_content"
                     android:text="..." />
             </LinearLayout>
+
         </LinearLayout>
 
+        <fragment
+            android:id="@+id/fragmentFormCategoriaTroco"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        
     </LinearLayout>
 
     <LinearLayout
@@ -180,6 +186,11 @@
             </LinearLayout>
 
         </LinearLayout>
+
+        <fragment
+            android:id="@+id/fragmentFormCategoriaPor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 </RelativeLayout>

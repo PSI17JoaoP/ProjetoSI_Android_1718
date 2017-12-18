@@ -25,10 +25,34 @@
     <string name="mensagem_pin_vazio">Não introduziu um PIN.\nIntroduza para efetuar o login.</string>
     <string name="mensagem_pin_incorreto">O PIN inserido é incorreto.\nVerifique o PIN nas definições da sua conta, na aplicação Web.</string>
     <string name="mensagem_login_erro">Ocorreu um erro na autenticação</string>
+
     <string name="title_activity_criar_anuncio">Criar Anuncio</string>
     <string name="criar_anuncio_titulo">Titulo</string>
     <string name="criar_anuncio_imagem_opcional">Imagem (opcional)</string>
     <string name="criar_anuncio_text_view_troco">Quero trocar:</string>
     <string name="criar_anuncio_text_view_por">Quero receber:</string>
+
+    <string name="fragment_brinquedos_nome">Nome</string>
+    <string name="fragment_brinquedos_faixa_etaria">Faixa Etária</string>
+    <string name="fragment_brinquedos_editora">Editora</string>
+    <string name="fragment_brinquedos_descricao">Descrição</string>
+    <string name="fragment_jogos_produtora">Produtora</string>
+    <string name="fragment_eletronica_nome">Nome</string>
+    <string name="fragment_eletronica_marca">Marca</string>
+    <string name="fragment_eletronica_descricao">Descrição</string>
+    <string name="fragment_computadores_processador">Processador</string>
+    <string name="fragment_computadores_ram">Memória RAM</string>
+    <string name="fragment_computadores_hdd">Armazenamento Interno</string>
+    <string name="fragment_computadores_gpu">Placa Gráfica</string>
+    <string name="fragment_computadores_os">Sistema Operativo</string>
+    <string name="fragment_smartphones_tamanho">Tamanho</string>
+    <string name="fragment_livros_nome">Nome</string>
+    <string name="fragment_livros_titulo">Titulo</string>
+    <string name="fragment_livros_editora">Editora</string>
+    <string name="fragment_livros_autor">Autor</string>
+    <string name="fragment_livros_isbn">ISBN</string>
+    <string name="fragment_roupa_nome">Nome</string>
+    <string name="fragment_roupa_marca">Marca</string>
+    <string name="fragment_roupa_tamanho">Tamanho</string>
 
 </resources>
