@@ -23,7 +23,7 @@ abstract class BDHelper<T> extends SQLiteOpenHelper {
     public Context context;
 
     private static final String BD_NAME = "SisTrocasBD";
-    private static int BD_VERSION = 1;
+    private static final int BD_VERSION = 1;
 
     protected SQLiteDatabase database;
 

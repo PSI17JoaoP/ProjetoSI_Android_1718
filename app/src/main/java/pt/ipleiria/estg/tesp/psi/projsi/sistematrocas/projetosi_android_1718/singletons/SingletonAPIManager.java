@@ -174,7 +174,7 @@ public class SingletonAPIManager {
                         usar.Erro(error);
                     }
                 }
-            )/*{
+            ){
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     Map<String, String> params = new HashMap<>();
@@ -182,7 +182,7 @@ public class SingletonAPIManager {
                     params.put("Authorization", "Basic " + auth);
                     return params;
                 }
-            }*/;
+            };
 
             return jsonArrayRequest;
         }
@@ -219,6 +219,14 @@ public class SingletonAPIManager {
                 @Override
                 public String getBodyContentType() {
                     return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("Accept", "application/json");
+                    params.put("Authorization", "Basic " + auth);
+                    return params;
                 }
 
                 @Override

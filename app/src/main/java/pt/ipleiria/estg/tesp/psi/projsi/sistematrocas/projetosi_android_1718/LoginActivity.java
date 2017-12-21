@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,6 +33,8 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
         preferences = getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
 
         pin = preferences.getString("pin", "");
@@ -44,7 +47,6 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         }else
         {
-            super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_login);
 
             textViewMensagem = findViewById(R.id.textViewLoginMensagem);
@@ -64,23 +66,26 @@ public class LoginActivity extends AppCompatActivity {
         } else {
 
             SingletonAPIManager.getInstance(this).setAuth(pinString);
-            JsonArrayRequest user = SingletonAPIManager.getInstance(this).pedirVariosAPI("clientes/pin/" + pinString, new SingletonAPIManager.APIJsonArrayResposta() {
+
+            JsonObjectRequest user = SingletonAPIManager.getInstance(this).pedirAPI("clientes/pin/"+pinString, new SingletonAPIManager.APIJsonResposta() {
                 @Override
-                public void Sucesso(JSONArray result) {
+                public void Sucesso(JSONObject resultado) {
                     try {
 
-                        JSONObject object = result.getJSONObject(1);
+                        JSONObject userResult = resultado.getJSONObject("User");
 
-                        prefEditor.putString("username", object.getString("Username"));
-                        prefEditor.putString("email", object.getString("Email"));
+                        String username = userResult.getString("Username");
+                        String email = userResult.getString("Email");
+
+                        prefEditor.putString("username", username);
+                        prefEditor.putString("email", email);
                         prefEditor.putString("pin", pinString);
                         prefEditor.apply();
 
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        Toast.makeText(LoginActivity.this, "Sucesso", Toast.LENGTH_SHORT).show();
+                        /*Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);*/
 
-                        startActivity(intent);
-
-                        finish();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -88,7 +93,6 @@ public class LoginActivity extends AppCompatActivity {
 
                 @Override
                 public void Erro(VolleyError erro) {
-
                     //TODO: Switch para vários tipos de erros.
                     if(erro.networkResponse.statusCode == 404) {
                         textViewMensagem.setText(R.string.mensagem_pin_incorreto);
