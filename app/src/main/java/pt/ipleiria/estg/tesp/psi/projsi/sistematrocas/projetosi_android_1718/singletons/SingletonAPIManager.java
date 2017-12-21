@@ -1,8 +1,10 @@
 package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Base64;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -21,12 +23,19 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SingletonAPIManager {
 
     private static SingletonAPIManager INSTANCE = null;
     private RequestQueue requestQueue;
     private static Context context;
+
+    SharedPreferences preferences;
+
+    private static final String baseURL = "http://10.0.2.2:8888/";
+    private static String auth = null;
 
     public static synchronized SingletonAPIManager getInstance(Context contexto) {
 
@@ -40,6 +49,8 @@ public class SingletonAPIManager {
     private SingletonAPIManager(Context contexto) {
         context = contexto;
         requestQueue = getRequestQueue();
+
+        preferences = contexto.getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
     }
 
     /**
@@ -53,6 +64,12 @@ public class SingletonAPIManager {
         }
 
         return requestQueue;
+    }
+
+    public void setAuth(String pin)
+    {
+        byte[] authBytes = (pin+":").getBytes();
+        auth = Base64.encodeToString(authBytes, Base64.DEFAULT);
     }
 
     /**
@@ -86,6 +103,7 @@ public class SingletonAPIManager {
         void Erro(VolleyError erro);
     }
 
+
     /**
      * Recebe o URI para fazer o pedido GET a 1 objeto e implementa a função 'usar'
      * para trabalhar a resposta
@@ -98,7 +116,7 @@ public class SingletonAPIManager {
         if (ligadoInternet())
         {
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Request.Method.GET, url,null,
+                Request.Method.GET, baseURL+url,null,
                 new Response.Listener<JSONObject>()
                 {
                     @Override
@@ -113,7 +131,15 @@ public class SingletonAPIManager {
                         usar.Erro(error);
                     }
                 }
-            );
+            ) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("Accept", "application/json");
+                    params.put("Authorization", "Basic " + auth);
+                    return params;
+                }
+            };
 
             return jsonObjectRequest;
         }
@@ -133,7 +159,7 @@ public class SingletonAPIManager {
         if (ligadoInternet())
         {
             JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
-                Request.Method.GET, url, null,
+                Request.Method.GET, baseURL+url, null,
                 new Response.Listener<JSONArray>()
                 {
                     @Override
@@ -148,7 +174,15 @@ public class SingletonAPIManager {
                         usar.Erro(error);
                     }
                 }
-            );
+            ){
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("Accept", "application/json");
+                    params.put("Authorization", "Basic " + auth);
+                    return params;
+                }
+            };
 
             return jsonArrayRequest;
         }
@@ -171,7 +205,7 @@ public class SingletonAPIManager {
         {
             final String requestBody = jsonBody.toString();
 
-            StringRequest stringRequest = new StringRequest(tipoPedido, url, new Response.Listener<String>() {
+            StringRequest stringRequest = new StringRequest(tipoPedido, baseURL+url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     usar.Sucesso(response);
