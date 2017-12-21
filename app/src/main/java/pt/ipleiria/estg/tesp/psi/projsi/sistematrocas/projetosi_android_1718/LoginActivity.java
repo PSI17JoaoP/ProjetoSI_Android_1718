@@ -82,9 +82,9 @@ public class LoginActivity extends AppCompatActivity {
                         prefEditor.putString("pin", pinString);
                         prefEditor.apply();
 
-                        Toast.makeText(LoginActivity.this, "Sucesso", Toast.LENGTH_SHORT).show();
-                        /*Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        startActivity(intent);*/
+                        //Toast.makeText(LoginActivity.this, "Sucesso", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
 
                     } catch (JSONException e) {
                         e.printStackTrace();
