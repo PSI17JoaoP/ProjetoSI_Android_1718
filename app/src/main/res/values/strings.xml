@@ -4,7 +4,6 @@
 
     <string name="navigation_drawer_open">Abrir menu</string>
     <string name="navigation_drawer_close">Fechar menu</string>
-
     <string name="navigation_drawer_itemHomePage">Página Inicial</string>
     <string name="navigation_drawer_itemMeusAnuncios">Meus Anúncios</string>
     <string name="navigation_drawer_itemPesquisarAnuncios">Pesquisar Anúncios</string>
@@ -28,9 +27,10 @@
 
     <string name="title_activity_criar_anuncio">Criar Anuncio</string>
     <string name="criar_anuncio_titulo">Titulo</string>
-    <string name="criar_anuncio_imagem_opcional">Imagem (opcional)</string>
+    <string name="criar_anuncio_imagens">Imagens</string>
     <string name="criar_anuncio_text_view_troco">Quero trocar:</string>
     <string name="criar_anuncio_text_view_por">Quero receber:</string>
+    <string name="criar_anuncio_nome">Nome</string>
 
     <string name="fragment_brinquedos_nome">Nome</string>
     <string name="fragment_brinquedos_faixa_etaria">Faixa Etária</string>

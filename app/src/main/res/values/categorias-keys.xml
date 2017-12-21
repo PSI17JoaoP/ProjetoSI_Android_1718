@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="categorias_keys">
+        <item>n/a</item>
+        <item>brinquedos</item>
+        <item>eletronica</item>
+        <item>computadores</item>
+        <item>smartphones</item>
+        <item>livros</item>
+        <item>roupa</item>
+    </string-array>
+</resources>
