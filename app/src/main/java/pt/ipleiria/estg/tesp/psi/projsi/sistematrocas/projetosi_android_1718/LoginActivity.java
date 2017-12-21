@@ -30,9 +30,6 @@ public class LoginActivity extends AppCompatActivity {
     SharedPreferences.Editor prefEditor;
     private String pin;
 
-    public static final String DADOS_USERNAME = "username";
-    public static final String DADOS_EMAIL = "email";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         preferences = getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
@@ -72,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
                 public void Sucesso(JSONArray result) {
                     try {
 
-                        JSONObject object = (JSONObject) result.get(1);
+                        JSONObject object = result.getJSONObject(1);
 
                         prefEditor.putString("username", object.getString("Username"));
                         prefEditor.putString("email", object.getString("Email"));
