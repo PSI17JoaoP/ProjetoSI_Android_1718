@@ -9,23 +9,23 @@ public class Anuncio {
     private Long id;
     private String titulo;
     private Long idUser;
-    private Long idCatOferecer;
+    private Long catOferecer;
     private Integer quantOferecer;
-    private Long idCatReceber;
+    private Long catReceber;
     private Integer quantReceber;
     private String estado;
     private String dataCriacao;
     private String dataConclusao;
     private String comentarios;
 
-    public Anuncio(String titulo, Long idUser, Long idCatOferecer, Integer quantOferecer,
-                   Long idCatReceber, Integer quantReceber, String estado, String dataCriacao, String comentarios) {
+    public Anuncio(String titulo, Long idUser, Long catOferecer, Integer quantOferecer,
+                   Long catReceber, Integer quantReceber, String estado, String dataCriacao, String comentarios) {
 
         this.titulo = titulo;
         this.idUser = idUser;
-        this.idCatOferecer = idCatOferecer;
+        this.catOferecer = catOferecer;
         this.quantOferecer = quantOferecer;
-        this.idCatReceber = idCatReceber;
+        this.catReceber = catReceber;
         this.quantReceber = quantReceber;
         this.estado = estado;
         this.dataCriacao = dataCriacao;
@@ -33,15 +33,15 @@ public class Anuncio {
         this.comentarios = comentarios;
     }
 
-    public Anuncio(String titulo, Long idUser, Long idCatOferecer,
-                   Integer quantOferecer, Long idCatReceber, Integer quantReceber,
+    public Anuncio(String titulo, Long idUser, Long catOferecer,
+                   Integer quantOferecer, Long catReceber, Integer quantReceber,
                    String estado, String dataCriacao, String dataConclusao, String comentarios) {
 
         this.titulo = titulo;
         this.idUser = idUser;
-        this.idCatOferecer = idCatOferecer;
+        this.catOferecer = catOferecer;
         this.quantOferecer = quantOferecer;
-        this.idCatReceber = idCatReceber;
+        this.catReceber = catReceber;
         this.quantReceber = quantReceber;
         this.estado = estado;
         this.dataCriacao = dataCriacao;
@@ -73,12 +73,12 @@ public class Anuncio {
         this.idUser = idUser;
     }
 
-    public Long getIdCatOferecer() {
-        return idCatOferecer;
+    public Long getCatOferecer() {
+        return catOferecer;
     }
 
-    public void setIdCatOferecer(Long idCatOferecer) {
-        this.idCatOferecer = idCatOferecer;
+    public void setCatOferecer(Long catOferecer) {
+        this.catOferecer = catOferecer;
     }
 
     public Integer getQuantOferecer() {
@@ -89,12 +89,12 @@ public class Anuncio {
         this.quantOferecer = quantOferecer;
     }
 
-    public Long getIdCatReceber() {
-        return idCatReceber;
+    public Long getCatReceber() {
+        return catReceber;
     }
 
-    public void setIdCatReceber(Long idCatReceber) {
-        this.idCatReceber = idCatReceber;
+    public void setCatReceber(Long catReceber) {
+        this.catReceber = catReceber;
     }
 
     public Integer getQuantReceber() {

@@ -7,17 +7,17 @@ package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.mo
 public class Proposta {
 
     private Long id;
-    private Long catProposta;
+    private Long catProposto;
     private Integer quant;
     private Long idUser;
     private Long idAnuncio;
     private String estado;
     private String dataProposta;
 
-    public Proposta(Long catProposta, Integer quant, Long idUser,
+    public Proposta(Long catProposto, Integer quant, Long idUser,
                     Long idAnuncio, String estado, String dataProposta) {
 
-        this.catProposta = catProposta;
+        this.catProposto = catProposto;
         this.quant = quant;
         this.idUser = idUser;
         this.idAnuncio = idAnuncio;
@@ -33,12 +33,12 @@ public class Proposta {
         this.id = id;
     }
 
-    public Long getCatProposta() {
-        return catProposta;
+    public Long getCatProposto() {
+        return catProposto;
     }
 
-    public void setCatProposta(Long catProposta) {
-        this.catProposta = catProposta;
+    public void setCatProposto(Long catProposto) {
+        this.catProposto = catProposto;
     }
 
     public Integer getQuant() {

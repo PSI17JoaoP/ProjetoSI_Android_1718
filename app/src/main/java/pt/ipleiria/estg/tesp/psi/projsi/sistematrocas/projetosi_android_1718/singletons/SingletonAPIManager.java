@@ -195,16 +195,14 @@ public class SingletonAPIManager {
      * implementa a função 'usar' para verificar a resposta
      * @param url O url do pedido
      * @param tipoPedido Tipo de pedido
-     * @param jsonBody O corpo da mensagem
+     * @param requestBody O corpo da mensagem
      * @param usar Interface de Resposta
      * @return mixed
      */
-    public StringRequest enviarAPI(String url, Integer tipoPedido, JSONObject jsonBody, final APIStringResposta usar)
+    public StringRequest enviarAPI(String url, Integer tipoPedido, final String requestBody, final APIStringResposta usar)
     {
         if (ligadoInternet())
         {
-            final String requestBody = jsonBody.toString();
-
             StringRequest stringRequest = new StringRequest(tipoPedido, baseURL+url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {

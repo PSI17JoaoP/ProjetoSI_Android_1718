@@ -11,7 +11,6 @@ import java.util.List;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.R;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Anuncio;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Proposta;
 
 /**
  * Created by leona on 07/11/2017.
@@ -62,7 +61,7 @@ public class AnunciosAdapter extends BaseAdapter {
         Anuncio anuncio = listaAnuncios.get(i);
 
         txtOfertaTitle.setText(anuncio.getTitulo());
-        txtPropostaTitle.setText(""+anuncio.getIdCatReceber());
+        txtPropostaTitle.setText(""+anuncio.getCatReceber());
 
         return item;
     }

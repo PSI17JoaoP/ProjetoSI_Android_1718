@@ -41,6 +41,8 @@ public class LoginActivity extends AppCompatActivity {
 
         if (!pin.isEmpty())
         {
+            SingletonAPIManager.getInstance(this).setAuth(pin);
+
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
 
