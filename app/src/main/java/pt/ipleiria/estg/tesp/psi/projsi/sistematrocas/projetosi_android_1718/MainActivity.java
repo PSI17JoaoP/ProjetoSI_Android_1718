@@ -48,11 +48,11 @@ public class MainActivity extends NavDrawerActivity implements AnunciosListener,
         spec.setIndicator("Anúncios Sugeridos");
         host.addTab(spec);
 
+        lvAnuncios = findViewById(R.id.lvAnuncios);
+        lvPropostas = findViewById(R.id.lvPropostas);
         //------------------------------------
 
         if (savedInstanceState == null) {
-            lvAnuncios = findViewById(R.id.lvAnuncios);
-            lvPropostas = findViewById(R.id.lvPropostas);
 
             SingletonAnuncios.getInstance(this).setAnunciosListener(this);
             SingletonAnuncios.getInstance(this).getAnunciosSugeridos();
