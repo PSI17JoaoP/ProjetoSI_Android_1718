@@ -52,6 +52,23 @@ public class ClienteBDTable extends BDHelper<Cliente> {
     }
 
     @Override
+    public void onOpen(SQLiteDatabase db) {
+        if(db.isOpen()) {
+            Cursor cursor = db.rawQuery("SELECT DISTINCT tbl_name FROM sqlite_master WHERE tbl_name = '" + TABLE_NAME + "';", null);
+
+            if (cursor != null) {
+
+                if (cursor.getCount() == 0) {
+                    cursor.close();
+                    this.onCreate(db);
+                }
+
+                cursor.close();
+            }
+        }
+    }
+
+    @Override
     public ArrayList<Cliente> select() {
 
         ArrayList<Cliente> clientes = new ArrayList<>();
