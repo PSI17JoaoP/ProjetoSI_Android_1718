@@ -1,5 +1,6 @@
 package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718;
 
+import android.annotation.SuppressLint;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,10 +16,15 @@ import android.widget.FrameLayout;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 
+import java.util.HashMap;
+
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms.FormSelector;
 
 public class CriarAnuncioActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
+    private HashMap<Integer, String> categoriasHashMap;
+
+    @SuppressLint("UseSparseArrays")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,12 +32,19 @@ public class CriarAnuncioActivity extends AppCompatActivity implements AdapterVi
         Toolbar toolbar = findViewById(R.id.toolbarCriarAnuncio);
         setSupportActionBar(toolbar);
 
-        String[] categorias = getResources().getStringArray(R.array.categorias_values);
+        String[] categoriasValues = getResources().getStringArray(R.array.categorias_values);
+        String[] categoriasKeys = getResources().getStringArray(R.array.categorias_keys);
+
+        categoriasHashMap = new HashMap<>();
+
+        for (int cont = 0; cont < categoriasKeys.length; cont++) {
+                categoriasHashMap.put(cont, categoriasKeys[cont]);
+        }
 
         //Array Adapter das categorias guardadas nos recursos XML
         ArrayAdapter<CharSequence> spinnerCategorias = new ArrayAdapter<CharSequence>(this,
                 R.layout.custom_spinner_item,
-                categorias);
+                categoriasValues);
 
         //---------------------------------Dropdowns (Spinners)---------------------------
         Spinner dropDownCategoriasTroco = findViewById(R.id.dropDownCategoriasTroco);
@@ -52,14 +65,14 @@ public class CriarAnuncioActivity extends AppCompatActivity implements AdapterVi
         NumberPicker numberPickerCategoriaTroco = findViewById(R.id.numberPickerCategoriaTroco);
 
         numberPickerCategoriaTroco.setMinValue(1);
-        numberPickerCategoriaTroco.setMaxValue(100);
-        numberPickerCategoriaTroco.setWrapSelectorWheel(false);
+        numberPickerCategoriaTroco.setMaxValue(99);
+        //numberPickerCategoriaTroco.setWrapSelectorWheel(false);
 
         NumberPicker numberPickerCategoriaPor = findViewById(R.id.numberPickerCategoriaPor);
 
         numberPickerCategoriaPor.setMinValue(1);
-        numberPickerCategoriaPor.setMaxValue(100);
-        numberPickerCategoriaPor.setWrapSelectorWheel(false);
+        numberPickerCategoriaPor.setMaxValue(99);
+        //numberPickerCategoriaPor.setWrapSelectorWheel(false);
         //---------------------------------------------------------------------------------------
 
         //----------------------------------Botão Flutuante--------------------------------------
@@ -86,11 +99,11 @@ public class CriarAnuncioActivity extends AppCompatActivity implements AdapterVi
             switch (parent.getId()) {
                 case R.id.dropDownCategoriasTroco:
 
-                    String categoriaTroco = parent.getSelectedItem().toString();
+                    String categoriaTroco = categoriasHashMap.get(position);
 
                     try {
 
-                        Fragment form = formSelector.selectForm(categoriaTroco, getResources().getStringArray(R.array.categorias_values),
+                        Fragment form = formSelector.selectForm(categoriaTroco, getResources().getStringArray(R.array.categorias_keys),
                                 getApplicationContext());
 
                         if(form != null) {
@@ -109,24 +122,18 @@ public class CriarAnuncioActivity extends AppCompatActivity implements AdapterVi
 
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
-                        Snackbar snackbar = Snackbar
-                                .make(findViewById(R.id.coordinatorLayoutCriarAnuncio),
-                                        "Ocorreu um erro na seleção da categoria", Snackbar.LENGTH_LONG);
-
-                        snackbar.show();
+                        showNotification();
                     }
 
                     break;
 
                 case R.id.dropDownCategoriasPor:
 
-                    String categoriaPor = parent.getSelectedItem().toString();
-
-                    if (categoriaPor.equals(manager.findFragmentById(R.id.fragmentFormCategoriaPor).getTag())) {
+                    String categoriaPor = categoriasHashMap.get(position);
 
                         try {
 
-                            Fragment form = formSelector.selectForm(categoriaPor, getResources().getStringArray(R.array.categorias_values),
+                            Fragment form = formSelector.selectForm(categoriaPor, getResources().getStringArray(R.array.categorias_keys),
                                     getApplicationContext());
 
                             if(form != null) {
@@ -137,19 +144,16 @@ public class CriarAnuncioActivity extends AppCompatActivity implements AdapterVi
                                 if (fragmentContainer.getChildCount() == 0) {
                                     transaction.add(R.id.fragmentFormCategoriaPor, form, categoriaPor).commit();
                                 } else {
-                                    transaction.replace(R.id.fragmentFormCategoriaPor, form, categoriaPor).commit();
+                                    if (manager.findFragmentByTag(categoriaPor) == null) {
+                                        transaction.replace(R.id.fragmentFormCategoriaTroco, form, categoriaPor).commit();
+                                    }
                                 }
                             }
 
                         } catch (ClassNotFoundException e) {
                             e.printStackTrace();
-                            Snackbar snackbar = Snackbar
-                                    .make(findViewById(R.id.coordinatorLayoutCriarAnuncio),
-                                            "Ocorreu um erro na seleção da categoria", Snackbar.LENGTH_LONG);
-
-                            snackbar.show();
+                            showNotification();
                         }
-                    }
 
                     break;
             }
@@ -159,5 +163,12 @@ public class CriarAnuncioActivity extends AppCompatActivity implements AdapterVi
     @Override
     public void onNothingSelected(AdapterView<?> parent)  {
 
+    }
+
+    private void showNotification() {
+        Snackbar snackbar = Snackbar
+                .make(findViewById(R.id.coordinatorLayoutCriarAnuncio), "Ocorreu um erro na seleção da categoria", Snackbar.LENGTH_LONG);
+
+        snackbar.show();
     }
 }

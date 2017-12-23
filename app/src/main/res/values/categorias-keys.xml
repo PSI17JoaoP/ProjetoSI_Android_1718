@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="categorias_keys">
-        <item>n/a</item>
-        <item>brinquedos</item>
-        <item>eletronica</item>
-        <item>computadores</item>
-        <item>smartphones</item>
-        <item>livros</item>
-        <item>roupa</item>
+        <item>N/A</item>
+        <item>Brinquedos</item>
+        <item>Jogos</item>
+        <item>Eletronica</item>
+        <item>Computadores</item>
+        <item>Smartphones</item>
+        <item>Livros</item>
+        <item>Roupa</item>
     </string-array>
 </resources>

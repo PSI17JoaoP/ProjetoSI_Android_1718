@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="categorias_values">
-        <item>Categoria</item>
+        <item>Selecione a categoria</item>
         <item>Brinquedos</item>
+        <item>Jogos</item>
         <item>Eletrónica</item>
         <item>Computadores</item>
         <item>Smartphones</item>

@@ -14,9 +14,7 @@ public class FormSelector {
 
     private static final String PACKAGE_PATH = "pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms.";
 
-    public Fragment selectForm(String categoria, String[] categorias, Context context) throws ClassNotFoundException {
-
-        String categoriaForm = removeAccents(categoria);
+    public Fragment selectForm(String categoriaForm, String[] categorias, Context context) throws ClassNotFoundException {
 
         for (String categoriaNome : categorias) {
             if (categoriaForm.equals(categoriaNome)) {
@@ -27,21 +25,5 @@ public class FormSelector {
         }
 
         return null;
-    }
-
-    private String removeAccents(String string) {
-
-        /*if(!Normalizer.isNormalized(string, Normalizer.Form.NFKD)) {
-            String normalizedString = Normalizer.normalize(string, Normalizer.Form.NFKD);
-
-            return normalizedString.replaceAll("\\p{M}", "");
-        }*/
-
-        //TODO: Apenas está aqui para funcionar para a categoria Eletrónica. Comentado em cima a solução, embora não funcione por alguma razão
-        if (string.equals("Eletrónica")) {
-            return "Eletronica";
-        }
-
-        return string;
     }
 }
