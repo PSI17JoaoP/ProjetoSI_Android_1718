@@ -15,6 +15,9 @@ import android.view.ViewGroup;
 
 public class ComputadoresFragment extends Fragment {
 
+    public ComputadoresFragment() {
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 

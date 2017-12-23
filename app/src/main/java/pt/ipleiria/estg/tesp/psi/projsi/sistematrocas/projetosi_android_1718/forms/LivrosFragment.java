@@ -15,6 +15,9 @@ import android.view.ViewGroup;
 
 public class LivrosFragment extends Fragment {
 
+    public LivrosFragment() {
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
