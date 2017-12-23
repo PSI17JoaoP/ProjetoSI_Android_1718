@@ -1,12 +1,26 @@
 package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.google.gson.JsonArray;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.helpers.PropostaBDTable;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.PropostasListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Proposta;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.parsers.PropostasParser;
 
 /**
  * Created by leona on 21/11/2017.
@@ -16,7 +30,9 @@ public class SingletonPropostas {
     private static SingletonPropostas INSTANCE = null;
     private ArrayList<Proposta> propostas;
     private PropostaBDTable bdTable;
+    private Context context;
 
+    private PropostasListener propostasListener;
 
     public static SingletonPropostas getInstance(Context context) {
         if (INSTANCE == null)
@@ -26,68 +42,150 @@ public class SingletonPropostas {
     }
 
     private SingletonPropostas(Context context) {
+        this.context = context;
         propostas = new ArrayList<>();
         bdTable = new PropostaBDTable(context);
-        propostas = bdTable.select();
-
-        //gerarFakeData();
+        //propostas = bdTable.select();
     }
 
-    /**
-     * Provisório. Eliminar no futuro
-     */
-    /*private void gerarFakeData(){
-        String data = "05/11/2017";
+    public void getPropostas()
+    {
+        SharedPreferences preferences = context.getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
+        String username = preferences.getString("username", "");
 
-        Proposta fProposta1 = new Proposta(Long.valueOf("1"), 2, Long.valueOf("1"), Long.valueOf("1"), "ativo", data);
-        Proposta fProposta2 = new Proposta(Long.valueOf("1"), 2, Long.valueOf("1"), Long.valueOf("1"), "ativo", data);
-        Proposta fProposta3 = new Proposta(Long.valueOf("1"), 2, Long.valueOf("1"), Long.valueOf("1"), "ativo", data);
-        Proposta fProposta4 = new Proposta(Long.valueOf("1"), 2, Long.valueOf("1"), Long.valueOf("1"), "ativo", data);
-        Proposta fProposta5 = new Proposta(Long.valueOf("1"), 2, Long.valueOf("1"), Long.valueOf("1"), "ativo", data);
-        Proposta fProposta6 = new Proposta(Long.valueOf("1"), 2, Long.valueOf("1"), Long.valueOf("1"), "ativo", data);
-        Proposta fProposta7 = new Proposta(Long.valueOf("1"), 2, Long.valueOf("1"), Long.valueOf("1"), "ativo", data);
-        Proposta fProposta8 = new Proposta(Long.valueOf("1"), 2, Long.valueOf("1"), Long.valueOf("1"), "ativo", data);
+        if (propostas.size() == 0) {
+            if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+                JsonArrayRequest propostasAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("anuncios/propostas/"+username, new SingletonAPIManager.APIJsonArrayResposta() {
+                    @Override
+                    public void Sucesso(JSONArray resultados) {
 
-        fProposta1.setId(Long.valueOf("1"));
-        fProposta2.setId(Long.valueOf("2"));
-        fProposta3.setId(Long.valueOf("3"));
-        fProposta4.setId(Long.valueOf("4"));
-        fProposta5.setId(Long.valueOf("5"));
-        fProposta6.setId(Long.valueOf("6"));
-        fProposta7.setId(Long.valueOf("7"));
-        fProposta8.setId(Long.valueOf("8"));
+                        try {
+                            JSONArray propostasJson = (JSONArray) resultados.get(0);
 
-        this.propostas.add(fProposta1);
-        this.propostas.add(fProposta2);
-        this.propostas.add(fProposta3);
-        this.propostas.add(fProposta4);
-        this.propostas.add(fProposta5);
-        this.propostas.add(fProposta6);
-        this.propostas.add(fProposta7);
-        this.propostas.add(fProposta8);
-    }*/
+                            propostas = PropostasParser.paraObjeto(propostasJson, context);
 
-    public ArrayList<Proposta> getPropostas() {
-        return propostas;
+                            adicionarPropostasLocal(propostas);
+
+                            if (propostasListener != null)
+                                propostasListener.onRefreshPropostas(propostas);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void Erro(VolleyError erro) {
+                        Toast.makeText(context, "Não foi possível sincronizar as propostas com a API - " + erro.networkResponse.statusCode, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                SingletonAPIManager.getInstance(context).getRequestQueue().add(propostasAPI);
+            } else {
+                propostas = bdTable.select();
+
+                if (propostasListener != null)
+                    propostasListener.onRefreshPropostas(propostas);
+            }
+        }
     }
+
+    public void adicionarProposta(Proposta proposta)
+    {
+        StringRequest propostasAPI = SingletonAPIManager.getInstance(context).enviarAPI("propostas/",
+                Request.Method.POST, PropostasParser.paraJson(proposta), new SingletonAPIManager.APIStringResposta() {
+                    @Override
+                    public void Sucesso(String resposta) {
+                        try {
+                            Proposta novaProposta = PropostasParser.paraObjeto(new JSONObject(resposta), context);
+
+                            if (propostasListener != null)
+                                propostasListener.onUpdatePropostas(novaProposta, 1);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void Erro(VolleyError erro) {
+                        Toast.makeText(context, "Não foi possível adicionar a proposta", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        SingletonAPIManager.getInstance(context).getRequestQueue().add(propostasAPI);
+    }
+
+    public void alterarProposta(Proposta proposta)
+    {
+        StringRequest propostasAPI = SingletonAPIManager.getInstance(context).enviarAPI("propostas/"+proposta.getId().intValue(),
+                Request.Method.PUT, PropostasParser.paraJson(proposta), new SingletonAPIManager.APIStringResposta() {
+                    @Override
+                    public void Sucesso(String resposta) {
+                        try {
+                            Proposta altProposta = PropostasParser.paraObjeto(new JSONObject(resposta), context);
+
+                            if (propostasListener != null)
+                                propostasListener.onUpdatePropostas(altProposta, 2);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void Erro(VolleyError erro) {
+                        Toast.makeText(context, "Não foi possível alterar a proposta", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        SingletonAPIManager.getInstance(context).getRequestQueue().add(propostasAPI);
+    }
+
+    public void apagarProposta(final Proposta proposta)
+    {
+        StringRequest propostasAPI = SingletonAPIManager.getInstance(context).enviarAPI("propostas/"+proposta.getId().intValue(),
+                Request.Method.DELETE, null, new SingletonAPIManager.APIStringResposta() {
+                    @Override
+                    public void Sucesso(String resposta) {
+                        if (propostasListener != null)
+                            propostasListener.onUpdatePropostas(proposta, 3);
+                    }
+
+                    @Override
+                    public void Erro(VolleyError erro) {
+                        Toast.makeText(context, "Não foi possível apagar a proposta", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        SingletonAPIManager.getInstance(context).getRequestQueue().add(propostasAPI);
+    }
+
+    //------------------------------------------------------------
+    //LOCAL A PARTIR DAQUI
 
     public Integer getPropostasCount(){
         return propostas.size();
     }
 
-    public boolean adicionarProposta(Proposta proposta)
+    public void adicionarPropostasLocal(ArrayList<Proposta> propostasList)
+    {
+        for(Proposta proposta:propostasList)
+        {
+            bdTable.insert(proposta);
+        }
+    }
+
+    public boolean adicionarPropostaLocal(Proposta proposta)
     {
         Proposta propostaInserida = bdTable.insert(proposta);
 
         return propostaInserida != null && propostas.add(propostaInserida);
     }
 
-    public boolean removerProposta(Proposta proposta)
+    public boolean removerPropostaLocal(Proposta proposta)
     {
         return bdTable.delete(proposta.getId()) && propostas.remove(proposta);
     }
 
-    public boolean editarProposta(Proposta proposta)
+    public boolean editarPropostaLocal(Proposta proposta)
     {
         if(bdTable.update(proposta)) {
             Proposta novaProposta = propostas.set(proposta.getId().intValue(), proposta);
@@ -100,6 +198,20 @@ public class SingletonPropostas {
 
     public Proposta pesquisarPropostaID(Long id)
     {
-        return propostas.get(id.intValue());
+        for (Proposta proposta:propostas) {
+            if (proposta.getId() == id)
+                return proposta;
+        }
+
+        return null;
+    }
+
+    public Proposta pesquisarPropostaPosicao(int i)
+    {
+        return propostas.get(i);
+    }
+
+    public void setPropostasListener(PropostasListener propostasListener) {
+        this.propostasListener = propostasListener;
     }
 }

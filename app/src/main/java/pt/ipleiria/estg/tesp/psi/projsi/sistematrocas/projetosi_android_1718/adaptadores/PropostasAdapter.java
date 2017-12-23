@@ -67,7 +67,7 @@ public class PropostasAdapter extends BaseAdapter {
         Anuncio anuncioProposta = SingletonAnuncios.getInstance(view.getContext()).pesquisarAnuncioID(proposta.getIdAnuncio());
 
         txtOfertaTitle.setText(anuncioProposta.getTitulo());
-        txtPropostaTitle.setText(""+proposta.getCatProposta());
+        txtPropostaTitle.setText(""+proposta.getCatProposto());
 
         return item;
     }

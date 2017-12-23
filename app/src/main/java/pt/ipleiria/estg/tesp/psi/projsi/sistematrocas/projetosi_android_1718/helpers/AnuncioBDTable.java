@@ -41,8 +41,8 @@ public class AnuncioBDTable extends BDHelper<Anuncio> {
                 ID_USER_ANUNCIO + " INTEGER NOT NULL," +
                 ID_CAT_OFERECER_ANUNCIO + " INTEGER NOT NULL," +
                 QUANT_OFERECER_ANUNCIO + " INTEGER NOT NULL," +
-                ID_CAT_RECEBER_ANUNCIO + " INTEGER NOT NULL," +
-                QUANT_RECEBER_ANUNCIO + " INTEGER NOT NULL," +
+                ID_CAT_RECEBER_ANUNCIO + " INTEGER," +
+                QUANT_RECEBER_ANUNCIO + " INTEGER," +
                 ESTADO_ANUNCIO + " TEXT NOT NULL," +
                 COMENTARIOS_ANUNCIO + " TEXT NOT NULL," +
                 DATA_CRIACAO_ANUNCIO + " TEXT DEFAULT CURRENT_DATE," +
@@ -62,6 +62,23 @@ public class AnuncioBDTable extends BDHelper<Anuncio> {
         String dropTableAnuncios = "DROP TABLE IF EXISTS " + TABLE_NAME;
         db.execSQL(dropTableAnuncios);
         this.onCreate(db);
+    }
+
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        if(db.isOpen()) {
+            Cursor cursor = db.rawQuery("SELECT DISTINCT tbl_name FROM sqlite_master WHERE tbl_name = '" + TABLE_NAME + "';", null);
+
+            if (cursor != null) {
+
+                if (cursor.getCount() == 0) {
+                    cursor.close();
+                    this.onCreate(db);
+                }
+
+                cursor.close();
+            }
+        }
     }
 
     @Override
@@ -235,9 +252,9 @@ public class AnuncioBDTable extends BDHelper<Anuncio> {
 
         values.put(TITULO_ANUNCIO, anuncio.getTitulo());
         values.put(ID_USER_ANUNCIO, anuncio.getIdUser());
-        values.put(ID_CAT_OFERECER_ANUNCIO, anuncio.getIdCatOferecer());
+        values.put(ID_CAT_OFERECER_ANUNCIO, anuncio.getCatOferecer());
         values.put(QUANT_OFERECER_ANUNCIO, anuncio.getQuantOferecer());
-        values.put(ID_CAT_RECEBER_ANUNCIO, anuncio.getIdCatReceber());
+        values.put(ID_CAT_RECEBER_ANUNCIO, anuncio.getCatReceber());
         values.put(QUANT_OFERECER_ANUNCIO, anuncio.getQuantOferecer());
         values.put(ESTADO_ANUNCIO, anuncio.getEstado());
         values.put(COMENTARIOS_ANUNCIO, anuncio.getComentarios());
@@ -261,9 +278,9 @@ public class AnuncioBDTable extends BDHelper<Anuncio> {
 
         values.put(TITULO_ANUNCIO, anuncio.getTitulo());
         values.put(ID_USER_ANUNCIO, anuncio.getIdUser());
-        values.put(ID_CAT_OFERECER_ANUNCIO, anuncio.getIdCatOferecer());
+        values.put(ID_CAT_OFERECER_ANUNCIO, anuncio.getCatOferecer());
         values.put(QUANT_OFERECER_ANUNCIO, anuncio.getQuantOferecer());
-        values.put(ID_CAT_RECEBER_ANUNCIO, anuncio.getIdCatReceber());
+        values.put(ID_CAT_RECEBER_ANUNCIO, anuncio.getCatReceber());
         values.put(QUANT_RECEBER_ANUNCIO, anuncio.getQuantReceber());
         values.put(ESTADO_ANUNCIO, anuncio.getEstado());
         values.put(COMENTARIOS_ANUNCIO, anuncio.getComentarios());

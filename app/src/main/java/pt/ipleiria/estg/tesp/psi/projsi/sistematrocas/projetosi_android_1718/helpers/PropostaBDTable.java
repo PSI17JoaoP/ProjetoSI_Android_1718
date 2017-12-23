@@ -57,6 +57,23 @@ public class PropostaBDTable extends BDHelper<Proposta> {
     }
 
     @Override
+    public void onOpen(SQLiteDatabase db) {
+        if(db.isOpen()) {
+            Cursor cursor = db.rawQuery("SELECT DISTINCT tbl_name FROM sqlite_master WHERE tbl_name = '" + TABLE_NAME + "';", null);
+
+            if (cursor != null) {
+
+                if (cursor.getCount() == 0) {
+                    cursor.close();
+                    this.onCreate(db);
+                }
+
+                cursor.close();
+            }
+        }
+    }
+
+    @Override
     public ArrayList<Proposta> select() {
 
         ArrayList<Proposta> propostas = new ArrayList<>();
@@ -159,7 +176,7 @@ public class PropostaBDTable extends BDHelper<Proposta> {
 
         ContentValues values = new ContentValues();
 
-        values.put(ID_CAT_PROPOSTA_PROPOSTA, proposta.getCatProposta());
+        values.put(ID_CAT_PROPOSTA_PROPOSTA, proposta.getCatProposto());
         values.put(QUANT_PROPOSTA, proposta.getQuant());
         values.put(ID_USER_PROPOSTA, proposta.getIdUser());
         values.put(ID_ANUNCIO_PROPOSTA, proposta.getIdAnuncio());
@@ -181,7 +198,7 @@ public class PropostaBDTable extends BDHelper<Proposta> {
 
         ContentValues values = new ContentValues();
 
-        values.put(ID_CAT_PROPOSTA_PROPOSTA, proposta.getCatProposta());
+        values.put(ID_CAT_PROPOSTA_PROPOSTA, proposta.getCatProposto());
         values.put(QUANT_PROPOSTA, proposta.getQuant());
         values.put(ID_USER_PROPOSTA, proposta.getIdUser());
         values.put(ID_ANUNCIO_PROPOSTA, proposta.getIdAnuncio());
