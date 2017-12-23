@@ -52,7 +52,8 @@ public class MainActivity extends NavDrawerActivity implements AnunciosListener,
         lvPropostas = findViewById(R.id.lvPropostas);
         //------------------------------------
 
-        if (savedInstanceState == null) {
+        if (savedInstanceState == null)
+        {
 
             SingletonAnuncios.getInstance(this).setAnunciosListener(this);
             SingletonAnuncios.getInstance(this).getAnunciosSugeridos();
