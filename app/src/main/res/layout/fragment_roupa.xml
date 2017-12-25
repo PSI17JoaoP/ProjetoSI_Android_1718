@@ -10,27 +10,12 @@
         tools:ignore="UselessParent">
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/textInputLayoutNomeRoupa"
+            android:id="@+id/textInputLayoutMarcaRoupa"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/textInputEditTextNomeRoupa"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/fragment_roupa_nome" />
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/textInputLayoutMarcaRoupa"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/textInputLayoutNomeRoupa"
-            android:layout_below="@+id/textInputLayoutNomeRoupa"
             android:layout_marginTop="10dp">
 
             <android.support.design.widget.TextInputEditText

@@ -57,6 +57,35 @@
             android:textAppearance="@style/TextAppearance.AppCompat" />
 
         <LinearLayout
+            android:id="@+id/linearLayoutCriarAnuncioTrocoNomeCategoria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <TextView
+                android:id="@+id/textViewCriarAnuncioTrocoNomeCategoria"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".15"
+                android:text="@string/criar_anuncio_nome"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat" />
+
+            <EditText
+                android:id="@+id/editTextCriarAnuncioTrocoNomeCategoria"
+                android:labelFor="@+id/editTextCriarAnuncioTrocoNomeCategoria"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".85"
+                android:ems="15"
+                android:inputType="textPersonName" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/linearLayoutCriarAnuncioCategoriaTroco"
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -76,7 +105,8 @@
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
                 android:text="x"
-                android:textAppearance="@style/TextAppearance.AppCompat" />
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                tools:ignore="HardcodedText" />
 
             <NumberPicker
                 android:id="@+id/numberPickerCategoriaTroco"
@@ -121,7 +151,8 @@
                     android:id="@+id/btnCriarAnuncioAdicionarImagemTroco"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="..." />
+                    android:text="..."
+                    tools:ignore="HardcodedText" />
             </LinearLayout>
 
         </LinearLayout>
@@ -154,6 +185,35 @@
             android:textAppearance="@style/TextAppearance.AppCompat" />
 
         <LinearLayout
+            android:id="@+id/linearLayoutCriarAnuncioPorNomeCategoria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <TextView
+                android:id="@+id/textViewCriarAnuncioPorNomeCategoria"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".15"
+                android:text="@string/criar_anuncio_nome"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat" />
+
+            <EditText
+                android:id="@+id/editTextCriarAnuncioPorNomeCategoria"
+                android:labelFor="@+id/editTextCriarAnuncioPorNomeCategoria"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".85"
+                android:ems="15"
+                android:inputType="textPersonName" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/linearLayoutCriarAnuncioCategoriaPor"
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -173,7 +233,8 @@
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
                 android:text="x"
-                android:textAppearance="@style/TextAppearance.AppCompat" />
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                tools:ignore="HardcodedText" />
 
             <NumberPicker
                 android:id="@+id/numberPickerCategoriaPor"
@@ -218,7 +279,8 @@
                     android:id="@+id/btnCriarAnuncioAdicionarImagemPor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="..." />
+                    android:text="..."
+                    tools:ignore="HardcodedText" />
             </LinearLayout>
 
         </LinearLayout>

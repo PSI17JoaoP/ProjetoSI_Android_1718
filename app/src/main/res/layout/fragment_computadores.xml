@@ -10,28 +10,12 @@
         tools:ignore="UselessParent">
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/textInputLayoutNomeComputadores"
+            android:id="@+id/textInputLayoutMarcaComputadores"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/textInputEditTextNomeComputadores"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/fragment_eletronica_nome" />
-
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/textInputLayoutMarcaComputadores"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/textInputLayoutNomeComputadores"
-            android:layout_below="@+id/textInputLayoutNomeComputadores"
             android:layout_marginTop="10dp">
 
             <android.support.design.widget.TextInputEditText
