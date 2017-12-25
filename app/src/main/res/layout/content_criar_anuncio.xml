@@ -53,6 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/criar_anuncio_text_view_troco"
+            android:textSize="20sp"
             android:textAppearance="@style/TextAppearance.AppCompat" />
 
         <LinearLayout
@@ -79,6 +80,7 @@
 
             <NumberPicker
                 android:id="@+id/numberPickerCategoriaTroco"
+                android:descendantFocusability="blocksDescendants"
                 android:layout_height="match_parent"
                 android:layout_width="0dp"
                 android:layout_weight=".15" />
@@ -148,6 +150,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/criar_anuncio_text_view_por"
+            android:textSize="20sp"
             android:textAppearance="@style/TextAppearance.AppCompat" />
 
         <LinearLayout
@@ -174,6 +177,7 @@
 
             <NumberPicker
                 android:id="@+id/numberPickerCategoriaPor"
+                android:descendantFocusability="blocksDescendants"
                 android:layout_height="match_parent"
                 android:layout_width="0dp"
                 android:layout_weight=".15"/>
