@@ -1,12 +1,23 @@
 package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.R;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Roupa;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.TipoRoupa;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonTiposRoupa;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
 
 /**
  * Created by JAPorelo on 16-12-2017.
@@ -16,6 +27,10 @@ import android.view.ViewGroup;
 
 public class RoupaFragment extends Fragment {
 
+    private TextInputEditText textInputEditTextMarcaRoupa;
+    private TextInputEditText textInputEditTextTamanhoRoupa;
+    private Spinner spinnerTipoRoupa;
+
     public RoupaFragment() {
     }
 
@@ -24,5 +39,43 @@ public class RoupaFragment extends Fragment {
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_roupa, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        textInputEditTextMarcaRoupa = view.findViewById(R.id.textInputEditTextMarcaRoupa);
+        textInputEditTextTamanhoRoupa = view.findViewById(R.id.textInputEditTextTamanhoRoupa);
+
+        ArrayList<TipoRoupa> tiposRoupa = SingletonTiposRoupa.getInstance(getContext()).getTiposRoupa();
+
+        ArrayAdapter<TipoRoupa> spinnerTamanhos = new ArrayAdapter<TipoRoupa>(getContext(),
+                R.layout.custom_spinner_item,
+                tiposRoupa);
+
+        spinnerTipoRoupa = view.findViewById(R.id.spinnerTamanhoRoupa);
+
+        spinnerTamanhos.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerTipoRoupa.setAdapter(spinnerTamanhos);
+    }
+
+    @Override
+    public void onDestroyView() {
+        textInputEditTextMarcaRoupa = null;
+        textInputEditTextTamanhoRoupa = null;
+        spinnerTipoRoupa = null;
+        super.onDestroyView();
+    }
+
+    public Roupa getRoupa(String nome) {
+
+        String marca = textInputEditTextMarcaRoupa.getText().toString().trim();
+        String tamanho = textInputEditTextTamanhoRoupa.getText().toString().trim();
+        TipoRoupa tipo = (TipoRoupa) spinnerTipoRoupa.getSelectedItem();
+
+        if(!nome.isEmpty() && !marca.isEmpty() && !tamanho.isEmpty() && tipo != null) {
+            return new Roupa(nome, marca, tamanho, tipo.getId());
+        }
+
+        return null;
     }
 }

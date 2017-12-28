@@ -43,11 +43,12 @@ public class SingletonAnuncios {
         this.context = context;
         anuncios = new ArrayList<>();
         bdTable = new AnuncioBDTable(context);
-        //anuncios = bdTable.select();
+        getAnuncios();
     }
 
     public void getAnuncios() {
-        if (anuncios.size() == 0)
+
+        if (anuncios.isEmpty())
         {
             if (SingletonAPIManager.getInstance(context).ligadoInternet())
             {
@@ -78,7 +79,8 @@ public class SingletonAnuncios {
         }
     }
 
-    public void getAnunciosSugeridos(){
+    public void getAnunciosSugeridos() {
+
         SharedPreferences preferences = context.getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
         String username = preferences.getString("username", "");
 
@@ -87,9 +89,8 @@ public class SingletonAnuncios {
             JsonArrayRequest anunciosAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("anuncios/sugeridos/"+username, new SingletonAPIManager.APIJsonArrayResposta() {
                 @Override
                 public void Sucesso(JSONArray resultados) {
-                    anuncios = AnunciosParser.paraObjeto(resultados, context);
 
-                    adicionarAnunciosLocal(anuncios);
+                    adicionarAnunciosLocal(AnunciosParser.paraObjeto(resultados, context));
 
                     if (anunciosListener != null)
                         anunciosListener.onRefreshAnuncios(anuncios);
@@ -107,86 +108,103 @@ public class SingletonAnuncios {
 
     public void adicionarAnuncio(Anuncio anuncio)
     {
-        StringRequest adicionarAPI = SingletonAPIManager.getInstance(context).enviarAPI("anuncios/",
-                Request.Method.POST, AnunciosParser.paraJson(anuncio), new SingletonAPIManager.APIStringResposta() {
-                    @Override
-                    public void Sucesso(String resposta) {
-                        try {
-                            Anuncio novoAnuncio = AnunciosParser.paraObjeto(new JSONObject(resposta), context);
+        if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
 
-                            if (anunciosListener != null)
-                                anunciosListener.onUpdateAnuncios(novoAnuncio, 1);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+            StringRequest adicionarAPI = SingletonAPIManager.getInstance(context).enviarAPI("anuncios/",
+                    Request.Method.POST, AnunciosParser.paraJson(anuncio), new SingletonAPIManager.APIStringResposta() {
+                        @Override
+                        public void Sucesso(String resposta) {
+                            try {
+                                Anuncio novoAnuncio = AnunciosParser.paraObjeto(new JSONObject(resposta), context);
+
+                                if (adicionarAnuncioLocal(novoAnuncio)) {
+                                    if (anunciosListener != null)
+                                        anunciosListener.onUpdateAnuncios(novoAnuncio, 1);
+                                }
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
 
-                    @Override
-                    public void Erro(VolleyError erro) {
-                        Toast.makeText(context, "Não foi possível adicionar o anúncio", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                        @Override
+                        public void Erro(VolleyError erro) {
+                            Toast.makeText(context, "Não foi possível adicionar o anúncio", Toast.LENGTH_SHORT).show();
+                        }
+                    });
 
-        SingletonAPIManager.getInstance(context).getRequestQueue().add(adicionarAPI);
+            SingletonAPIManager.getInstance(context).getRequestQueue().add(adicionarAPI);
+        }
     }
 
     public void alterarAnuncio(Anuncio anuncio)
     {
-        StringRequest alterarAPI = SingletonAPIManager.getInstance(context).enviarAPI("anuncios/" + anuncio.getId().intValue(),
-                Request.Method.PUT, AnunciosParser.paraJson(anuncio), new SingletonAPIManager.APIStringResposta() {
-                    @Override
-                    public void Sucesso(String resposta) {
-                        try {
-                            Anuncio altAnuncio = AnunciosParser.paraObjeto(new JSONObject(resposta), context);
+        if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
 
-                            if (anunciosListener != null)
-                                anunciosListener.onUpdateAnuncios(altAnuncio, 2);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+            StringRequest alterarAPI = SingletonAPIManager.getInstance(context).enviarAPI("anuncios/" + anuncio.getId().intValue(),
+                    Request.Method.PUT, AnunciosParser.paraJson(anuncio), new SingletonAPIManager.APIStringResposta() {
+                        @Override
+                        public void Sucesso(String resposta) {
+                            try {
+                                Anuncio anuncioAlterado = AnunciosParser.paraObjeto(new JSONObject(resposta), context);
+
+                                if (editarAnuncioLocal(anuncioAlterado)) {
+                                    if (anunciosListener != null)
+                                        anunciosListener.onUpdateAnuncios(anuncioAlterado, 2);
+                                }
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
 
-                    @Override
-                    public void Erro(VolleyError erro) {
-                        Toast.makeText(context, "Não foi possível alterar o anúncio", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                        @Override
+                        public void Erro(VolleyError erro) {
+                            Toast.makeText(context, "Não foi possível alterar o anúncio", Toast.LENGTH_SHORT).show();
+                        }
+                    });
 
-        SingletonAPIManager.getInstance(context).getRequestQueue().add(alterarAPI);
+            SingletonAPIManager.getInstance(context).getRequestQueue().add(alterarAPI);
+        }
     }
 
     public void apagarAnuncio(final Anuncio anuncio)
     {
-        StringRequest alterarAPI = SingletonAPIManager.getInstance(context).enviarAPI("anuncios/" + anuncio.getId().intValue(),
-                Request.Method.DELETE, null, new SingletonAPIManager.APIStringResposta() {
-                    @Override
-                    public void Sucesso(String resposta) {
-                        if (anunciosListener != null)
-                            anunciosListener.onUpdateAnuncios(anuncio, 3);
-                    }
+        if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
 
-                    @Override
-                    public void Erro(VolleyError erro) {
-                        Toast.makeText(context, "Não foi possível apagar o anúncio", Toast.LENGTH_SHORT).show();
-                    }
-                });
+            StringRequest alterarAPI = SingletonAPIManager.getInstance(context).enviarAPI("anuncios/" + anuncio.getId().intValue(),
+                    Request.Method.DELETE, null, new SingletonAPIManager.APIStringResposta() {
+                        @Override
+                        public void Sucesso(String resposta) {
 
-        SingletonAPIManager.getInstance(context).getRequestQueue().add(alterarAPI);
+                            if (removerAnuncioLocal(anuncio)) {
+                                if (anunciosListener != null)
+                                    anunciosListener.onUpdateAnuncios(anuncio, 3);
+                            }
+                        }
+
+                        @Override
+                        public void Erro(VolleyError erro) {
+                            Toast.makeText(context, "Não foi possível apagar o anúncio", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+            SingletonAPIManager.getInstance(context).getRequestQueue().add(alterarAPI);
+        }
     }
 
     //------------------------------------------------------------
     //LOCAL A PARTIR DAQUI
 
-    public Integer getAnunciosCount()
-    {
+    public Integer getAnunciosCount() {
         return anuncios.size();
     }
 
     public void adicionarAnunciosLocal(ArrayList<Anuncio> anuncioList)
     {
-        for(Anuncio anuncio:anuncioList)
+        for(Anuncio anuncio : anuncioList)
         {
-            bdTable.insert(anuncio);
+            adicionarAnuncioLocal(anuncio);
         }
     }
 
@@ -215,16 +233,16 @@ public class SingletonAnuncios {
 
     public Anuncio pesquisarAnuncioID(Long id)
     {
-        for (Anuncio anuncio:anuncios) {
-            if (anuncio.getId() == id)
+        for (Anuncio anuncio : anuncios) {
+            if (anuncio.getId().equals(id)) {
                 return anuncio;
+            }
         }
 
         return null;
     }
 
-    public Anuncio pesquisarAnuncioPosicao(Integer i)
-    {
+    public Anuncio pesquisarAnuncioPosicao(Integer i) {
         return anuncios.get(i);
     }
 

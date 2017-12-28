@@ -91,26 +91,11 @@
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/textInputLayoutGPUSmartphones"
+            android:id="@+id/textInputLayoutOSSmartphones"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/textInputLayoutHDDSmartphones"
             android:layout_below="@+id/textInputLayoutHDDSmartphones"
-            android:layout_marginTop="10dp">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/textInputEditTextGPUSmartphones"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/fragment_computadores_gpu" />
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/textInputLayoutOSSmartphones"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/textInputLayoutGPUSmartphones"
-            android:layout_below="@+id/textInputLayoutGPUSmartphones"
             android:layout_marginTop="10dp">
 
             <android.support.design.widget.TextInputEditText

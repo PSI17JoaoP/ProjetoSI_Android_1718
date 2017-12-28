@@ -45,7 +45,6 @@ public class SingletonPropostas {
         this.context = context;
         propostas = new ArrayList<>();
         bdTable = new PropostaBDTable(context);
-        //propostas = bdTable.select();
     }
 
     public void getPropostas()

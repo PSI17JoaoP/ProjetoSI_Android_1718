@@ -1,12 +1,22 @@
 package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.R;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.GeneroJogo;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Jogo;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonGenerosJogo;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Spinner;
+
+import java.util.ArrayList;
 
 /**
  * Created by JAPorelo on 16-12-2017.
@@ -14,6 +24,12 @@ import android.view.ViewGroup;
  */
 
 public class JogosFragment extends Fragment {
+
+    private EditText editTextFaixaEtariaJogos;
+    private TextInputEditText textInputEditTextEditoraJogos;
+    private EditText editTextDescricaoJogos;
+    private TextInputEditText textInputEditTextProdutoraJogos;
+    private Spinner spinnerGeneroJogos;
 
     public JogosFragment() {
     }
@@ -23,5 +39,49 @@ public class JogosFragment extends Fragment {
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_jogos, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        editTextFaixaEtariaJogos = view.findViewById(R.id.editTextFaixaEtariaJogos);
+        textInputEditTextEditoraJogos = view.findViewById(R.id.textInputEditTextEditoraJogos);
+        editTextDescricaoJogos = view.findViewById(R.id.editTextDescricaoJogos);
+        textInputEditTextProdutoraJogos = view.findViewById(R.id.textInputEditTextProdutoraJogos);
+
+        ArrayList<GeneroJogo> generoJogos = SingletonGenerosJogo.getInstance(getContext()).getGeneroJogos();
+
+        ArrayAdapter<GeneroJogo> spinnerGeneros = new ArrayAdapter<GeneroJogo>(getContext(),
+                R.layout.custom_spinner_item,
+                generoJogos);
+
+        spinnerGeneroJogos = view.findViewById(R.id.spinnerGeneroJogos);
+
+        spinnerGeneros.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerGeneroJogos.setAdapter(spinnerGeneros);
+    }
+
+    @Override
+    public void onDestroyView() {
+        editTextFaixaEtariaJogos = null;
+        textInputEditTextEditoraJogos = null;
+        editTextDescricaoJogos = null;
+        textInputEditTextProdutoraJogos = null;
+        spinnerGeneroJogos = null;
+        super.onDestroyView();
+    }
+
+    public Jogo getJogo(String nome) throws NumberFormatException {
+
+        String faixaEtaria = editTextFaixaEtariaJogos.getText().toString().trim();
+        String editora = textInputEditTextEditoraJogos.getText().toString().trim();
+        String descricao = editTextDescricaoJogos.getText().toString().trim();
+        String produtora = textInputEditTextProdutoraJogos.getText().toString().trim();
+        GeneroJogo genero = (GeneroJogo) spinnerGeneroJogos.getSelectedItem();
+
+        if(!nome.isEmpty() && !faixaEtaria.isEmpty() && !editora.isEmpty() && !descricao.isEmpty() && !produtora.isEmpty() && genero != null) {
+            return new Jogo(nome, editora, Integer.valueOf(faixaEtaria), descricao, genero.getId(), produtora);
+        }
+
+        return null;
     }
 }

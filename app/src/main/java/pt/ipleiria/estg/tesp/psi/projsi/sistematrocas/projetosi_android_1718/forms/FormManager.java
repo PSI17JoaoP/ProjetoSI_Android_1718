@@ -3,14 +3,12 @@ package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.fo
 import android.support.v4.app.Fragment;
 import android.content.Context;
 
-import java.text.Normalizer;
-
 /**
  * Created by JAPorelo on 22-12-2017.
  * Project ProjetoSI_Android_1718 - pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms
  */
 
-public class FormSelector {
+public class FormManager {
 
     private static final String PACKAGE_PATH = "pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms.";
 
@@ -26,6 +24,4 @@ public class FormSelector {
 
         return null;
     }
-
-    public 
 }
