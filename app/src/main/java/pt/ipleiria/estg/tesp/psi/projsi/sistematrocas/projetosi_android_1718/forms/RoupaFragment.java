@@ -66,7 +66,7 @@ public class RoupaFragment extends Fragment {
         super.onDestroyView();
     }
 
-    public Roupa getRoupa(String nome) {
+    public Roupa getCategoria(String nome) {
 
         String marca = textInputEditTextMarcaRoupa.getText().toString().trim();
         String tamanho = textInputEditTextTamanhoRoupa.getText().toString().trim();

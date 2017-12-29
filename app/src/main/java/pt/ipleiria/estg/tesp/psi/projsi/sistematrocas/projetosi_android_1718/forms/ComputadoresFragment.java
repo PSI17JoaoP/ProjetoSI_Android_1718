@@ -79,7 +79,7 @@ public class ComputadoresFragment extends Fragment {
         super.onDestroyView();
     }
 
-    public Computador getComputador(String nome) {
+    public Computador getCategoria(String nome) {
         String marca = textInputEditTextMarcaComputadores.getText().toString().trim();
         String descricao = editTextDescricaoComputadores.getText().toString().trim();
         String cpu = textInputEditTextProcessadorComputadores.getText().toString().trim();

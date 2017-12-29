@@ -70,7 +70,7 @@ public class JogosFragment extends Fragment {
         super.onDestroyView();
     }
 
-    public Jogo getJogo(String nome) throws NumberFormatException {
+    public Jogo getCategoria(String nome) throws RuntimeException {
 
         String faixaEtaria = editTextFaixaEtariaJogos.getText().toString().trim();
         String editora = textInputEditTextEditoraJogos.getText().toString().trim();
@@ -79,7 +79,13 @@ public class JogosFragment extends Fragment {
         GeneroJogo genero = (GeneroJogo) spinnerGeneroJogos.getSelectedItem();
 
         if(!nome.isEmpty() && !faixaEtaria.isEmpty() && !editora.isEmpty() && !descricao.isEmpty() && !produtora.isEmpty() && genero != null) {
-            return new Jogo(nome, editora, Integer.valueOf(faixaEtaria), descricao, genero.getId(), produtora);
+
+            try {
+                return new Jogo(nome, editora, Integer.valueOf(faixaEtaria), descricao, genero.getId(), produtora);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                throw new RuntimeException("Ocorreu um erro no processamento do formulário.\nVerifique a faixa etária do formulário de Jogos correspondente.");
+            }
         }
 
         return null;

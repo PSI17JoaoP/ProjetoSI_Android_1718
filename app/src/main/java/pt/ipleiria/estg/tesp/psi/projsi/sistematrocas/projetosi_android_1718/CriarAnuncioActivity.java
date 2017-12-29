@@ -2,6 +2,8 @@ package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718;
 
 import android.annotation.SuppressLint;
 import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -20,18 +22,16 @@ import android.widget.Spinner;
 
 import java.util.HashMap;
 
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms.BrinquedosFragment;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms.ComputadoresFragment;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms.EletronicaFragment;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms.FormManager;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms.JogosFragment;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms.LivrosFragment;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms.RoupaFragment;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms.SmartphonesFragment;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.helpers.BrinquedoBDTable;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Anuncio;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Brinquedo;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Categoria;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonBrinquedos;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Computador;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Eletronica;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Jogo;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Livro;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Roupa;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Smartphone;
 
 public class CriarAnuncioActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
@@ -157,7 +157,7 @@ public class CriarAnuncioActivity extends AppCompatActivity implements AdapterVi
 
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
-                showNotification("Ocorreu um erro na seleção da categoria");
+                showNotification("Ocorreu um erro na seleção da categoria.");
             }
         } else {
 
@@ -180,53 +180,115 @@ public class CriarAnuncioActivity extends AppCompatActivity implements AdapterVi
 
         EditText editTextAnuncioTitulo = findViewById(R.id.editTextCriarAnuncioTitulo);
         EditText editTextNomeCategoriaTroco = findViewById(R.id.editTextCriarAnuncioTrocoNomeCategoria);
-        EditText nomeCategoriaPor = findViewById(R.id.editTextCriarAnuncioPorNomeCategoria);
+        EditText editTextNomeCategoriaPor = findViewById(R.id.editTextCriarAnuncioPorNomeCategoria);
 
-        FragmentManager manager = getSupportFragmentManager();
+        NumberPicker numberPickerCategoriaTroco = findViewById(R.id.numberPickerCategoriaTroco);
+        NumberPicker numberPickerCategoriaPor = findViewById(R.id.numberPickerCategoriaPor);
 
         FrameLayout fragmentContainerFormTroco = findViewById(R.id.fragmentFormCategoriaTroco);
+        FrameLayout fragmentContainerFormPor = findViewById(R.id.fragmentFormCategoriaPor);
 
-        if(!editTextAnuncioTitulo.getText().toString().trim().isEmpty() && !editTextNomeCategoriaTroco.getText().toString().trim().isEmpty()
-                && fragmentContainerFormTroco.getChildCount() != 0) {
+        String anuncioTitulo = editTextAnuncioTitulo.getText().toString().trim();
+        String nomeCategoriaTroco = editTextNomeCategoriaTroco.getText().toString().trim();
+        String nomeCategoriaPor = editTextNomeCategoriaPor.getText().toString().trim();
 
-            String anuncioTitulo = editTextAnuncioTitulo.getText().toString().trim();
-            String nomeCategoriaTroco = editTextNomeCategoriaTroco.getText().toString().trim();
+        FragmentManager fragmentManager = getSupportFragmentManager();
 
-            Fragment fragmentFormTroco = manager.findFragmentById(R.id.fragmentFormCategoriaTroco);
+        if(!anuncioTitulo.isEmpty()) {
 
-            if (fragmentFormTroco instanceof LivrosFragment) {
+            if(!nomeCategoriaTroco.isEmpty() && fragmentContainerFormTroco.getChildCount() != 0) {
 
-                LivrosFragment fragmentLivrosFormTroco = (LivrosFragment) fragmentFormTroco;
+                if (!nomeCategoriaPor.isEmpty() && fragmentContainerFormPor.getChildCount() != 0) {
 
-            } else if(fragmentFormTroco instanceof RoupaFragment) {
+                    Anuncio novoAnuncio = criarAnuncio(fragmentManager,
+                            R.id.fragmentFormCategoriaTroco, nomeCategoriaTroco, numberPickerCategoriaTroco.getValue(),
+                            R.id.fragmentFormCategoriaPor, nomeCategoriaPor, numberPickerCategoriaPor.getValue());
+                }
 
-                RoupaFragment fragmentRoupaFormTroco = (RoupaFragment) fragmentFormTroco;
+                else if(nomeCategoriaPor.isEmpty() && fragmentContainerFormPor.getChildCount() != 0) {
+                    showNotification("Preencha o nome do bem a receber.\nSe não pretender receber um bem especifico, deselecione a categoria do bem a receber.");
+                }
 
-            } else if(fragmentFormTroco instanceof EletronicaFragment) {
+                else if(!nomeCategoriaPor.isEmpty() && fragmentContainerFormPor.getChildCount() == 0) {
+                    showNotification("Selecione a categoria do bem a receber.\nSe não pretender receber um bem especifico, remova o nome do bem a receber.");
+                }
 
-                EletronicaFragment fragmentEletronicaFormTroco = (EletronicaFragment) fragmentFormTroco;
-
-            } else if(fragmentFormTroco instanceof BrinquedosFragment) {
-
-                BrinquedosFragment fragmentBrinquedosFormTroco = (BrinquedosFragment) fragmentFormTroco;
-
-                Brinquedo novoBrinquedo = fragmentBrinquedosFormTroco.getBrinquedo(nomeCategoriaTroco);
-
-                System.out.println("####" + novoBrinquedo);
-
-            } else if(fragmentFormTroco instanceof ComputadoresFragment) {
-
-                ComputadoresFragment fragmentComputadoresFormTroco = (ComputadoresFragment) fragmentFormTroco;
-
-            } else if(fragmentFormTroco instanceof SmartphonesFragment) {
-
-                SmartphonesFragment fragmentSmartphonesFormTroco = (SmartphonesFragment) fragmentFormTroco;
-
-            } else if(fragmentFormTroco instanceof JogosFragment) {
-
-                JogosFragment fragmentJogosFormTroco = (JogosFragment) fragmentFormTroco;
-
+                else {
+                    Anuncio novoAnuncio = criarAnuncio(fragmentManager,
+                            R.id.fragmentFormCategoriaTroco, nomeCategoriaTroco, numberPickerCategoriaTroco.getValue(),
+                            null, null, null);
+                }
             }
+
+            else if(nomeCategoriaTroco.isEmpty()) {
+                showNotification("Preencha o nome do bem a trocar.");
+            }
+
+            else if(fragmentContainerFormTroco.getChildCount() == 0) {
+                showNotification("Selecione a categoria do bem a oferecer.");
+            }
+        }
+
+        else {
+            showNotification("Preencha o titulo do anúncio.");
+        }
+    }
+
+    private Anuncio criarAnuncio(@NonNull FragmentManager fragmentManager,
+                                @IdRes @NonNull Integer containerIdFormTroco, @NonNull String nomeCategoriaTroco, @NonNull Integer quantidadeCategoriaTroco,
+                                @IdRes @Nullable Integer containerIdFormPor, @Nullable String nomeCategoriaPor, @Nullable Integer quantidadeCategoriaPor) {
+
+        FormManager formManager = new FormManager();
+
+        if(containerIdFormPor != null && nomeCategoriaPor != null && quantidadeCategoriaPor != null) {
+            Categoria categoriaTroco = getCategoria(fragmentManager, formManager, containerIdFormTroco, nomeCategoriaTroco);
+            Categoria categoriaPor = getCategoria(fragmentManager, formManager, containerIdFormPor, nomeCategoriaPor);
+        }
+
+        else if(containerIdFormPor == null && nomeCategoriaPor == null && quantidadeCategoriaPor == null) {
+            Categoria categoriaTroco = getCategoria(fragmentManager, formManager, containerIdFormTroco, nomeCategoriaTroco);
+        }
+    }
+
+    private Categoria getCategoria(@NonNull FragmentManager fragmentManager, @NonNull FormManager formManager, @IdRes @NonNull Integer containerIdForm, @NonNull String nomeCategoria) {
+
+        Categoria categoria = null;
+
+        Fragment fragmentForm = fragmentManager.findFragmentById(containerIdForm);
+
+        try {
+            categoria = formManager.getCategoria(fragmentManager, fragmentForm, getResources().getStringArray(R.array.categorias_keys), nomeCategoria, getApplicationContext());
+        }
+
+        catch (RuntimeException ex) {
+            showNotification(ex.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            showNotification("Ocorreu um erro inesperado no processamento dos formulários.");
+        }
+
+        return categoria;
+    }
+
+    private Anuncio getAnuncio(@NonNull Categoria categoriaTroco, @NonNull Integer quantidadeTroco,
+                               @Nullable Categoria categoriaPor, @Nullable Integer quantidadePor) {
+
+        Anuncio novoAnuncio = null;
+
+        if(categoriaTroco instanceof Jogo) {
+            Jogo novoJogo = (Jogo) categoriaTroco;
+        } else if(categoriaTroco instanceof Brinquedo) {
+            Brinquedo novoBrinquedo = (Brinquedo) categoriaTroco;
+        } else if(categoriaTroco instanceof Computador) {
+            Computador novoComputador = (Computador) categoriaTroco;
+        } else if(categoriaTroco instanceof Smartphone) {
+            Smartphone novoSmartphone = (Smartphone) categoriaTroco;
+        } else if(categoriaTroco instanceof Eletronica) {
+            Eletronica novaEletronica = (Eletronica) categoriaTroco;
+        } else if(categoriaTroco instanceof Livro) {
+            Livro novoLivroo = (Livro) categoriaTroco;
+        } else if(categoriaTroco instanceof Roupa) {
+            Roupa novaRoupa = (Roupa) categoriaTroco;
         }
     }
 }

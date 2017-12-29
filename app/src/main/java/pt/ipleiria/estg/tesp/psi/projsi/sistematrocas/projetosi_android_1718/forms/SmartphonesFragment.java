@@ -61,7 +61,7 @@ public class SmartphonesFragment extends Fragment {
         super.onDestroyView();
     }
 
-    public Smartphone getSmartphone(String nome) {
+    public Smartphone getCategoria(String nome) {
 
         String marca = textInputEditTextMarcaSmartphones.getText().toString().trim();
         String descricao = editTextDescricaoSmartphones.getText().toString().trim();

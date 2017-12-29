@@ -51,7 +51,7 @@ public class LivrosFragment extends Fragment {
         super.onDestroyView();
     }
 
-    public Livro getLivro(String nome) throws NumberFormatException {
+    public Livro getCategoria(String nome) throws NumberFormatException {
 
         String titulo = textInputEditTextTituloLivros.getText().toString().trim();
         String editora = textInputEditTextEditoraLivros.getText().toString().trim();
@@ -59,7 +59,12 @@ public class LivrosFragment extends Fragment {
         String isbn = editTextISBNLivros.getText().toString().trim();
 
         if(!nome.isEmpty() && !titulo.isEmpty() && !editora.isEmpty() && !autor.isEmpty() && !isbn.isEmpty()) {
-            return new Livro(nome, titulo, editora, autor, Integer.valueOf(isbn));
+            try {
+                return new Livro(nome, titulo, editora, autor, Integer.valueOf(isbn));
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                throw new RuntimeException("Ocorreu um erro no processamento do formulário.\nVerifique o ISBN do formulário de Livros correspondente.");
+            }
         }
 
         return null;

@@ -48,15 +48,19 @@ public class BrinquedosFragment extends Fragment {
         super.onDestroyView();
     }
 
-    public Brinquedo getBrinquedo(String nome) throws NumberFormatException {
+    public Brinquedo getCategoria(String nome) throws NumberFormatException {
 
         String editora = textInputEditTextEditoraBrinquedos.getText().toString().trim();
         String faixaEtaria = editTextFaixaEtariaBrinquedos.getText().toString().trim();
         String descricao = editTextDescricaoBrinquedos.getText().toString().trim();
 
         if(!nome.isEmpty() && !editora.isEmpty() && !faixaEtaria.isEmpty() && !descricao.isEmpty()) {
-
-            return new Brinquedo(nome, editora, Integer.valueOf(faixaEtaria), descricao);
+            try {
+                return new Brinquedo(nome, editora, Integer.valueOf(faixaEtaria), descricao);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                throw new RuntimeException("Ocorreu um erro no processamento do formulário.\nVerifique a faixa etária do formulário de Brinquedos correspondente.");
+            }
         }
 
         return null;

@@ -45,7 +45,7 @@ public class EletronicaFragment extends Fragment {
         super.onDestroyView();
     }
 
-    public Eletronica getEletronica(String nome) {
+    public Eletronica getCategoria(String nome) {
 
         String marca = textInputEditTextMarcaEletronica.getText().toString().trim();
         String descricao = editTextDescricaoEletronica.getText().toString().trim();
