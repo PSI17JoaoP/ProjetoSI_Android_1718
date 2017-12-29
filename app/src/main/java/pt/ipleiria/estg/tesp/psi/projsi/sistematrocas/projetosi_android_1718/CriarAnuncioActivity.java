@@ -234,6 +234,7 @@ public class CriarAnuncioActivity extends AppCompatActivity implements AdapterVi
         }
     }
 
+    //Método que obtém o anúncio, juntamente com as categorias que obtém dos fragmentos, e regista-o na BD e API.
     private Anuncio criarAnuncio(@NonNull FragmentManager fragmentManager,
                                 @IdRes @NonNull Integer containerIdFormTroco, @NonNull String nomeCategoriaTroco, @NonNull Integer quantidadeCategoriaTroco,
                                 @IdRes @Nullable Integer containerIdFormPor, @Nullable String nomeCategoriaPor, @Nullable Integer quantidadeCategoriaPor) {
@@ -250,6 +251,7 @@ public class CriarAnuncioActivity extends AppCompatActivity implements AdapterVi
         }
     }
 
+    //Método que obtém a categoria do fragment, através do método getCategoria do objeto do tipo FormManager.
     private Categoria getCategoria(@NonNull FragmentManager fragmentManager, @NonNull FormManager formManager, @IdRes @NonNull Integer containerIdForm, @NonNull String nomeCategoria) {
 
         Categoria categoria = null;
@@ -270,25 +272,160 @@ public class CriarAnuncioActivity extends AppCompatActivity implements AdapterVi
         return categoria;
     }
 
+    //Método que cria o objeto do tipo Anuncio.
+    //TODO: A implementação deste método está bastante extensa e repetitiva, e muito pouco elegante. Necessário revisão, se houver tempo.
     private Anuncio getAnuncio(@NonNull Categoria categoriaTroco, @NonNull Integer quantidadeTroco,
                                @Nullable Categoria categoriaPor, @Nullable Integer quantidadePor) {
 
         Anuncio novoAnuncio = null;
 
         if(categoriaTroco instanceof Jogo) {
-            Jogo novoJogo = (Jogo) categoriaTroco;
+
+            Jogo novoJogoTroco = (Jogo) categoriaTroco;
+
+            if(categoriaPor != null && quantidadePor != null) {
+                if (categoriaPor instanceof Jogo) {
+                    Jogo novoJogoPor = (Jogo) categoriaPor;
+                } else if (categoriaPor instanceof Brinquedo) {
+                    Brinquedo novoBrinquedoPor = (Brinquedo) categoriaPor;
+                } else if (categoriaPor instanceof Computador) {
+                    Computador novoComputadorPor = (Computador) categoriaPor;
+                } else if (categoriaPor instanceof Smartphone) {
+                    Smartphone novoSmartphonePor = (Smartphone) categoriaPor;
+                } else if (categoriaPor instanceof Eletronica) {
+                    Eletronica novaEletronicaPor = (Eletronica) categoriaPor;
+                } else if (categoriaPor instanceof Livro) {
+                    Livro novoLivroPor = (Livro) categoriaPor;
+                } else if (categoriaPor instanceof Roupa) {
+                    Roupa novaRoupaPor = (Roupa) categoriaPor;
+                }
+            }
         } else if(categoriaTroco instanceof Brinquedo) {
-            Brinquedo novoBrinquedo = (Brinquedo) categoriaTroco;
+
+            Brinquedo novoBrinquedoTroco = (Brinquedo) categoriaTroco;
+
+            if(categoriaPor != null && quantidadePor != null) {
+                if (categoriaPor instanceof Jogo) {
+                    Jogo novoJogoPor = (Jogo) categoriaPor;
+                } else if (categoriaPor instanceof Brinquedo) {
+                    Brinquedo novoBrinquedoPor = (Brinquedo) categoriaPor;
+                } else if (categoriaPor instanceof Computador) {
+                    Computador novoComputadorPor = (Computador) categoriaPor;
+                } else if (categoriaPor instanceof Smartphone) {
+                    Smartphone novoSmartphonePor = (Smartphone) categoriaPor;
+                } else if (categoriaPor instanceof Eletronica) {
+                    Eletronica novaEletronicaPor = (Eletronica) categoriaPor;
+                } else if (categoriaPor instanceof Livro) {
+                    Livro novoLivroPor = (Livro) categoriaPor;
+                } else if (categoriaPor instanceof Roupa) {
+                    Roupa novaRoupaPor = (Roupa) categoriaPor;
+                }
+            }
         } else if(categoriaTroco instanceof Computador) {
-            Computador novoComputador = (Computador) categoriaTroco;
+
+            Computador novoComputadorTroco = (Computador) categoriaTroco;
+
+            if(categoriaPor != null && quantidadePor != null) {
+                if (categoriaPor instanceof Jogo) {
+                    Jogo novoJogoPor = (Jogo) categoriaPor;
+                } else if (categoriaPor instanceof Brinquedo) {
+                    Brinquedo novoBrinquedoPor = (Brinquedo) categoriaPor;
+                } else if (categoriaPor instanceof Computador) {
+                    Computador novoComputadorPor = (Computador) categoriaPor;
+                } else if (categoriaPor instanceof Smartphone) {
+                    Smartphone novoSmartphonePor = (Smartphone) categoriaPor;
+                } else if (categoriaPor instanceof Eletronica) {
+                    Eletronica novaEletronicaPor = (Eletronica) categoriaPor;
+                } else if (categoriaPor instanceof Livro) {
+                    Livro novoLivroPor = (Livro) categoriaPor;
+                } else if (categoriaPor instanceof Roupa) {
+                    Roupa novaRoupaPor = (Roupa) categoriaPor;
+                }
+            }
         } else if(categoriaTroco instanceof Smartphone) {
-            Smartphone novoSmartphone = (Smartphone) categoriaTroco;
+
+            Smartphone novoSmartphoneTroco = (Smartphone) categoriaTroco;
+
+            if(categoriaPor != null && quantidadePor != null) {
+                if (categoriaPor instanceof Jogo) {
+                    Jogo novoJogoPor = (Jogo) categoriaPor;
+                } else if (categoriaPor instanceof Brinquedo) {
+                    Brinquedo novoBrinquedoPor = (Brinquedo) categoriaPor;
+                } else if (categoriaPor instanceof Computador) {
+                    Computador novoComputadorPor = (Computador) categoriaPor;
+                } else if (categoriaPor instanceof Smartphone) {
+                    Smartphone novoSmartphonePor = (Smartphone) categoriaPor;
+                } else if (categoriaPor instanceof Eletronica) {
+                    Eletronica novaEletronicaPor = (Eletronica) categoriaPor;
+                } else if (categoriaPor instanceof Livro) {
+                    Livro novoLivroPor = (Livro) categoriaPor;
+                } else if (categoriaPor instanceof Roupa) {
+                    Roupa novaRoupaPor = (Roupa) categoriaPor;
+                }
+            }
         } else if(categoriaTroco instanceof Eletronica) {
-            Eletronica novaEletronica = (Eletronica) categoriaTroco;
+
+            Eletronica novaEletronicaTroco = (Eletronica) categoriaTroco;
+
+            if(categoriaPor != null && quantidadePor != null) {
+                if (categoriaPor instanceof Jogo) {
+                    Jogo novoJogoPor = (Jogo) categoriaPor;
+                } else if (categoriaPor instanceof Brinquedo) {
+                    Brinquedo novoBrinquedoPor = (Brinquedo) categoriaPor;
+                } else if (categoriaPor instanceof Computador) {
+                    Computador novoComputadorPor = (Computador) categoriaPor;
+                } else if (categoriaPor instanceof Smartphone) {
+                    Smartphone novoSmartphonePor = (Smartphone) categoriaPor;
+                } else if (categoriaPor instanceof Eletronica) {
+                    Eletronica novaEletronicaPor = (Eletronica) categoriaPor;
+                } else if (categoriaPor instanceof Livro) {
+                    Livro novoLivroPor = (Livro) categoriaPor;
+                } else if (categoriaPor instanceof Roupa) {
+                    Roupa novaRoupaPor = (Roupa) categoriaPor;
+                }
+            }
         } else if(categoriaTroco instanceof Livro) {
-            Livro novoLivroo = (Livro) categoriaTroco;
+
+            Livro novoLivroTroco = (Livro) categoriaTroco;
+
+            if(categoriaPor != null && quantidadePor != null) {
+                if (categoriaPor instanceof Jogo) {
+                    Jogo novoJogoPor = (Jogo) categoriaPor;
+                } else if (categoriaPor instanceof Brinquedo) {
+                    Brinquedo novoBrinquedoPor = (Brinquedo) categoriaPor;
+                } else if (categoriaPor instanceof Computador) {
+                    Computador novoComputadorPor = (Computador) categoriaPor;
+                } else if (categoriaPor instanceof Smartphone) {
+                    Smartphone novoSmartphonePor = (Smartphone) categoriaPor;
+                } else if (categoriaPor instanceof Eletronica) {
+                    Eletronica novaEletronicaPor = (Eletronica) categoriaPor;
+                } else if (categoriaPor instanceof Livro) {
+                    Livro novoLivroPor = (Livro) categoriaPor;
+                } else if (categoriaPor instanceof Roupa) {
+                    Roupa novaRoupaPor = (Roupa) categoriaPor;
+                }
+            }
         } else if(categoriaTroco instanceof Roupa) {
-            Roupa novaRoupa = (Roupa) categoriaTroco;
+
+            Roupa novaRoupaTroco = (Roupa) categoriaTroco;
+
+            if(categoriaPor != null && quantidadePor != null) {
+                if (categoriaPor instanceof Jogo) {
+                    Jogo novoJogoPor = (Jogo) categoriaPor;
+                } else if (categoriaPor instanceof Brinquedo) {
+                    Brinquedo novoBrinquedoPor = (Brinquedo) categoriaPor;
+                } else if (categoriaPor instanceof Computador) {
+                    Computador novoComputadorPor = (Computador) categoriaPor;
+                } else if (categoriaPor instanceof Smartphone) {
+                    Smartphone novoSmartphonePor = (Smartphone) categoriaPor;
+                } else if (categoriaPor instanceof Eletronica) {
+                    Eletronica novaEletronicaPor = (Eletronica) categoriaPor;
+                } else if (categoriaPor instanceof Livro) {
+                    Livro novoLivroPor = (Livro) categoriaPor;
+                } else if (categoriaPor instanceof Roupa) {
+                    Roupa novaRoupaPor = (Roupa) categoriaPor;
+                }
+            }
         }
     }
 }
