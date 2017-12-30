@@ -177,6 +177,7 @@ public class RoupaBDTable extends BDHelper<Roupa> {
         CategoriaBDTable categoriaBDTable = new CategoriaBDTable(super.context);
 
         Categoria categoriaRoupa = new Categoria(roupa.getNome());
+        categoriaRoupa.setId(roupa.getId());
 
         Categoria categoriaInserida = categoriaBDTable.insert(categoriaRoupa);
 
@@ -189,10 +190,7 @@ public class RoupaBDTable extends BDHelper<Roupa> {
             values.put(TAMANHO_CAT_ROUPA, roupa.getTamanho());
             values.put(ID_TIPO_ROUPA_CAT_ROUPA, roupa.getIdTipo());
 
-            Long id = database.insert(TABLE_NAME, null, values);
-
-            if (id >= 0) {
-                roupa.setId(id);
+            if ((database.insert(TABLE_NAME, null, values)) >= 0) {
                 return roupa;
             }
         }
@@ -212,7 +210,6 @@ public class RoupaBDTable extends BDHelper<Roupa> {
 
             ContentValues values = new ContentValues();
 
-            values.put(ID_CATEGORIA_CAT_ROUPA, categoriaRoupa.getId());
             values.put(MARCA_CAT_ROUPA, roupa.getMarca());
             values.put(TAMANHO_CAT_ROUPA, roupa.getTamanho());
             values.put(ID_TIPO_ROUPA_CAT_ROUPA, roupa.getIdTipo());

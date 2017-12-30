@@ -210,17 +210,18 @@ public class ComputadorBDTable extends BDHelper<Computador> {
         Eletronica eletronicaComputador = new Eletronica(computador.getNome(), computador.getDescricao(), computador.getMarca());
         eletronicaComputador.setId(computador.getId());
 
-        Eletronica eletronicaInserida = eletronicaBDTable.insert(eletronicaComputador);
 
-        if(eletronicaInserida != null) {
+        Categoria categoriaInserida = categoriaBDTable.insert(categoriaComputador);
 
-            Categoria categoriaInserida = categoriaBDTable.insert(categoriaComputador);
+        if(categoriaInserida != null) {
 
-            if (categoriaInserida != null) {
+            Eletronica eletronicaInserida = eletronicaBDTable.insert(eletronicaComputador);
+
+            if (eletronicaInserida != null) {
 
                 ContentValues values = new ContentValues();
 
-                values.put(ID_ELETRONICA_CAT_COMPUTADOR, computador.getId());
+                values.put(ID_ELETRONICA_CAT_COMPUTADOR, eletronicaInserida.getId());
                 values.put(CPU_CAT_COMPUTADOR, computador.getProcessador());
                 values.put(RAM_CAT_COMPUTADOR, computador.getRam());
                 values.put(HDD_CAT_COMPUTADOR, computador.getHdd());
@@ -228,10 +229,7 @@ public class ComputadorBDTable extends BDHelper<Computador> {
                 values.put(OS_CAT_COMPUTADOR, computador.getOs());
                 values.put(PORTATIL_CAT_COMPUTADOR, computador.getPortatil());
 
-                Long id = database.insert(TABLE_NAME, null, values);
-
-                if (id >= 0) {
-                    computador.setId(id);
+                if (database.insert(TABLE_NAME, null, values) >= 0) {
                     return computador;
                 }
             }
@@ -256,7 +254,6 @@ public class ComputadorBDTable extends BDHelper<Computador> {
 
             ContentValues values = new ContentValues();
 
-            values.put(ID_ELETRONICA_CAT_COMPUTADOR, computador.getId());
             values.put(CPU_CAT_COMPUTADOR, computador.getProcessador());
             values.put(RAM_CAT_COMPUTADOR, computador.getRam());
             values.put(HDD_CAT_COMPUTADOR, computador.getHdd());

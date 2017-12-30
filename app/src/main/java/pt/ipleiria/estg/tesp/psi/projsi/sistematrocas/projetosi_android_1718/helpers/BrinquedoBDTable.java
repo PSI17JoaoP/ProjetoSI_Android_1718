@@ -175,6 +175,7 @@ public class BrinquedoBDTable extends BDHelper<Brinquedo> {
         CategoriaBDTable categoriaBDTable = new CategoriaBDTable(super.context);
 
         Categoria categoriaBrinquedo = new Categoria(brinquedo.getNome());
+        categoriaBrinquedo.setId(brinquedo.getId());
 
         Categoria categoriaInserida = categoriaBDTable.insert(categoriaBrinquedo);
 
@@ -187,10 +188,7 @@ public class BrinquedoBDTable extends BDHelper<Brinquedo> {
             values.put(FAIXA_ETARIA_CAT_BRINQUEDO, brinquedo.getFaixaEtaria());
             values.put(DESCRICAO_CAT_BRINQUEDO, brinquedo.getDescricao());
 
-            Long id = database.insert(TABLE_NAME, null, values);
-
-            if (id >= 0) {
-                brinquedo.setId(id);
+            if ((database.insert(TABLE_NAME, null, values)) >= 0) {
                 return brinquedo;
             }
         }
@@ -210,7 +208,6 @@ public class BrinquedoBDTable extends BDHelper<Brinquedo> {
 
             ContentValues values = new ContentValues();
 
-            values.put(ID_CATEGORIA_CAT_BRINQUEDO, categoriaBrinquedo.getId());
             values.put(EDITORA_CAT_BRINQUEDO, brinquedo.getEditora());
             values.put(FAIXA_ETARIA_CAT_BRINQUEDO, brinquedo.getFaixaEtaria());
             values.put(DESCRICAO_CAT_BRINQUEDO, brinquedo.getDescricao());

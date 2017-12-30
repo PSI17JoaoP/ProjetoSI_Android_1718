@@ -131,12 +131,10 @@ public class GeneroJogoBDTable extends BDHelper<GeneroJogo> {
 
         ContentValues values = new ContentValues();
 
+        values.put("id", genero.getId());
         values.put(NOME_GENERO_JOGO, genero.getNome());
 
-        Long id = database.insert(TABLE_NAME, null, values);
-
-        if(id >= 0) {
-            genero.setId(id);
+        if((database.insert(TABLE_NAME, null, values)) >= 0) {
             return genero;
         }
 

@@ -136,12 +136,12 @@ public class CategoriaBDTable extends BDHelper<Categoria> {
 
         ContentValues values = new ContentValues();
 
+        values.put("id", categoria.getId());
         values.put(NOME_CATEGORIA, categoria.getNome());
 
         Long id = database.insert(TABLE_NAME, null, values);
 
         if(id >= 0) {
-            categoria.setId(id);
             return categoria;
         }
 

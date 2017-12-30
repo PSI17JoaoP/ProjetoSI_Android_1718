@@ -250,6 +250,7 @@ public class AnuncioBDTable extends BDHelper<Anuncio> {
 
         ContentValues values = new ContentValues();
 
+        values.put("id", anuncio.getId());
         values.put(TITULO_ANUNCIO, anuncio.getTitulo());
         values.put(ID_USER_ANUNCIO, anuncio.getIdUser());
         values.put(ID_CAT_OFERECER_ANUNCIO, anuncio.getCatOferecer());
@@ -261,10 +262,7 @@ public class AnuncioBDTable extends BDHelper<Anuncio> {
         values.put(DATA_CRIACAO_ANUNCIO, anuncio.getDataCriacao());
         values.put(DATA_CONCLUSAO_ANUNCIO, anuncio.getDataConclusao());
 
-        Long id = database.insert(TABLE_NAME, null, values);
-
-        if(id >= 0) {
-            anuncio.setId(id);
+        if((database.insert(TABLE_NAME, null, values)) >= 0) {
             return anuncio;
         }
 

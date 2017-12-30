@@ -176,6 +176,7 @@ public class PropostaBDTable extends BDHelper<Proposta> {
 
         ContentValues values = new ContentValues();
 
+        values.put("id", proposta.getId());
         values.put(ID_CAT_PROPOSTA_PROPOSTA, proposta.getCatProposto());
         values.put(QUANT_PROPOSTA, proposta.getQuant());
         values.put(ID_USER_PROPOSTA, proposta.getIdUser());
@@ -183,10 +184,7 @@ public class PropostaBDTable extends BDHelper<Proposta> {
         values.put(ESTADO_PROPOSTA, proposta.getEstado());
         values.put(DATA_PROPOSTA_PROPOSTA, proposta.getDataProposta());
 
-        Long id = database.insert(TABLE_NAME, null, values);
-
-        if(id >= 0) {
-            proposta.setId(id);
+        if((database.insert(TABLE_NAME, null, values)) >= 0) {
             return proposta;
         }
 

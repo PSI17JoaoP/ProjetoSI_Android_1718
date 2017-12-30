@@ -131,12 +131,10 @@ public class TipoRoupaBDTable extends BDHelper<TipoRoupa> {
 
         ContentValues values = new ContentValues();
 
+        values.put("id", tipo.getId());
         values.put(NOME_TIPO_ROUPA, tipo.getNome());
 
-        Long id = database.insert(TABLE_NAME, null, values);
-
-        if(id >= 0) {
-            tipo.setId(id);
+        if((database.insert(TABLE_NAME, null, values)) >= 0) {
             return tipo;
         }
 

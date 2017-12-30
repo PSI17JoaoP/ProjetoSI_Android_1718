@@ -180,6 +180,7 @@ public class LivroBDTable extends BDHelper<Livro> {
         CategoriaBDTable categoriaBDTable = new CategoriaBDTable(super.context);
 
         Categoria categoriaLivro = new Categoria(livro.getNome());
+        categoriaLivro.setId(livro.getId());
 
         Categoria categoriaInserida = categoriaBDTable.insert(categoriaLivro);
 
@@ -193,10 +194,7 @@ public class LivroBDTable extends BDHelper<Livro> {
             values.put(AUTOR_CAT_LIVROS, livro.getAutor());
             values.put(ISBN_CAT_LIVROS, livro.getIsbn());
 
-            Long id = database.insert(TABLE_NAME, null, values);
-
-            if (id >= 0) {
-                livro.setId(id);
+            if ((database.insert(TABLE_NAME, null, values)) >= 0) {
                 return livro;
             }
         }
@@ -216,7 +214,6 @@ public class LivroBDTable extends BDHelper<Livro> {
 
             ContentValues values = new ContentValues();
 
-            values.put(ID_CATEGORIA_CAT_LIVROS, categoriaLivro.getId());
             values.put(TITULO_CAT_LIVROS, livro.getTitulo());
             values.put(EDITORA_CAT_LIVROS, livro.getEditora());
             values.put(AUTOR_CAT_LIVROS, livro.getAutor());

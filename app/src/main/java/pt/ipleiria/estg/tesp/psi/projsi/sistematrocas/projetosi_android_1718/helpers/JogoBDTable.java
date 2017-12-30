@@ -194,24 +194,21 @@ public class JogoBDTable extends BDHelper<Jogo> {
         Brinquedo brinquedoComputador = new Brinquedo(jogo.getNome(), jogo.getEditora(), jogo.getFaixaEtaria(), jogo.getDescricao());
         brinquedoComputador.setId(jogo.getId());
 
-        Brinquedo brinquedoInserida = brinquedoBDTable.insert(brinquedoComputador);
+        Categoria categoriaInserida = categoriaBDTable.insert(categoriaComputador);
 
-        if(brinquedoInserida != null) {
+        if(categoriaInserida != null) {
 
-            Categoria categoriaInserida = categoriaBDTable.insert(categoriaComputador);
+            Brinquedo brinquedoInserida = brinquedoBDTable.insert(brinquedoComputador);
 
-            if (categoriaInserida != null) {
+            if (brinquedoInserida != null) {
 
                 ContentValues values = new ContentValues();
 
-                values.put(ID_BRINQUEDO_CAT_JOGO, jogo.getId());
+                values.put(ID_BRINQUEDO_CAT_JOGO, brinquedoInserida.getId());
                 values.put(ID_GENERO_JOGO_CAT_JOGO, jogo.getIdGenero());
                 values.put(PRODUTORA_CAT_JOGO, jogo.getProdutora());
 
-                Long id = database.insert(TABLE_NAME, null, values);
-
-                if (id >= 0) {
-                    jogo.setId(id);
+                if ((database.insert(TABLE_NAME, null, values)) >= 0) {
                     return jogo;
                 }
             }
@@ -236,7 +233,6 @@ public class JogoBDTable extends BDHelper<Jogo> {
 
             ContentValues values = new ContentValues();
 
-            values.put(ID_BRINQUEDO_CAT_JOGO, jogo.getId());
             values.put(ID_GENERO_JOGO_CAT_JOGO, jogo.getIdGenero());
             values.put(PRODUTORA_CAT_JOGO, jogo.getProdutora());
 

@@ -169,6 +169,7 @@ public class EletronicaBDTable extends BDHelper<Eletronica> {
         CategoriaBDTable categoriaBDTable = new CategoriaBDTable(super.context);
 
         Categoria categoriaEletronica = new Categoria(eletronica.getNome());
+        categoriaEletronica.setId(eletronica.getId());
 
         Categoria categoriaInserida = categoriaBDTable.insert(categoriaEletronica);
 
@@ -180,10 +181,7 @@ public class EletronicaBDTable extends BDHelper<Eletronica> {
             values.put(MARCA_CAT_ELETRONICA, eletronica.getMarca());
             values.put(DESCRICAO_CAT_ELETRONICA, eletronica.getDescricao());
 
-            Long id = database.insert(TABLE_NAME, null, values);
-
-            if (id >= 0) {
-                eletronica.setId(id);
+            if ((database.insert(TABLE_NAME, null, values)) >= 0) {
                 return eletronica;
             }
         }
@@ -203,7 +201,6 @@ public class EletronicaBDTable extends BDHelper<Eletronica> {
 
             ContentValues values = new ContentValues();
 
-            values.put(ID_CATEGORIA_CAT_ELETRONICA, categoriaEletronica.getId());
             values.put(MARCA_CAT_ELETRONICA, eletronica.getMarca());
             values.put(DESCRICAO_CAT_ELETRONICA, eletronica.getDescricao());
 

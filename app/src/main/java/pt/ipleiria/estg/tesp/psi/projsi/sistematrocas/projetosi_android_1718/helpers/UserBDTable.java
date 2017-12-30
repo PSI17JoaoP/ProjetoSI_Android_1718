@@ -142,15 +142,13 @@ public class UserBDTable extends BDHelper<User> {
 
         ContentValues values = new ContentValues();
 
+        values.put("id", user.getId());
         values.put(USERNAME_USER, user.getUsername());
         values.put(PASSWORD_USER, user.getPasswordHash());
         values.put(EMAIL_USER, user.getEmail());
         values.put(STATUS_USER, user.getStatus());
 
-        Long id = database.insert(TABLE_NAME, null, values);
-
-        if(id >= 0) {
-            user.setId(id);
+        if((database.insert(TABLE_NAME, null, values)) >= 0) {
             return user;
         }
 

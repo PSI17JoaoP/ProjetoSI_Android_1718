@@ -199,15 +199,18 @@ public class SmartphoneBDTable extends BDHelper<Smartphone> {
         EletronicaBDTable eletronicaBDTable = new EletronicaBDTable(super.context);
 
         Categoria categoriaSmartphone = new Categoria(smartphone.getNome());
+        categoriaSmartphone.setId(smartphone.getId());
+
         Eletronica eletronicaSmartphone = new Eletronica(smartphone.getNome(), smartphone.getDescricao(), smartphone.getMarca());
+        eletronicaSmartphone.setId(smartphone.getId());
 
-        Eletronica eletronicaInserida = eletronicaBDTable.insert(eletronicaSmartphone);
+        Categoria categoriaInserida = categoriaBDTable.insert(categoriaSmartphone);
 
-        if(eletronicaInserida != null) {
+        if(categoriaInserida != null) {
 
-            Categoria categoriaInserida = categoriaBDTable.insert(categoriaSmartphone);
+            Eletronica eletronicaInserida = eletronicaBDTable.insert(eletronicaSmartphone);
 
-            if (categoriaInserida != null) {
+            if (eletronicaInserida != null) {
 
                 ContentValues values = new ContentValues();
 
@@ -218,10 +221,7 @@ public class SmartphoneBDTable extends BDHelper<Smartphone> {
                 values.put(OS_CAT_SMARTPHONE, smartphone.getOs());
                 values.put(TAMANHO_CAT_SMARTPHONE, smartphone.getTamanho());
 
-                Long id = database.insert(TABLE_NAME, null, values);
-
-                if (id >= 0) {
-                    smartphone.setId(id);
+                if ((database.insert(TABLE_NAME, null, values)) >= 0) {
                     return smartphone;
                 }
             }
@@ -246,7 +246,6 @@ public class SmartphoneBDTable extends BDHelper<Smartphone> {
 
             ContentValues values = new ContentValues();
 
-            values.put(ID_ELETRONICA_CAT_SMARTPHONE, smartphone.getId());
             values.put(CPU_CAT_SMARTPHONE, smartphone.getProcessador());
             values.put(RAM_CAT_SMARTPHONE, smartphone.getRam());
             values.put(HDD_CAT_SMARTPHONE, smartphone.getHdd());

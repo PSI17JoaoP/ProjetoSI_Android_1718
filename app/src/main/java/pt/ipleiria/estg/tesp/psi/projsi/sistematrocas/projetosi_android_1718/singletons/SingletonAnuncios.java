@@ -90,7 +90,9 @@ public class SingletonAnuncios {
                 @Override
                 public void Sucesso(JSONArray resultados) {
 
-                    adicionarAnunciosLocal(AnunciosParser.paraObjeto(resultados, context));
+                    ArrayList<Anuncio> anunciosAPI = AnunciosParser.paraObjeto(resultados, context);
+
+                    adicionarAnunciosLocal(anunciosAPI);
 
                     if (anunciosListener != null)
                         anunciosListener.onRefreshAnuncios(anuncios);
@@ -115,6 +117,7 @@ public class SingletonAnuncios {
                         @Override
                         public void Sucesso(String resposta) {
                             try {
+
                                 Anuncio novoAnuncio = AnunciosParser.paraObjeto(new JSONObject(resposta), context);
 
                                 if (adicionarAnuncioLocal(novoAnuncio)) {
@@ -146,6 +149,7 @@ public class SingletonAnuncios {
                         @Override
                         public void Sucesso(String resposta) {
                             try {
+
                                 Anuncio anuncioAlterado = AnunciosParser.paraObjeto(new JSONObject(resposta), context);
 
                                 if (editarAnuncioLocal(anuncioAlterado)) {
