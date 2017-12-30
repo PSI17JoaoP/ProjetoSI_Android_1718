@@ -20,6 +20,7 @@ import android.widget.FrameLayout;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms.FormManager;
@@ -32,6 +33,7 @@ import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.mod
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Livro;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Roupa;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Smartphone;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonCategorias;
 
 public class CriarAnuncioActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
@@ -200,7 +202,7 @@ public class CriarAnuncioActivity extends AppCompatActivity implements AdapterVi
 
                 if (!nomeCategoriaPor.isEmpty() && fragmentContainerFormPor.getChildCount() != 0) {
 
-                    Anuncio novoAnuncio = criarAnuncio(fragmentManager,
+                    Anuncio novoAnuncio = criarAnuncio(fragmentManager, anuncioTitulo,
                             R.id.fragmentFormCategoriaTroco, nomeCategoriaTroco, numberPickerCategoriaTroco.getValue(),
                             R.id.fragmentFormCategoriaPor, nomeCategoriaPor, numberPickerCategoriaPor.getValue());
                 }
@@ -214,7 +216,7 @@ public class CriarAnuncioActivity extends AppCompatActivity implements AdapterVi
                 }
 
                 else {
-                    Anuncio novoAnuncio = criarAnuncio(fragmentManager,
+                    Anuncio novoAnuncio = criarAnuncio(fragmentManager, anuncioTitulo,
                             R.id.fragmentFormCategoriaTroco, nomeCategoriaTroco, numberPickerCategoriaTroco.getValue(),
                             null, null, null);
                 }
@@ -235,24 +237,33 @@ public class CriarAnuncioActivity extends AppCompatActivity implements AdapterVi
     }
 
     //Método que obtém o anúncio, juntamente com as categorias que obtém dos fragmentos, e regista-o na BD e API.
-    private Anuncio criarAnuncio(@NonNull FragmentManager fragmentManager,
+    private Anuncio criarAnuncio(@NonNull FragmentManager fragmentManager, @NonNull String anuncioTitulo,
                                 @IdRes @NonNull Integer containerIdFormTroco, @NonNull String nomeCategoriaTroco, @NonNull Integer quantidadeCategoriaTroco,
                                 @IdRes @Nullable Integer containerIdFormPor, @Nullable String nomeCategoriaPor, @Nullable Integer quantidadeCategoriaPor) {
+
+        Anuncio novoAnuncio = null;
 
         FormManager formManager = new FormManager();
 
         if(containerIdFormPor != null && nomeCategoriaPor != null && quantidadeCategoriaPor != null) {
             Categoria categoriaTroco = getCategoria(fragmentManager, formManager, containerIdFormTroco, nomeCategoriaTroco);
             Categoria categoriaPor = getCategoria(fragmentManager, formManager, containerIdFormPor, nomeCategoriaPor);
+
+            novoAnuncio = getCategoriaTroco(anuncioTitulo, categoriaTroco, quantidadeCategoriaTroco, categoriaPor, quantidadeCategoriaPor);
         }
 
         else if(containerIdFormPor == null && nomeCategoriaPor == null && quantidadeCategoriaPor == null) {
             Categoria categoriaTroco = getCategoria(fragmentManager, formManager, containerIdFormTroco, nomeCategoriaTroco);
+
+            novoAnuncio = getCategoriaTroco(anuncioTitulo, categoriaTroco, quantidadeCategoriaTroco, null, null);
         }
+
+        return novoAnuncio;
     }
 
     //Método que obtém a categoria do fragment, através do método getCategoria do objeto do tipo FormManager.
-    private Categoria getCategoria(@NonNull FragmentManager fragmentManager, @NonNull FormManager formManager, @IdRes @NonNull Integer containerIdForm, @NonNull String nomeCategoria) {
+    private Categoria getCategoria(@NonNull FragmentManager fragmentManager, @NonNull FormManager formManager,
+                                   @IdRes @NonNull Integer containerIdForm, @NonNull String nomeCategoria) {
 
         Categoria categoria = null;
 
@@ -272,160 +283,126 @@ public class CriarAnuncioActivity extends AppCompatActivity implements AdapterVi
         return categoria;
     }
 
-    //Método que cria o objeto do tipo Anuncio.
-    //TODO: A implementação deste método está bastante extensa e repetitiva, e muito pouco elegante. Necessário revisão, se houver tempo.
-    private Anuncio getAnuncio(@NonNull Categoria categoriaTroco, @NonNull Integer quantidadeTroco,
-                               @Nullable Categoria categoriaPor, @Nullable Integer quantidadePor) {
+    private Anuncio getCategoriaTroco(@NonNull String anuncioTitulo,
+                                      @NonNull Categoria categoriaTroco, @NonNull Integer quantidadeTroco,
+                                      @Nullable Categoria categoriaPor, @Nullable Integer quantidadePor) {
 
         Anuncio novoAnuncio = null;
 
-        if(categoriaTroco instanceof Jogo) {
+        String categoriaTrocoNome = categoriaTroco.getClass().getName();
 
-            Jogo novoJogoTroco = (Jogo) categoriaTroco;
+        switch (categoriaTrocoNome) {
 
-            if(categoriaPor != null && quantidadePor != null) {
-                if (categoriaPor instanceof Jogo) {
-                    Jogo novoJogoPor = (Jogo) categoriaPor;
-                } else if (categoriaPor instanceof Brinquedo) {
-                    Brinquedo novoBrinquedoPor = (Brinquedo) categoriaPor;
-                } else if (categoriaPor instanceof Computador) {
-                    Computador novoComputadorPor = (Computador) categoriaPor;
-                } else if (categoriaPor instanceof Smartphone) {
-                    Smartphone novoSmartphonePor = (Smartphone) categoriaPor;
-                } else if (categoriaPor instanceof Eletronica) {
-                    Eletronica novaEletronicaPor = (Eletronica) categoriaPor;
-                } else if (categoriaPor instanceof Livro) {
-                    Livro novoLivroPor = (Livro) categoriaPor;
-                } else if (categoriaPor instanceof Roupa) {
-                    Roupa novaRoupaPor = (Roupa) categoriaPor;
+            case "Jogo":
+
+                Jogo jogoTroco = (Jogo) SingletonCategorias.getInstance(this).adicionarCategoria(categoriaTroco);
+
+                if(jogoTroco != null) {
+                    if (categoriaPor != null && quantidadePor != null) {
+                        novoAnuncio = getCategoriaPor(anuncioTitulo, jogoTroco, quantidadeTroco, categoriaPor, quantidadePor);
+                    } else if (categoriaPor == null && quantidadePor == null) {
+                        novoAnuncio = getAnuncio(anuncioTitulo, jogoTroco, quantidadeTroco, null, null);
+                    }
                 }
-            }
-        } else if(categoriaTroco instanceof Brinquedo) {
 
-            Brinquedo novoBrinquedoTroco = (Brinquedo) categoriaTroco;
+            case "Brinquedo":
 
-            if(categoriaPor != null && quantidadePor != null) {
-                if (categoriaPor instanceof Jogo) {
-                    Jogo novoJogoPor = (Jogo) categoriaPor;
-                } else if (categoriaPor instanceof Brinquedo) {
-                    Brinquedo novoBrinquedoPor = (Brinquedo) categoriaPor;
-                } else if (categoriaPor instanceof Computador) {
-                    Computador novoComputadorPor = (Computador) categoriaPor;
-                } else if (categoriaPor instanceof Smartphone) {
-                    Smartphone novoSmartphonePor = (Smartphone) categoriaPor;
-                } else if (categoriaPor instanceof Eletronica) {
-                    Eletronica novaEletronicaPor = (Eletronica) categoriaPor;
-                } else if (categoriaPor instanceof Livro) {
-                    Livro novoLivroPor = (Livro) categoriaPor;
-                } else if (categoriaPor instanceof Roupa) {
-                    Roupa novaRoupaPor = (Roupa) categoriaPor;
+                /*if(categoriaPor != null && quantidadePor != null) {
+                    getCategoriaPor(anuncioTitulo, categoriaTroco, quantidadeTroco, categoriaPor, quantidadePor);
+                } else if (categoriaPor == null && quantidadePor == null){
+
+                }*/
+
+            case "Computador":
+
+                /*if(categoriaPor != null && quantidadePor != null) {
+                    getCategoriaPor(anuncioTitulo, categoriaTroco, quantidadeTroco, categoriaPor, quantidadePor);
+                } else if (categoriaPor == null && quantidadePor == null){
+
+                }*/
+
+            case "Smartphone":
+
+                /*if(categoriaPor != null && quantidadePor != null) {
+                    getCategoriaPor(anuncioTitulo, categoriaTroco, quantidadeTroco, categoriaPor, quantidadePor);
+                } else if (categoriaPor == null && quantidadePor == null){
+
+                }*/
+
+            case "Eletronica":
+
+                /*if(categoriaPor != null && quantidadePor != null) {
+                    getCategoriaPor(anuncioTitulo, categoriaTroco, quantidadeTroco, categoriaPor, quantidadePor);
+                } else if (categoriaPor == null && quantidadePor == null){
+
+                }*/
+
+            case "Roupa":
+
+                /*if(categoriaPor != null && quantidadePor != null) {
+                    getCategoriaPor(anuncioTitulo, categoriaTroco, quantidadeTroco, categoriaPor, quantidadePor);
+                } else if (categoriaPor == null && quantidadePor == null){
+
+                }*/
+
+            case "Livro":
+
+                /*if(categoriaPor != null && quantidadePor != null) {
+                    getCategoriaPor(anuncioTitulo, categoriaTroco, quantidadeTroco, categoriaPor, quantidadePor);
+                } else if (categoriaPor == null && quantidadePor == null){
+
+                }*/
+        }
+
+        return novoAnuncio;
+    }
+
+    private Anuncio getCategoriaPor(@NonNull String anuncioTitulo,
+                                    @NonNull Categoria categoriaTroco, @NonNull Integer quantidadeTroco,
+                                    @NonNull Categoria categoriaPor, @NonNull Integer quantidadePor) {
+
+        Anuncio novoAnuncio = null;
+
+        String categoriaPorNome = categoriaPor.getClass().getName();
+
+        switch (categoriaPorNome) {
+
+            case "Jogo":
+
+                Jogo jogoPor = (Jogo) SingletonCategorias.getInstance(this).adicionarCategoria(categoriaPor);
+
+                if(jogoPor != null) {
+                    novoAnuncio = getAnuncio(anuncioTitulo, categoriaTroco, quantidadeTroco, jogoPor, quantidadePor);
                 }
-            }
-        } else if(categoriaTroco instanceof Computador) {
 
-            Computador novoComputadorTroco = (Computador) categoriaTroco;
+            case "Brinquedo":
 
-            if(categoriaPor != null && quantidadePor != null) {
-                if (categoriaPor instanceof Jogo) {
-                    Jogo novoJogoPor = (Jogo) categoriaPor;
-                } else if (categoriaPor instanceof Brinquedo) {
-                    Brinquedo novoBrinquedoPor = (Brinquedo) categoriaPor;
-                } else if (categoriaPor instanceof Computador) {
-                    Computador novoComputadorPor = (Computador) categoriaPor;
-                } else if (categoriaPor instanceof Smartphone) {
-                    Smartphone novoSmartphonePor = (Smartphone) categoriaPor;
-                } else if (categoriaPor instanceof Eletronica) {
-                    Eletronica novaEletronicaPor = (Eletronica) categoriaPor;
-                } else if (categoriaPor instanceof Livro) {
-                    Livro novoLivroPor = (Livro) categoriaPor;
-                } else if (categoriaPor instanceof Roupa) {
-                    Roupa novaRoupaPor = (Roupa) categoriaPor;
-                }
-            }
-        } else if(categoriaTroco instanceof Smartphone) {
+            case "Computador":
 
-            Smartphone novoSmartphoneTroco = (Smartphone) categoriaTroco;
+            case "Smartphone":
 
-            if(categoriaPor != null && quantidadePor != null) {
-                if (categoriaPor instanceof Jogo) {
-                    Jogo novoJogoPor = (Jogo) categoriaPor;
-                } else if (categoriaPor instanceof Brinquedo) {
-                    Brinquedo novoBrinquedoPor = (Brinquedo) categoriaPor;
-                } else if (categoriaPor instanceof Computador) {
-                    Computador novoComputadorPor = (Computador) categoriaPor;
-                } else if (categoriaPor instanceof Smartphone) {
-                    Smartphone novoSmartphonePor = (Smartphone) categoriaPor;
-                } else if (categoriaPor instanceof Eletronica) {
-                    Eletronica novaEletronicaPor = (Eletronica) categoriaPor;
-                } else if (categoriaPor instanceof Livro) {
-                    Livro novoLivroPor = (Livro) categoriaPor;
-                } else if (categoriaPor instanceof Roupa) {
-                    Roupa novaRoupaPor = (Roupa) categoriaPor;
-                }
-            }
-        } else if(categoriaTroco instanceof Eletronica) {
+            case "Eletronica":
 
-            Eletronica novaEletronicaTroco = (Eletronica) categoriaTroco;
+            case "Roupa":
 
-            if(categoriaPor != null && quantidadePor != null) {
-                if (categoriaPor instanceof Jogo) {
-                    Jogo novoJogoPor = (Jogo) categoriaPor;
-                } else if (categoriaPor instanceof Brinquedo) {
-                    Brinquedo novoBrinquedoPor = (Brinquedo) categoriaPor;
-                } else if (categoriaPor instanceof Computador) {
-                    Computador novoComputadorPor = (Computador) categoriaPor;
-                } else if (categoriaPor instanceof Smartphone) {
-                    Smartphone novoSmartphonePor = (Smartphone) categoriaPor;
-                } else if (categoriaPor instanceof Eletronica) {
-                    Eletronica novaEletronicaPor = (Eletronica) categoriaPor;
-                } else if (categoriaPor instanceof Livro) {
-                    Livro novoLivroPor = (Livro) categoriaPor;
-                } else if (categoriaPor instanceof Roupa) {
-                    Roupa novaRoupaPor = (Roupa) categoriaPor;
-                }
-            }
-        } else if(categoriaTroco instanceof Livro) {
+            case "Livro":
+        }
 
-            Livro novoLivroTroco = (Livro) categoriaTroco;
+        return novoAnuncio;
+    }
 
-            if(categoriaPor != null && quantidadePor != null) {
-                if (categoriaPor instanceof Jogo) {
-                    Jogo novoJogoPor = (Jogo) categoriaPor;
-                } else if (categoriaPor instanceof Brinquedo) {
-                    Brinquedo novoBrinquedoPor = (Brinquedo) categoriaPor;
-                } else if (categoriaPor instanceof Computador) {
-                    Computador novoComputadorPor = (Computador) categoriaPor;
-                } else if (categoriaPor instanceof Smartphone) {
-                    Smartphone novoSmartphonePor = (Smartphone) categoriaPor;
-                } else if (categoriaPor instanceof Eletronica) {
-                    Eletronica novaEletronicaPor = (Eletronica) categoriaPor;
-                } else if (categoriaPor instanceof Livro) {
-                    Livro novoLivroPor = (Livro) categoriaPor;
-                } else if (categoriaPor instanceof Roupa) {
-                    Roupa novaRoupaPor = (Roupa) categoriaPor;
-                }
-            }
-        } else if(categoriaTroco instanceof Roupa) {
+    private Anuncio getAnuncio(@NonNull String anuncioTitulo,
+                               @NonNull Categoria categoriaTroco, @NonNull Integer quantidadeTroco,
+                               @Nullable Categoria categoriaPor, @Nullable Integer quantidadePor) {
 
-            Roupa novaRoupaTroco = (Roupa) categoriaTroco;
+        if (categoriaPor != null && quantidadePor != null) {
 
-            if(categoriaPor != null && quantidadePor != null) {
-                if (categoriaPor instanceof Jogo) {
-                    Jogo novoJogoPor = (Jogo) categoriaPor;
-                } else if (categoriaPor instanceof Brinquedo) {
-                    Brinquedo novoBrinquedoPor = (Brinquedo) categoriaPor;
-                } else if (categoriaPor instanceof Computador) {
-                    Computador novoComputadorPor = (Computador) categoriaPor;
-                } else if (categoriaPor instanceof Smartphone) {
-                    Smartphone novoSmartphonePor = (Smartphone) categoriaPor;
-                } else if (categoriaPor instanceof Eletronica) {
-                    Eletronica novaEletronicaPor = (Eletronica) categoriaPor;
-                } else if (categoriaPor instanceof Livro) {
-                    Livro novoLivroPor = (Livro) categoriaPor;
-                } else if (categoriaPor instanceof Roupa) {
-                    Roupa novaRoupaPor = (Roupa) categoriaPor;
-                }
-            }
+            //TODO: Falta arranjar o ID do User, cujo deve ser passado no intent para esta activity. De momento, está um ID estático.
+            //TODO: Por alguma razão, não consigo utilizar a classe LocalDate para arranjar a data atual.
+            //TODO: Se calhar vai-se ter de eliminar os comentários, visto que até faria mais sentido não estar no Anúncio.
+            return new Anuncio(anuncioTitulo, 1L, categoriaTroco.getId(), quantidadeTroco, categoriaPor.getId(), quantidadePor, "ABERTO", , );
+        } else if (categoriaPor == null && quantidadePor == null) {
+            return new Anuncio(anuncioTitulo, 1L, categoriaTroco.getId(), quantidadeTroco, null, null, "ABERTO", , );
         }
     }
 }
