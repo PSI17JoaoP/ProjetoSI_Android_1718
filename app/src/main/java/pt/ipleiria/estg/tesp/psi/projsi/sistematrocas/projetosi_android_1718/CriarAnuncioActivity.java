@@ -288,7 +288,7 @@ public class CriarAnuncioActivity extends AppCompatActivity implements AdapterVi
                 if (categoriaPor != null && quantidadePor != null) {
                     getCategoriaPor(anuncioTitulo, categoria, quantidadeTroco, categoriaPor, quantidadePor);
                 } else if (categoriaPor == null && quantidadePor == null) {
-                    getAnuncio(anuncioTitulo, categoriaTroco, quantidadeTroco, null, null);
+                    getAnuncio(anuncioTitulo, categoria, quantidadeTroco, null, null);
                 }
             }
 
