@@ -30,15 +30,17 @@ public class FormManager {
         return null;
     }
 
-    public Categoria getCategoria(FragmentManager fragmentManager, Fragment fragmentForm, String[] categoriasForm, String nomeCategoria, Context context)
+    public Categoria getCategoria(Fragment fragmentForm, String[] categoriasForm, String categoriaKey, String nomeCategoria, Context context)
             throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, NumberFormatException {
 
         for (String categoriaForm : categoriasForm) {
 
-            if (Class.forName(PACKAGE_PATH + categoriaForm + "Fragment") != null) {
-                Fragment fragment = Fragment.instantiate(context, (PACKAGE_PATH + categoriaForm + "Fragment"));
-                if (fragmentForm.getClass().equals(fragment.getClass())) {
-                    return (Categoria) fragmentForm.getClass().getMethod("getCategoria", nomeCategoria.getClass()).invoke(fragmentForm, nomeCategoria);
+            if (categoriaKey.equals(categoriaForm)) {
+                if (Class.forName(PACKAGE_PATH + categoriaForm + "Fragment") != null) {
+                    Fragment fragment = Fragment.instantiate(context, (PACKAGE_PATH + categoriaForm + "Fragment"));
+                    if (fragmentForm.getClass().equals(fragment.getClass())) {
+                        return (Categoria) fragmentForm.getClass().getMethod("getCategoria", nomeCategoria.getClass()).invoke(fragmentForm, nomeCategoria);
+                    }
                 }
             }
         }

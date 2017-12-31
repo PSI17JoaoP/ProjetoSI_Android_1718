@@ -30,9 +30,9 @@ public class SingletonAPIManager {
 
     private static SingletonAPIManager INSTANCE = null;
     private RequestQueue requestQueue;
-    private static Context context;
+    private Context context;
 
-    SharedPreferences preferences;
+    private SharedPreferences preferences;
 
     private static final String baseURL = "http://10.0.2.2:8888/";
     private static String auth = null;

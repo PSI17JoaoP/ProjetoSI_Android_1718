@@ -48,11 +48,19 @@ public class RoupaFragment extends Fragment {
 
         ArrayList<TipoRoupa> tiposRoupa = SingletonTiposRoupa.getInstance(getContext()).getTiposRoupa();
 
-        ArrayAdapter<TipoRoupa> spinnerTamanhos = new ArrayAdapter<TipoRoupa>(getContext(),
+        //Inserção manual para efeito de desenvolvimento.
+        tiposRoupa.add(new TipoRoupa(1L, "Camisola"));
+        tiposRoupa.add(new TipoRoupa(2L, "Calças"));
+        tiposRoupa.add(new TipoRoupa(3L, "Casaco"));
+        tiposRoupa.add(new TipoRoupa(4L, "Camisa"));
+        tiposRoupa.add(new TipoRoupa(5L, "Boné"));
+        tiposRoupa.add(new TipoRoupa(5L, "T-Shirt"));
+
+        ArrayAdapter<TipoRoupa> spinnerTamanhos = new ArrayAdapter<>(getContext(),
                 R.layout.custom_spinner_item,
                 tiposRoupa);
 
-        spinnerTipoRoupa = view.findViewById(R.id.spinnerTamanhoRoupa);
+        spinnerTipoRoupa = view.findViewById(R.id.spinnerTipoRoupa);
 
         spinnerTamanhos.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerTipoRoupa.setAdapter(spinnerTamanhos);

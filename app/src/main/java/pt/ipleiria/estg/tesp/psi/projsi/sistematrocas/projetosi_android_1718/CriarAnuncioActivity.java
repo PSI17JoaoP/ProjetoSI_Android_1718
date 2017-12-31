@@ -20,19 +20,13 @@ import android.widget.FrameLayout;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 
-import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms.FormManager;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Anuncio;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Brinquedo;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Categoria;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Computador;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Eletronica;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Jogo;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Livro;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Roupa;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Smartphone;
+
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonCategorias;
 
 public class CriarAnuncioActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
@@ -187,6 +181,9 @@ public class CriarAnuncioActivity extends AppCompatActivity implements AdapterVi
         NumberPicker numberPickerCategoriaTroco = findViewById(R.id.numberPickerCategoriaTroco);
         NumberPicker numberPickerCategoriaPor = findViewById(R.id.numberPickerCategoriaPor);
 
+        Spinner dropDownCategoriasTroco = findViewById(R.id.dropDownCategoriasTroco);
+        Spinner dropDownCategoriasPor = findViewById(R.id.dropDownCategoriasPor);
+
         FrameLayout fragmentContainerFormTroco = findViewById(R.id.fragmentFormCategoriaTroco);
         FrameLayout fragmentContainerFormPor = findViewById(R.id.fragmentFormCategoriaPor);
 
@@ -202,23 +199,23 @@ public class CriarAnuncioActivity extends AppCompatActivity implements AdapterVi
 
                 if (!nomeCategoriaPor.isEmpty() && fragmentContainerFormPor.getChildCount() != 0) {
 
-                    Anuncio novoAnuncio = criarAnuncio(fragmentManager, anuncioTitulo,
-                            R.id.fragmentFormCategoriaTroco, nomeCategoriaTroco, numberPickerCategoriaTroco.getValue(),
-                            R.id.fragmentFormCategoriaPor, nomeCategoriaPor, numberPickerCategoriaPor.getValue());
+                    criarAnuncio(fragmentManager, anuncioTitulo,
+                            R.id.fragmentFormCategoriaTroco, nomeCategoriaTroco, dropDownCategoriasTroco.getSelectedItemPosition(), numberPickerCategoriaTroco.getValue(),
+                            R.id.fragmentFormCategoriaPor, nomeCategoriaPor, dropDownCategoriasPor.getSelectedItemPosition(), numberPickerCategoriaPor.getValue());
                 }
 
                 else if(nomeCategoriaPor.isEmpty() && fragmentContainerFormPor.getChildCount() != 0) {
-                    showNotification("Preencha o nome do bem a receber.\nSe não pretender receber um bem especifico, deselecione a categoria do bem a receber.");
+                    showNotification("Preencha o nome do bem a receber.\nSe não pretender receber um bem especifico,\ndeselecione a categoria do bem a receber.");
                 }
 
                 else if(!nomeCategoriaPor.isEmpty() && fragmentContainerFormPor.getChildCount() == 0) {
-                    showNotification("Selecione a categoria do bem a receber.\nSe não pretender receber um bem especifico, remova o nome do bem a receber.");
+                    showNotification("Selecione a categoria do bem a receber.\nSe não pretender receber um bem especifico,\nremova o nome do bem a receber.");
                 }
 
                 else {
-                    Anuncio novoAnuncio = criarAnuncio(fragmentManager, anuncioTitulo,
-                            R.id.fragmentFormCategoriaTroco, nomeCategoriaTroco, numberPickerCategoriaTroco.getValue(),
-                            null, null, null);
+                    criarAnuncio(fragmentManager, anuncioTitulo,
+                            R.id.fragmentFormCategoriaTroco, nomeCategoriaTroco, dropDownCategoriasTroco.getSelectedItemPosition(), numberPickerCategoriaTroco.getValue(),
+                            null, null, null, null);
                 }
             }
 
@@ -237,45 +234,43 @@ public class CriarAnuncioActivity extends AppCompatActivity implements AdapterVi
     }
 
     //Método que obtém o anúncio, juntamente com as categorias que obtém dos fragmentos, e regista-o na BD e API.
-    private Anuncio criarAnuncio(@NonNull FragmentManager fragmentManager, @NonNull String anuncioTitulo,
-                                @IdRes @NonNull Integer containerIdFormTroco, @NonNull String nomeCategoriaTroco, @NonNull Integer quantidadeCategoriaTroco,
-                                @IdRes @Nullable Integer containerIdFormPor, @Nullable String nomeCategoriaPor, @Nullable Integer quantidadeCategoriaPor) {
-
-        Anuncio novoAnuncio = null;
+    private void criarAnuncio(@NonNull FragmentManager fragmentManager, @NonNull String anuncioTitulo,
+                                @IdRes @NonNull Integer containerIdFormTroco, @NonNull String nomeCategoriaTroco, @NonNull Integer categoriaTrocoKeyPosition, @NonNull Integer quantidadeCategoriaTroco,
+                                @IdRes @Nullable Integer containerIdFormPor, @Nullable String nomeCategoriaPor, @Nullable Integer categoriaPorKeyPosition, @Nullable Integer quantidadeCategoriaPor) {
 
         FormManager formManager = new FormManager();
 
-        if(containerIdFormPor != null && nomeCategoriaPor != null && quantidadeCategoriaPor != null) {
-            Categoria categoriaTroco = getCategoria(fragmentManager, formManager, containerIdFormTroco, nomeCategoriaTroco);
-            Categoria categoriaPor = getCategoria(fragmentManager, formManager, containerIdFormPor, nomeCategoriaPor);
+        if(containerIdFormPor != null && nomeCategoriaPor != null && quantidadeCategoriaPor != null && categoriaPorKeyPosition != null) {
+            Categoria categoriaTroco = getCategoria(fragmentManager, formManager, containerIdFormTroco, nomeCategoriaTroco, categoriaTrocoKeyPosition);
+            Categoria categoriaPor = getCategoria(fragmentManager, formManager, containerIdFormPor, nomeCategoriaPor, categoriaPorKeyPosition);
 
-            novoAnuncio = getCategoriaTroco(anuncioTitulo, categoriaTroco, quantidadeCategoriaTroco, categoriaPor, quantidadeCategoriaPor);
+            getCategoriaTroco(anuncioTitulo, categoriaTroco, quantidadeCategoriaTroco, categoriaPor, quantidadeCategoriaPor);
         }
 
         else if(containerIdFormPor == null && nomeCategoriaPor == null && quantidadeCategoriaPor == null) {
-            Categoria categoriaTroco = getCategoria(fragmentManager, formManager, containerIdFormTroco, nomeCategoriaTroco);
+            Categoria categoriaTroco = getCategoria(fragmentManager, formManager, containerIdFormTroco, nomeCategoriaTroco, categoriaTrocoKeyPosition);
 
-            novoAnuncio = getCategoriaTroco(anuncioTitulo, categoriaTroco, quantidadeCategoriaTroco, null, null);
+            getCategoriaTroco(anuncioTitulo, categoriaTroco, quantidadeCategoriaTroco, null, null);
         }
-
-        return novoAnuncio;
     }
 
     //Método que obtém a categoria do fragment, através do método getCategoria do objeto do tipo FormManager.
     private Categoria getCategoria(@NonNull FragmentManager fragmentManager, @NonNull FormManager formManager,
-                                   @IdRes @NonNull Integer containerIdForm, @NonNull String nomeCategoria) {
+                                   @IdRes @NonNull Integer containerIdForm, @NonNull String nomeCategoria, @NonNull Integer categoriaKeyPosition) {
 
         Categoria categoria = null;
 
         Fragment fragmentForm = fragmentManager.findFragmentById(containerIdForm);
 
-        try {
-            categoria = formManager.getCategoria(fragmentManager, fragmentForm, getResources().getStringArray(R.array.categorias_keys), nomeCategoria, getApplicationContext());
-        }
+        String categoriaKey = categoriasHashMap.get(categoriaKeyPosition);
 
+        try {
+            categoria = formManager.getCategoria(fragmentForm, getResources().getStringArray(R.array.categorias_keys), categoriaKey, nomeCategoria, getApplicationContext());
+        }
         catch (RuntimeException ex) {
             showNotification(ex.getMessage());
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
             showNotification("Ocorreu um erro inesperado no processamento dos formulários.");
         }
@@ -283,115 +278,47 @@ public class CriarAnuncioActivity extends AppCompatActivity implements AdapterVi
         return categoria;
     }
 
-    private Anuncio getCategoriaTroco(@NonNull String anuncioTitulo,
-                                      @NonNull Categoria categoriaTroco, @NonNull Integer quantidadeTroco,
-                                      @Nullable Categoria categoriaPor, @Nullable Integer quantidadePor) {
+    private void getCategoriaTroco(@NonNull final String anuncioTitulo,
+                                      @NonNull final Categoria categoriaTroco, @NonNull final Integer quantidadeTroco,
+                                      @Nullable final Categoria categoriaPor, @Nullable final Integer quantidadePor) {
 
-        Anuncio novoAnuncio = null;
-
-        String categoriaTrocoNome = categoriaTroco.getClass().getName();
-
-        switch (categoriaTrocoNome) {
-
-            case "Jogo":
-
-                Jogo jogoTroco = (Jogo) SingletonCategorias.getInstance(this).adicionarCategoria(categoriaTroco);
-
-                if(jogoTroco != null) {
-                    if (categoriaPor != null && quantidadePor != null) {
-                        novoAnuncio = getCategoriaPor(anuncioTitulo, jogoTroco, quantidadeTroco, categoriaPor, quantidadePor);
-                    } else if (categoriaPor == null && quantidadePor == null) {
-                        novoAnuncio = getAnuncio(anuncioTitulo, jogoTroco, quantidadeTroco, null, null);
-                    }
+        SingletonCategorias.getInstance(this).adicionarCategoria(categoriaTroco, new SingletonCategorias.SingletonActivityAPIResponse() {
+            @Override
+            public void onSuccessEnvioAPI(Categoria categoria) {
+                if (categoriaPor != null && quantidadePor != null) {
+                    getCategoriaPor(anuncioTitulo, categoria, quantidadeTroco, categoriaPor, quantidadePor);
+                } else if (categoriaPor == null && quantidadePor == null) {
+                    getAnuncio(anuncioTitulo, categoriaTroco, quantidadeTroco, null, null);
                 }
+            }
 
-            case "Brinquedo":
-
-                /*if(categoriaPor != null && quantidadePor != null) {
-                    getCategoriaPor(anuncioTitulo, categoriaTroco, quantidadeTroco, categoriaPor, quantidadePor);
-                } else if (categoriaPor == null && quantidadePor == null){
-
-                }*/
-
-            case "Computador":
-
-                /*if(categoriaPor != null && quantidadePor != null) {
-                    getCategoriaPor(anuncioTitulo, categoriaTroco, quantidadeTroco, categoriaPor, quantidadePor);
-                } else if (categoriaPor == null && quantidadePor == null){
-
-                }*/
-
-            case "Smartphone":
-
-                /*if(categoriaPor != null && quantidadePor != null) {
-                    getCategoriaPor(anuncioTitulo, categoriaTroco, quantidadeTroco, categoriaPor, quantidadePor);
-                } else if (categoriaPor == null && quantidadePor == null){
-
-                }*/
-
-            case "Eletronica":
-
-                /*if(categoriaPor != null && quantidadePor != null) {
-                    getCategoriaPor(anuncioTitulo, categoriaTroco, quantidadeTroco, categoriaPor, quantidadePor);
-                } else if (categoriaPor == null && quantidadePor == null){
-
-                }*/
-
-            case "Roupa":
-
-                /*if(categoriaPor != null && quantidadePor != null) {
-                    getCategoriaPor(anuncioTitulo, categoriaTroco, quantidadeTroco, categoriaPor, quantidadePor);
-                } else if (categoriaPor == null && quantidadePor == null){
-
-                }*/
-
-            case "Livro":
-
-                /*if(categoriaPor != null && quantidadePor != null) {
-                    getCategoriaPor(anuncioTitulo, categoriaTroco, quantidadeTroco, categoriaPor, quantidadePor);
-                } else if (categoriaPor == null && quantidadePor == null){
-
-                }*/
-        }
-
-        return novoAnuncio;
+            @Override
+            public void onErrorEnvioAPI(String message, Exception ex) {
+                ex.printStackTrace();
+                showNotification(message);
+            }
+        });
     }
 
-    private Anuncio getCategoriaPor(@NonNull String anuncioTitulo,
-                                    @NonNull Categoria categoriaTroco, @NonNull Integer quantidadeTroco,
-                                    @NonNull Categoria categoriaPor, @NonNull Integer quantidadePor) {
+    private void getCategoriaPor(@NonNull final String anuncioTitulo,
+                                 @NonNull final Categoria categoriaTroco, @NonNull final Integer quantidadeTroco,
+                                 @NonNull final Categoria categoriaPor, @NonNull final Integer quantidadePor) {
 
-        Anuncio novoAnuncio = null;
+        SingletonCategorias.getInstance(this).adicionarCategoria(categoriaPor, new SingletonCategorias.SingletonActivityAPIResponse() {
+            @Override
+            public void onSuccessEnvioAPI(Categoria categoria) {
+                getAnuncio(anuncioTitulo, categoriaTroco, quantidadeTroco, categoria, quantidadePor);
+            }
 
-        String categoriaPorNome = categoriaPor.getClass().getName();
-
-        switch (categoriaPorNome) {
-
-            case "Jogo":
-
-                Jogo jogoPor = (Jogo) SingletonCategorias.getInstance(this).adicionarCategoria(categoriaPor);
-
-                if(jogoPor != null) {
-                    novoAnuncio = getAnuncio(anuncioTitulo, categoriaTroco, quantidadeTroco, jogoPor, quantidadePor);
-                }
-
-            case "Brinquedo":
-
-            case "Computador":
-
-            case "Smartphone":
-
-            case "Eletronica":
-
-            case "Roupa":
-
-            case "Livro":
-        }
-
-        return novoAnuncio;
+            @Override
+            public void onErrorEnvioAPI(String message, Exception ex) {
+                ex.printStackTrace();
+                showNotification(message);
+            }
+        });
     }
 
-    private Anuncio getAnuncio(@NonNull String anuncioTitulo,
+    private void getAnuncio(@NonNull String anuncioTitulo,
                                @NonNull Categoria categoriaTroco, @NonNull Integer quantidadeTroco,
                                @Nullable Categoria categoriaPor, @Nullable Integer quantidadePor) {
 
@@ -400,9 +327,10 @@ public class CriarAnuncioActivity extends AppCompatActivity implements AdapterVi
             //TODO: Falta arranjar o ID do User, cujo deve ser passado no intent para esta activity. De momento, está um ID estático.
             //TODO: Por alguma razão, não consigo utilizar a classe LocalDate para arranjar a data atual.
             //TODO: Se calhar vai-se ter de eliminar os comentários, visto que até faria mais sentido não estar no Anúncio.
-            return new Anuncio(anuncioTitulo, 1L, categoriaTroco.getId(), quantidadeTroco, categoriaPor.getId(), quantidadePor, "ABERTO", , );
+
+            Anuncio anuncio = new Anuncio(anuncioTitulo, 1L, categoriaTroco.getId(), quantidadeTroco, categoriaPor.getId(), quantidadePor, "ABERTO", Calendar.getInstance().getTime().toString(), "PLACEHOLDER");
         } else if (categoriaPor == null && quantidadePor == null) {
-            return new Anuncio(anuncioTitulo, 1L, categoriaTroco.getId(), quantidadeTroco, null, null, "ABERTO", , );
+            Anuncio anuncio = new Anuncio(anuncioTitulo, 1L, categoriaTroco.getId(), quantidadeTroco, null, null, "ABERTO", Calendar.getInstance().getTime().toString(), "PLACEHOLDER");
         }
     }
 }
