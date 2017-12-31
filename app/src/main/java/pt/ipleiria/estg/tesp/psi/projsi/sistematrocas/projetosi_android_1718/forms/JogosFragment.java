@@ -51,14 +51,14 @@ public class JogosFragment extends Fragment {
         ArrayList<GeneroJogo> generoJogos = SingletonGenerosJogo.getInstance(getContext()).getGeneroJogos();
 
         //Inserção manual para efeito de desenvolvimento.
-        generoJogos.add(new GeneroJogo(1L, "RTS"));
+        /*generoJogos.add(new GeneroJogo(1L, "RTS"));
         generoJogos.add(new GeneroJogo(2L, "Ação"));
         generoJogos.add(new GeneroJogo(3L, "Estratégia"));
         generoJogos.add(new GeneroJogo(4L, "RPG"));
         generoJogos.add(new GeneroJogo(5L, "Puzzle"));
-        generoJogos.add(new GeneroJogo(5L, "FPS"));
+        generoJogos.add(new GeneroJogo(5L, "FPS"));*/
 
-        ArrayAdapter<GeneroJogo> spinnerGeneros = new ArrayAdapter<GeneroJogo>(getContext(),
+        ArrayAdapter<GeneroJogo> spinnerGeneros = new ArrayAdapter<>(getContext(),
                 R.layout.custom_spinner_item,
                 generoJogos);
 

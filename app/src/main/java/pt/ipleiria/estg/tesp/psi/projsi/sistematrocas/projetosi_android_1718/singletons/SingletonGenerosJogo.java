@@ -1,18 +1,26 @@
 package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons;
 
 import android.content.Context;
+import android.widget.Toast;
+
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.helpers.GeneroJogoBDTable;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.GeneroJogo;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.parsers.GeneroJogosParser;
 
 /**
  * Created by leona on 24/11/2017.
  */
 
 public class SingletonGenerosJogo {
+    private Context context;
     private static SingletonGenerosJogo INSTANCE = null;
     private ArrayList<GeneroJogo> generosJogos;
     private GeneroJogoBDTable bdTable;
@@ -25,9 +33,43 @@ public class SingletonGenerosJogo {
     }
 
     private SingletonGenerosJogo(Context context) {
+        this.context = context;
         generosJogos = new ArrayList<>();
         bdTable = new GeneroJogoBDTable(context);
+        getGeneroJogosAPI();
+    }
+
+    private void getGeneroJogosAPI() {
+
         generosJogos = bdTable.select();
+
+        if(generosJogos.isEmpty()) {
+
+            if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+                JsonArrayRequest generosAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("categorias/generos", new SingletonAPIManager.APIJsonArrayResposta() {
+                    @Override
+                    public void Sucesso(JSONArray resultados) {
+                        generosJogos = GeneroJogosParser.paraObjeto(resultados, context);
+
+                        getTiposRoupaBD(generosJogos);
+                    }
+
+                    @Override
+                    public void Erro(VolleyError erro) {
+                        Toast.makeText(context, "Não foi possível sincronizar os géneros de jogos com a API - " +
+                                erro.networkResponse.statusCode, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                SingletonAPIManager.getInstance(context).getRequestQueue().add(generosAPI);
+            }
+        }
+    }
+
+    private void getTiposRoupaBD(ArrayList<GeneroJogo> generosJogos) {
+        for (GeneroJogo generoJogo : generosJogos) {
+            bdTable.insert(generoJogo);
+        }
     }
 
     public ArrayList<GeneroJogo> getGeneroJogos() {

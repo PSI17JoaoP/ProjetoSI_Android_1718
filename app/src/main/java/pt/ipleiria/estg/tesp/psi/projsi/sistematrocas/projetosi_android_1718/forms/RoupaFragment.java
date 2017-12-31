@@ -49,12 +49,12 @@ public class RoupaFragment extends Fragment {
         ArrayList<TipoRoupa> tiposRoupa = SingletonTiposRoupa.getInstance(getContext()).getTiposRoupa();
 
         //Inserção manual para efeito de desenvolvimento.
-        tiposRoupa.add(new TipoRoupa(1L, "Camisola"));
+        /*tiposRoupa.add(new TipoRoupa(1L, "Camisola"));
         tiposRoupa.add(new TipoRoupa(2L, "Calças"));
         tiposRoupa.add(new TipoRoupa(3L, "Casaco"));
         tiposRoupa.add(new TipoRoupa(4L, "Camisa"));
         tiposRoupa.add(new TipoRoupa(5L, "Boné"));
-        tiposRoupa.add(new TipoRoupa(5L, "T-Shirt"));
+        tiposRoupa.add(new TipoRoupa(5L, "T-Shirt"));*/
 
         ArrayAdapter<TipoRoupa> spinnerTamanhos = new ArrayAdapter<>(getContext(),
                 R.layout.custom_spinner_item,

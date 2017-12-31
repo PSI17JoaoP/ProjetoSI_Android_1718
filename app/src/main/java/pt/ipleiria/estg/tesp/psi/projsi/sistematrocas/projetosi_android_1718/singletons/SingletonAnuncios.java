@@ -46,7 +46,7 @@ public class SingletonAnuncios {
         getAnuncios();
     }
 
-    public void getAnuncios() {
+    private void getAnuncios() {
 
         if (anuncios.isEmpty())
         {
@@ -108,8 +108,8 @@ public class SingletonAnuncios {
         }
     }
 
-    public void adicionarAnuncio(Anuncio anuncio)
-    {
+    public void adicionarAnuncio(Anuncio anuncio) {
+
         if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
 
             StringRequest adicionarAPI = SingletonAPIManager.getInstance(context).enviarAPI("anuncios/",
@@ -140,8 +140,8 @@ public class SingletonAnuncios {
         }
     }
 
-    public void alterarAnuncio(Anuncio anuncio)
-    {
+    public void alterarAnuncio(Anuncio anuncio) {
+
         if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
 
             StringRequest alterarAPI = SingletonAPIManager.getInstance(context).enviarAPI("anuncios/" + anuncio.getId().intValue(),
@@ -172,8 +172,8 @@ public class SingletonAnuncios {
         }
     }
 
-    public void apagarAnuncio(final Anuncio anuncio)
-    {
+    public void apagarAnuncio(final Anuncio anuncio) {
+
         if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
 
             StringRequest alterarAPI = SingletonAPIManager.getInstance(context).enviarAPI("anuncios/" + anuncio.getId().intValue(),
@@ -200,32 +200,24 @@ public class SingletonAnuncios {
     //------------------------------------------------------------
     //LOCAL A PARTIR DAQUI
 
-    public Integer getAnunciosCount() {
-        return anuncios.size();
-    }
-
-    public void adicionarAnunciosLocal(ArrayList<Anuncio> anuncioList)
-    {
+    public void adicionarAnunciosLocal(ArrayList<Anuncio> anuncioList) {
         for(Anuncio anuncio : anuncioList)
         {
             adicionarAnuncioLocal(anuncio);
         }
     }
 
-    public boolean adicionarAnuncioLocal(Anuncio anuncio)
-    {
+    public boolean adicionarAnuncioLocal(Anuncio anuncio) {
         Anuncio anuncioInserido = bdTable.insert(anuncio);
 
         return anuncioInserido != null && anuncios.add(anuncioInserido);
     }
 
-    public boolean removerAnuncioLocal(Anuncio anuncio)
-    {
+    public boolean removerAnuncioLocal(Anuncio anuncio) {
         return bdTable.delete(anuncio.getId()) && anuncios.remove(anuncio);
     }
 
-    public boolean editarAnuncioLocal(Anuncio anuncio)
-    {
+    public boolean editarAnuncioLocal(Anuncio anuncio) {
         if(bdTable.update(anuncio)) {
             Anuncio novoAnuncio = anuncios.set(anuncio.getId().intValue(), anuncio);
 
@@ -235,8 +227,7 @@ public class SingletonAnuncios {
         }
     }
 
-    public Anuncio pesquisarAnuncioID(Long id)
-    {
+    public Anuncio pesquisarAnuncioID(Long id) {
         for (Anuncio anuncio : anuncios) {
             if (anuncio.getId().equals(id)) {
                 return anuncio;
@@ -248,6 +239,10 @@ public class SingletonAnuncios {
 
     public Anuncio pesquisarAnuncioPosicao(Integer i) {
         return anuncios.get(i);
+    }
+
+    public Integer getAnunciosCount() {
+        return anuncios.size();
     }
 
     public void setAnunciosListener(AnunciosListener anunciosListener) {
