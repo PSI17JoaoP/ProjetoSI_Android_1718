@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.annotation.Nullable;
 import android.util.Base64;
 
 import com.android.volley.AuthFailureError;
@@ -21,9 +22,11 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -156,7 +159,7 @@ public class SingletonAPIManager {
      * @param usar Interface de Resposta
      * @return mixed
      */
-    public JsonArrayRequest pedirVariosAPI(String url, final APIJsonArrayResposta usar)
+    public JsonArrayRequest pedirVariosAPI(String url, @Nullable final String jsonArrayTag, final APIJsonArrayResposta usar)
     {
         if (ligadoInternet())
         {
@@ -183,6 +186,30 @@ public class SingletonAPIManager {
                     params.put("Accept", "application/json");
                     params.put("Authorization", "Basic " + auth);
                     return params;
+                }
+
+                @Override
+                protected Response<JSONArray> parseNetworkResponse(NetworkResponse response) {
+                    if(response != null) {
+                        String json = new String(response.data);
+
+                        JSONArray jsonArray = null;
+
+                        try {
+                            if(jsonArrayTag != null) {
+                                JSONObject jsonObject = new JSONObject(json);
+                                jsonArray = jsonObject.getJSONArray(jsonArrayTag);
+                            } else {
+                                jsonArray = new JSONArray(json);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        return Response.success(jsonArray, HttpHeaderParser.parseCacheHeaders(response));
+                    }
+
+                    return Response.error(new VolleyError("Ocorreu um erro no processamento da resposta da API."));
                 }
             };
 

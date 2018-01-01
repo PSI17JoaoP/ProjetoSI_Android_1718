@@ -51,4 +51,7 @@
     <string name="fragment_roupa_marca">Marca</string>
     <string name="fragment_roupa_tamanho">Tamanho</string>
 
+    <string name="title_activity_enviar_proposta">Enviar Proposta</string>
+    <string name="enviar_proposta_text_view">Proposta ao anúncio </string>
+
 </resources>

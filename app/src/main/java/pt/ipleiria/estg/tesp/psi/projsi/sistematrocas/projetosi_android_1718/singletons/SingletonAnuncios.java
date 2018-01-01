@@ -57,7 +57,7 @@ public class SingletonAnuncios {
         {
             if (SingletonAPIManager.getInstance(context).ligadoInternet())
             {
-                JsonArrayRequest anunciosAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("anuncios", new SingletonAPIManager.APIJsonArrayResposta() {
+                JsonArrayRequest anunciosAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("anuncios", null, new SingletonAPIManager.APIJsonArrayResposta() {
                     @Override
                     public void Sucesso(JSONArray resultados) {
                         anuncios = AnunciosParser.paraObjeto(resultados, context);
@@ -89,7 +89,7 @@ public class SingletonAnuncios {
 
         if (SingletonAPIManager.getInstance(context).ligadoInternet())
         {
-            JsonArrayRequest anunciosAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("anuncios/sugeridos/"+username, new SingletonAPIManager.APIJsonArrayResposta() {
+            JsonArrayRequest anunciosAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("anuncios/sugeridos/"+username, null, new SingletonAPIManager.APIJsonArrayResposta() {
                 @Override
                 public void Sucesso(JSONArray resultados) {
 

@@ -49,31 +49,30 @@ public class SingletonPropostas {
         getPropostasAPI();
     }
 
-    public void getPropostasAPI()
-    {
-        SharedPreferences preferences = context.getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
-        String username = preferences.getString("username", "");
+    public ArrayList<Proposta> getPropostas() {
+        return propostas;
+    }
+
+    private void getPropostasAPI() {
+
+        //SharedPreferences preferences = context.getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
+        //String username = preferences.getString("username", "");
+
+        String username = "TesteUser";
 
         if (propostas.isEmpty()) {
 
             if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
 
-                JsonArrayRequest propostasAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("anuncios/propostas/"+username, new SingletonAPIManager.APIJsonArrayResposta() {
+                JsonArrayRequest propostasAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("anuncios/propostas/"+username, "Propostas",new SingletonAPIManager.APIJsonArrayResposta() {
                     @Override
                     public void Sucesso(JSONArray resultados) {
 
-                        try {
-                            JSONArray propostasJson = (JSONArray) resultados.get(0);
-                            propostas = PropostasParser.paraObjeto(propostasJson, context);
-                            adicionarPropostasLocal(propostas);
+                        propostas = PropostasParser.paraObjeto(resultados, context);
+                        adicionarPropostasLocal(propostas);
 
-                            if (propostasListener != null)
-                                propostasListener.onRefreshPropostas(propostas);
-
-                        } catch (JSONException e) {
-                            if (propostasListener != null)
-                                propostasListener.onErrorPropostasAPI("Ocorreu um erro no processamento das Propostas.", e);
-                        }
+                        if (propostasListener != null)
+                            propostasListener.onRefreshPropostas(propostas);
                     }
 
                     @Override
@@ -93,31 +92,36 @@ public class SingletonPropostas {
 
     public void adicionarProposta(Proposta proposta)
     {
-        StringRequest propostasAPI = SingletonAPIManager.getInstance(context).enviarAPI("propostas/",
+        StringRequest propostasAPI = SingletonAPIManager.getInstance(context).enviarAPI("propostas",
                 Request.Method.POST, PropostasParser.paraJson(proposta), new SingletonAPIManager.APIStringResposta() {
                     @Override
                     public void Sucesso(String resposta) {
                         try {
                             Proposta novaProposta = PropostasParser.paraObjeto(new JSONObject(resposta), context);
 
-                            if (propostasListener != null)
-                                propostasListener.onUpdatePropostas(novaProposta, 1);
+                            if(adicionarPropostaLocal(novaProposta)) {
+                                if (propostasListener != null)
+                                    propostasListener.onSuccessPropostasAPI(novaProposta);
+                            }
+
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            if (propostasListener != null)
+                                propostasListener.onErrorPropostasAPI("Ocorreu um erro no processamento da Proposta.", e);
                         }
                     }
 
                     @Override
                     public void Erro(VolleyError erro) {
-                        Toast.makeText(context, "Não foi possível adicionar a proposta", Toast.LENGTH_SHORT).show();
+                        if (propostasListener != null)
+                            propostasListener.onErrorPropostasAPI("Ocorreu um erro no envio da Proposta para a API.", erro);
                     }
                 });
 
         SingletonAPIManager.getInstance(context).getRequestQueue().add(propostasAPI);
     }
 
-    public void alterarProposta(Proposta proposta)
-    {
+    public void alterarProposta(Proposta proposta) {
+
         StringRequest propostasAPI = SingletonAPIManager.getInstance(context).enviarAPI("propostas/"+proposta.getId().intValue(),
                 Request.Method.PUT, PropostasParser.paraJson(proposta), new SingletonAPIManager.APIStringResposta() {
                     @Override
@@ -141,8 +145,8 @@ public class SingletonPropostas {
         SingletonAPIManager.getInstance(context).getRequestQueue().add(propostasAPI);
     }
 
-    public void apagarProposta(final Proposta proposta)
-    {
+    public void apagarProposta(final Proposta proposta) {
+
         StringRequest propostasAPI = SingletonAPIManager.getInstance(context).enviarAPI("propostas/"+proposta.getId().intValue(),
                 Request.Method.DELETE, null, new SingletonAPIManager.APIStringResposta() {
                     @Override
