@@ -365,7 +365,7 @@ public class CriarAnuncioActivity extends AppCompatActivity implements AdapterVi
 
     @Override
     public void onSuccessAnunciosAPI(Anuncio anuncio) {
-        showNotification("SUCCESS - Envio do anúncio" + anuncio.getTitulo() + "para a API");
+        showNotification("SUCCESS - Envio do anúncio " + anuncio.getTitulo() + " para a API");
     }
 
     @Override
