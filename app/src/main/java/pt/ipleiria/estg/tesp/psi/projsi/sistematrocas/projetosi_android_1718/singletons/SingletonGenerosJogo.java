@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.helpers.GeneroJogoBDTable;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.GenerosJogosListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.GeneroJogo;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.parsers.GeneroJogosParser;
 
@@ -25,6 +26,8 @@ public class SingletonGenerosJogo {
     private ArrayList<GeneroJogo> generosJogos;
     private GeneroJogoBDTable bdTable;
 
+    private GenerosJogosListener generosJogosListener;
+
     public static SingletonGenerosJogo getInstance(Context context) {
         if (INSTANCE == null)
             INSTANCE = new SingletonGenerosJogo(context);
@@ -36,28 +39,38 @@ public class SingletonGenerosJogo {
         this.context = context;
         generosJogos = new ArrayList<>();
         bdTable = new GeneroJogoBDTable(context);
-        getGeneroJogosAPI();
+        generosJogos = bdTable.select();
+        getGenerosJogosAPI();
     }
 
-    private void getGeneroJogosAPI() {
+    private void getGenerosJogosAPI() {
 
-        generosJogos = bdTable.select();
+        //SharedPreferences preferences = getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
+        //String pin = preferences.getString("pin", "");
+
+        //Para efeito de desenvolvimento.
+        String pin = "MPW7P";
 
         if(generosJogos.isEmpty()) {
 
             if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+
+                SingletonAPIManager.getInstance(context).setAuth(pin);
+
                 JsonArrayRequest generosAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("categorias/generos", new SingletonAPIManager.APIJsonArrayResposta() {
                     @Override
                     public void Sucesso(JSONArray resultados) {
                         generosJogos = GeneroJogosParser.paraObjeto(resultados, context);
+                        adicionarTiposRoupaBD(generosJogos);
 
-                        getTiposRoupaBD(generosJogos);
+                        if (generosJogosListener != null)
+                            generosJogosListener.onRefreshGenerosJogos(generosJogos, context);
                     }
 
                     @Override
                     public void Erro(VolleyError erro) {
-                        Toast.makeText(context, "Não foi possível sincronizar os géneros de jogos com a API - " +
-                                erro.networkResponse.statusCode, Toast.LENGTH_SHORT).show();
+                        if (generosJogosListener != null)
+                            generosJogosListener.onErrorGenerosJogosAPI("Ocorreu um erro na sincronização dos géneros de jogo.", erro);
                     }
                 });
 
@@ -66,7 +79,7 @@ public class SingletonGenerosJogo {
         }
     }
 
-    private void getTiposRoupaBD(ArrayList<GeneroJogo> generosJogos) {
+    private void adicionarTiposRoupaBD(ArrayList<GeneroJogo> generosJogos) {
         for (GeneroJogo generoJogo : generosJogos) {
             bdTable.insert(generoJogo);
         }
@@ -80,20 +93,17 @@ public class SingletonGenerosJogo {
         this.generosJogos = generosJogos;
     }
 
-    public boolean adicionarGenero(GeneroJogo genero)
-    {
+    public boolean adicionarGenero(GeneroJogo genero) {
         GeneroJogo generoInserido = bdTable.insert(genero);
 
         return generoInserido != null && generosJogos.add(generoInserido);
     }
 
-    public boolean removerGenero(GeneroJogo genero)
-    {
+    public boolean removerGenero(GeneroJogo genero) {
         return bdTable.delete(genero.getId()) && generosJogos.remove(genero);
     }
 
-    public boolean editarGenero(GeneroJogo generoJogo)
-    {
+    public boolean editarGenero(GeneroJogo generoJogo) {
         if(bdTable.update(generoJogo)) {
             GeneroJogo novoGenero = generosJogos.set(generoJogo.getId().intValue(), generoJogo);
 
@@ -106,5 +116,9 @@ public class SingletonGenerosJogo {
     public GeneroJogo pesquisarGeneroJogosID(Long id)
     {
         return generosJogos.get(id.intValue());
+    }
+
+    public void setGenerosJogosListener(GenerosJogosListener generosJogosListener) {
+        this.generosJogosListener = generosJogosListener;
     }
 }

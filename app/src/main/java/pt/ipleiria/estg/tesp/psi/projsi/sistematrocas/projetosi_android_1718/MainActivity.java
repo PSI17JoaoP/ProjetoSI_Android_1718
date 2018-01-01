@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TabHost;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -70,6 +71,17 @@ public class MainActivity extends NavDrawerActivity implements AnunciosListener,
     }
 
     @Override
+    public void onSuccessAnunciosAPI(Anuncio anuncio) {
+
+    }
+
+    @Override
+    public void onErrorAnunciosAPI(String message, Exception ex) {
+        ex.printStackTrace();
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public void onRefreshAnuncios(ArrayList<Anuncio> anuncios) {
         anunciosAdapter = new AnunciosAdapter(this, anuncios);
         lvAnuncios.setAdapter(anunciosAdapter);
@@ -78,6 +90,17 @@ public class MainActivity extends NavDrawerActivity implements AnunciosListener,
     @Override
     public void onUpdateAnuncios(Anuncio anuncio, int acao) {
 
+    }
+
+    @Override
+    public void onSuccessPropostasAPI(Proposta proposta) {
+
+    }
+
+    @Override
+    public void onErrorPropostasAPI(String message, Exception ex) {
+        ex.printStackTrace();
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override

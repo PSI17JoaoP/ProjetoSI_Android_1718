@@ -36,7 +36,7 @@ public class LivrosFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        textInputEditTextTituloLivros = view.findViewById(R.id.textInputLayoutTituloLivros);
+        textInputEditTextTituloLivros = view.findViewById(R.id.textInputEditTextTituloLivros);
         textInputEditTextEditoraLivros = view.findViewById(R.id.textInputEditTextEditoraLivros);
         textInputEditTextAutorLivros = view.findViewById(R.id.textInputEditTextAutorLivros);
         editTextISBNLivros = view.findViewById(R.id.editTextISBNLivros);

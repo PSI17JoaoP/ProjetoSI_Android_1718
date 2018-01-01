@@ -1,10 +1,12 @@
 package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.R;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.TiposRoupaListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Roupa;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.TipoRoupa;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonTiposRoupa;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
@@ -25,7 +27,7 @@ import java.util.ArrayList;
  */
 
 
-public class RoupaFragment extends Fragment {
+public class RoupaFragment extends Fragment implements TiposRoupaListener {
 
     private TextInputEditText textInputEditTextMarcaRoupa;
     private TextInputEditText textInputEditTextTamanhoRoupa;
@@ -45,25 +47,20 @@ public class RoupaFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         textInputEditTextMarcaRoupa = view.findViewById(R.id.textInputEditTextMarcaRoupa);
         textInputEditTextTamanhoRoupa = view.findViewById(R.id.textInputEditTextTamanhoRoupa);
+        spinnerTipoRoupa = view.findViewById(R.id.spinnerTipoRoupa);
+
+        SingletonTiposRoupa.getInstance(getContext()).setTiposRoupaListener(this);
 
         ArrayList<TipoRoupa> tiposRoupa = SingletonTiposRoupa.getInstance(getContext()).getTiposRoupa();
 
-        //Inserção manual para efeito de desenvolvimento.
-        /*tiposRoupa.add(new TipoRoupa(1L, "Camisola"));
-        tiposRoupa.add(new TipoRoupa(2L, "Calças"));
-        tiposRoupa.add(new TipoRoupa(3L, "Casaco"));
-        tiposRoupa.add(new TipoRoupa(4L, "Camisa"));
-        tiposRoupa.add(new TipoRoupa(5L, "Boné"));
-        tiposRoupa.add(new TipoRoupa(5L, "T-Shirt"));*/
+        if(!tiposRoupa.isEmpty()) {
+            ArrayAdapter<TipoRoupa> spinnerTamanhos = new ArrayAdapter<>(getContext(),
+                    R.layout.custom_spinner_item,
+                    tiposRoupa);
 
-        ArrayAdapter<TipoRoupa> spinnerTamanhos = new ArrayAdapter<>(getContext(),
-                R.layout.custom_spinner_item,
-                tiposRoupa);
-
-        spinnerTipoRoupa = view.findViewById(R.id.spinnerTipoRoupa);
-
-        spinnerTamanhos.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerTipoRoupa.setAdapter(spinnerTamanhos);
+            spinnerTamanhos.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerTipoRoupa.setAdapter(spinnerTamanhos);
+        }
     }
 
     @Override
@@ -85,5 +82,25 @@ public class RoupaFragment extends Fragment {
         }
 
         return null;
+    }
+
+    @Override
+    public void onErrorTiposRoupaAPI(String message, Exception ex) {
+
+    }
+
+    @Override
+    public void onRefreshTiposRoupa(ArrayList<TipoRoupa> tiposRoupa, Context context) {
+        ArrayAdapter<TipoRoupa> spinnerTamanhos = new ArrayAdapter<>(getContext(),
+                R.layout.custom_spinner_item,
+                tiposRoupa);
+
+        spinnerTamanhos.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerTipoRoupa.setAdapter(spinnerTamanhos);
+    }
+
+    @Override
+    public void onUpdateTiposRoupa(TipoRoupa tipoRoupa, int acao) {
+
     }
 }

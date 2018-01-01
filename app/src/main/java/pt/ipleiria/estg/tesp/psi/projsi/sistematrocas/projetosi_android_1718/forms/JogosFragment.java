@@ -1,14 +1,17 @@
 package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.R;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.GenerosJogosListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.GeneroJogo;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Jogo;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonGenerosJogo;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +26,7 @@ import java.util.ArrayList;
  * Project ProjetoSI_Android_1718 - pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms
  */
 
-public class JogosFragment extends Fragment {
+public class JogosFragment extends Fragment implements GenerosJogosListener {
 
     private EditText editTextFaixaEtariaJogos;
     private TextInputEditText textInputEditTextEditoraJogos;
@@ -47,25 +50,20 @@ public class JogosFragment extends Fragment {
         textInputEditTextEditoraJogos = view.findViewById(R.id.textInputEditTextEditoraJogos);
         editTextDescricaoJogos = view.findViewById(R.id.editTextDescricaoJogos);
         textInputEditTextProdutoraJogos = view.findViewById(R.id.textInputEditTextProdutoraJogos);
-
-        ArrayList<GeneroJogo> generoJogos = SingletonGenerosJogo.getInstance(getContext()).getGeneroJogos();
-
-        //Inserção manual para efeito de desenvolvimento.
-        /*generoJogos.add(new GeneroJogo(1L, "RTS"));
-        generoJogos.add(new GeneroJogo(2L, "Ação"));
-        generoJogos.add(new GeneroJogo(3L, "Estratégia"));
-        generoJogos.add(new GeneroJogo(4L, "RPG"));
-        generoJogos.add(new GeneroJogo(5L, "Puzzle"));
-        generoJogos.add(new GeneroJogo(5L, "FPS"));*/
-
-        ArrayAdapter<GeneroJogo> spinnerGeneros = new ArrayAdapter<>(getContext(),
-                R.layout.custom_spinner_item,
-                generoJogos);
-
         spinnerGeneroJogos = view.findViewById(R.id.spinnerGeneroJogos);
 
-        spinnerGeneros.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerGeneroJogos.setAdapter(spinnerGeneros);
+        SingletonGenerosJogo.getInstance(getContext()).setGenerosJogosListener(this);
+
+        ArrayList<GeneroJogo> generosJogos = SingletonGenerosJogo.getInstance(getContext()).getGeneroJogos();
+
+        if(!generosJogos.isEmpty()) {
+            ArrayAdapter<GeneroJogo> spinnerGeneros = new ArrayAdapter<>(getContext(),
+                    R.layout.custom_spinner_item,
+                    generosJogos);
+
+            spinnerGeneros.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerGeneroJogos.setAdapter(spinnerGeneros);
+        }
     }
 
     @Override
@@ -97,5 +95,25 @@ public class JogosFragment extends Fragment {
         }
 
         return null;
+    }
+
+    @Override
+    public void onErrorGenerosJogosAPI(String message, Exception ex) {
+
+    }
+
+    @Override
+    public void onRefreshGenerosJogos(ArrayList<GeneroJogo> generosJogos, Context context) {
+        ArrayAdapter<GeneroJogo> spinnerGeneros = new ArrayAdapter<>(getContext(),
+                R.layout.custom_spinner_item,
+                generosJogos);
+
+        spinnerGeneros.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerGeneroJogos.setAdapter(spinnerGeneros);
+    }
+
+    @Override
+    public void onUpdateGenerosJogos(GeneroJogo generoJogo, int acao) {
+
     }
 }

@@ -20,18 +20,24 @@ import android.widget.FrameLayout;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms.FormManager;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.AnunciosListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Anuncio;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Categoria;
 
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonActivityAPIResponse;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonAnuncios;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonCategorias;
 
-public class CriarAnuncioActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
+public class CriarAnuncioActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener, AnunciosListener {
 
     private HashMap<Integer, String> categoriasHashMap;
+
+    private Anuncio anuncio;
 
     @SuppressLint("UseSparseArrays")
     @Override
@@ -76,14 +82,14 @@ public class CriarAnuncioActivity extends AppCompatActivity implements AdapterVi
         numberPickerCategoriaTroco.setMinValue(1);
         numberPickerCategoriaTroco.setMaxValue(99);
         numberPickerCategoriaTroco.setValue(1);
-        numberPickerCategoriaTroco.setWrapSelectorWheel(false);
+        numberPickerCategoriaTroco.setWrapSelectorWheel(true);
 
         NumberPicker numberPickerCategoriaPor = findViewById(R.id.numberPickerCategoriaPor);
 
         numberPickerCategoriaPor.setMinValue(1);
         numberPickerCategoriaPor.setMaxValue(99);
         numberPickerCategoriaPor.setValue(1);
-        numberPickerCategoriaPor.setWrapSelectorWheel(false);
+        numberPickerCategoriaPor.setWrapSelectorWheel(true);
         //---------------------------------------------------------------------------------------
 
         //----------------------------------Botão Flutuante--------------------------------------
@@ -282,7 +288,7 @@ public class CriarAnuncioActivity extends AppCompatActivity implements AdapterVi
                                       @NonNull final Categoria categoriaTroco, @NonNull final Integer quantidadeTroco,
                                       @Nullable final Categoria categoriaPor, @Nullable final Integer quantidadePor) {
 
-        SingletonCategorias.getInstance(this).adicionarCategoria(categoriaTroco, new SingletonCategorias.SingletonActivityAPIResponse() {
+        SingletonCategorias.getInstance(this).adicionarCategoria(categoriaTroco, new SingletonActivityAPIResponse() {
             @Override
             public void onSuccessEnvioAPI(Categoria categoria) {
                 if (categoriaPor != null && quantidadePor != null) {
@@ -304,7 +310,7 @@ public class CriarAnuncioActivity extends AppCompatActivity implements AdapterVi
                                  @NonNull final Categoria categoriaTroco, @NonNull final Integer quantidadeTroco,
                                  @NonNull final Categoria categoriaPor, @NonNull final Integer quantidadePor) {
 
-        SingletonCategorias.getInstance(this).adicionarCategoria(categoriaPor, new SingletonCategorias.SingletonActivityAPIResponse() {
+        SingletonCategorias.getInstance(this).adicionarCategoria(categoriaPor, new SingletonActivityAPIResponse() {
             @Override
             public void onSuccessEnvioAPI(Categoria categoria) {
                 getAnuncio(anuncioTitulo, categoriaTroco, quantidadeTroco, categoria, quantidadePor);
@@ -322,15 +328,61 @@ public class CriarAnuncioActivity extends AppCompatActivity implements AdapterVi
                                @NonNull Categoria categoriaTroco, @NonNull Integer quantidadeTroco,
                                @Nullable Categoria categoriaPor, @Nullable Integer quantidadePor) {
 
+        Anuncio anuncio = null;
+
         if (categoriaPor != null && quantidadePor != null) {
 
-            //TODO: Falta arranjar o ID do User, cujo deve ser passado no intent para esta activity. De momento, está um ID estático.
-            //TODO: Por alguma razão, não consigo utilizar a classe LocalDate para arranjar a data atual.
-            //TODO: Se calhar vai-se ter de eliminar os comentários, visto que até faria mais sentido não estar no Anúncio.
+            //TODO: ID do user autenticado passado pelo Intent.
+            //TODO: Implementação dos comentários.
 
-            Anuncio anuncio = new Anuncio(anuncioTitulo, 1L, categoriaTroco.getId(), quantidadeTroco, categoriaPor.getId(), quantidadePor, "ABERTO", Calendar.getInstance().getTime().toString(), "PLACEHOLDER");
+            anuncio = new Anuncio(anuncioTitulo, 1L, categoriaTroco.getId(), quantidadeTroco, categoriaPor.getId(), quantidadePor, "ABERTO", Calendar.getInstance().getTime().toString(), "PLACEHOLDER");
         } else if (categoriaPor == null && quantidadePor == null) {
-            Anuncio anuncio = new Anuncio(anuncioTitulo, 1L, categoriaTroco.getId(), quantidadeTroco, null, null, "ABERTO", Calendar.getInstance().getTime().toString(), "PLACEHOLDER");
+            anuncio = new Anuncio(anuncioTitulo, 1L, categoriaTroco.getId(), quantidadeTroco, null, null, "ABERTO", Calendar.getInstance().getTime().toString(), "PLACEHOLDER");
         }
+
+        if (anuncio != null) {
+            saveAnuncio(anuncio);
+        }
+    }
+
+    private void saveAnuncio(@NonNull Anuncio anuncio) {
+
+        //Guardada como variável global, para ser visivel no onRefreshAnuncios.
+        this.anuncio = anuncio;
+
+        SingletonAnuncios.getInstance(this).setAnunciosListener(this);
+
+        ArrayList<Anuncio> anuncios = SingletonAnuncios.getInstance(this).getAnuncios();
+
+        if(!anuncios.isEmpty()) {
+            if (!anuncios.contains(anuncio)) {
+                SingletonAnuncios.getInstance(this).adicionarAnuncio(anuncio);
+            }
+        }
+
+        //TODO: Intent para a actividade dos visualização dos anúncios do user autenticado.
+    }
+
+    @Override
+    public void onSuccessAnunciosAPI(Anuncio anuncio) {
+        showNotification("SUCCESS - Envio do anúncio" + anuncio.getTitulo() + "para a API");
+    }
+
+    @Override
+    public void onErrorAnunciosAPI(String message, Exception ex) {
+        ex.printStackTrace();
+        showNotification(message);
+    }
+
+    @Override
+    public void onRefreshAnuncios(ArrayList<Anuncio> anuncios) {
+        if(!anuncios.contains(anuncio)) {
+            SingletonAnuncios.getInstance(this).adicionarAnuncio(anuncio);
+        }
+    }
+
+    @Override
+    public void onUpdateAnuncios(Anuncio anuncio, int acao) {
+
     }
 }

@@ -9,6 +9,8 @@ import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.mod
  */
 
 public interface PropostasListener {
+    void onSuccessPropostasAPI(Proposta proposta);
+    void onErrorPropostasAPI(String message, Exception ex);
     void onRefreshPropostas(ArrayList<Proposta> propostas);
     void onUpdatePropostas(Proposta proposta, int acao);
 }

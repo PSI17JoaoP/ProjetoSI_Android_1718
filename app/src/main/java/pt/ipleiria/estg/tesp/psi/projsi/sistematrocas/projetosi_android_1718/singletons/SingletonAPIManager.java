@@ -18,6 +18,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -34,7 +35,7 @@ public class SingletonAPIManager {
 
     private SharedPreferences preferences;
 
-    private static final String baseURL = "http://10.0.2.2:8888/";
+    private static final String baseURL = "http://192.168.1.2:8888/";
     private static String auth = null;
 
     public static synchronized SingletonAPIManager getInstance(Context contexto) {
@@ -241,8 +242,11 @@ public class SingletonAPIManager {
                 protected Response<String> parseNetworkResponse(NetworkResponse response) {
                     String responseString = "";
                     if (response != null) {
-                        responseString = String.valueOf(response.statusCode);
-                        // can get more details such as response.headers
+                        try {
+                            responseString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
                     }
                     return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
                 }

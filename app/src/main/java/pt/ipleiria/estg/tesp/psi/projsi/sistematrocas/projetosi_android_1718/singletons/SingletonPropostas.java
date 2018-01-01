@@ -45,43 +45,52 @@ public class SingletonPropostas {
         this.context = context;
         propostas = new ArrayList<>();
         bdTable = new PropostaBDTable(context);
+        propostas = bdTable.select();
+        getPropostasAPI();
     }
 
-    public void getPropostas()
+    public void getPropostasAPI()
     {
         SharedPreferences preferences = context.getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
         String username = preferences.getString("username", "");
+        //String pin = preferences.getString("pin", "");
 
-        if (propostas.size() == 0) {
+        //Para efeito de desenvolvimento.
+        String pin = "MPW7P";
+
+        if (propostas.isEmpty()) {
+
             if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+
+                SingletonAPIManager.getInstance(context).setAuth(pin);
+
                 JsonArrayRequest propostasAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("anuncios/propostas/"+username, new SingletonAPIManager.APIJsonArrayResposta() {
                     @Override
                     public void Sucesso(JSONArray resultados) {
 
                         try {
                             JSONArray propostasJson = (JSONArray) resultados.get(0);
-
                             propostas = PropostasParser.paraObjeto(propostasJson, context);
-
                             adicionarPropostasLocal(propostas);
 
                             if (propostasListener != null)
                                 propostasListener.onRefreshPropostas(propostas);
+
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            if (propostasListener != null)
+                                propostasListener.onErrorPropostasAPI("Ocorreu um erro no processamento das Propostas.", e);
                         }
                     }
 
                     @Override
                     public void Erro(VolleyError erro) {
-                        Toast.makeText(context, "Não foi possível sincronizar as propostas com a API - " + erro.networkResponse.statusCode, Toast.LENGTH_SHORT).show();
+                        if (propostasListener != null)
+                            propostasListener.onErrorPropostasAPI("Não foi possível sincronizar as propostas com a API - " + erro.networkResponse.statusCode, erro);
                     }
                 });
 
                 SingletonAPIManager.getInstance(context).getRequestQueue().add(propostasAPI);
             } else {
-                propostas = bdTable.select();
-
                 if (propostasListener != null)
                     propostasListener.onRefreshPropostas(propostas);
             }

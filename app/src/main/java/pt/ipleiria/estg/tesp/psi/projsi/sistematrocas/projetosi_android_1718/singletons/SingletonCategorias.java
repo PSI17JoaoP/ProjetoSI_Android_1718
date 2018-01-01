@@ -1,7 +1,6 @@
 package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
@@ -65,12 +64,7 @@ public class SingletonCategorias {
         this.categorias = categorias;
     }
 
-    public interface SingletonActivityAPIResponse {
-        void onSuccessEnvioAPI(Categoria categoria);
-        void onErrorEnvioAPI(String message, Exception ex);
-    }
-
-    public void adicionarCategoria(final Categoria categoria, final SingletonActivityAPIResponse interfaceSA) {
+    public synchronized void adicionarCategoria(final Categoria categoria, final SingletonActivityAPIResponse interfaceSA) {
 
         //SharedPreferences preferences = getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
         //String pin = preferences.getString("pin", "");

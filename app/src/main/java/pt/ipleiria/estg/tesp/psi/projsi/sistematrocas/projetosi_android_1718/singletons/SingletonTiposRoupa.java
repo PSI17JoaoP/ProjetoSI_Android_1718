@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.helpers.TipoRoupaBDTable;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.TiposRoupaListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.TipoRoupa;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.parsers.TiposRoupaParser;
 
@@ -25,6 +26,8 @@ public class SingletonTiposRoupa {
     private ArrayList<TipoRoupa> tiposRoupa;
     private TipoRoupaBDTable bdTable;
 
+    private TiposRoupaListener tiposRoupaListener;
+
     public static SingletonTiposRoupa getInstance(Context context) {
         if (INSTANCE == null)
             INSTANCE = new SingletonTiposRoupa(context);
@@ -36,28 +39,38 @@ public class SingletonTiposRoupa {
         this.context = context;
         tiposRoupa = new ArrayList<>();
         bdTable = new TipoRoupaBDTable(context);
+        tiposRoupa = bdTable.select();
         getTiposRoupaAPI();
     }
 
     private void getTiposRoupaAPI() {
 
-        tiposRoupa = bdTable.select();
+        //SharedPreferences preferences = getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
+        //String pin = preferences.getString("pin", "");
 
-        if(tiposRoupa.isEmpty()) {
+        //Para efeito de desenvolvimento.
+        String pin = "MPW7P";
+
+        if (tiposRoupa.isEmpty()) {
 
             if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+
+                SingletonAPIManager.getInstance(context).setAuth(pin);
+
                 JsonArrayRequest tiposAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("categorias/tipos", new SingletonAPIManager.APIJsonArrayResposta() {
                     @Override
                     public void Sucesso(JSONArray resultados) {
                         tiposRoupa = TiposRoupaParser.paraObjeto(resultados, context);
+                        adicionarTiposRoupaBD(tiposRoupa);
 
-                        getTiposRoupaBD(tiposRoupa);
+                        if (tiposRoupaListener != null)
+                            tiposRoupaListener.onRefreshTiposRoupa(tiposRoupa, context);
                     }
 
                     @Override
                     public void Erro(VolleyError erro) {
-                        Toast.makeText(context, "Não foi possível sincronizar os tipos de roupa com a API - " +
-                                erro.networkResponse.statusCode, Toast.LENGTH_SHORT).show();
+                        if (tiposRoupaListener != null)
+                            tiposRoupaListener.onErrorTiposRoupaAPI("Ocorreu um erro na sincronização dos tipos de roupa.", erro);
                     }
                 });
 
@@ -66,7 +79,7 @@ public class SingletonTiposRoupa {
         }
     }
 
-    private void getTiposRoupaBD(ArrayList<TipoRoupa> tiposRoupa) {
+    private void adicionarTiposRoupaBD(ArrayList<TipoRoupa> tiposRoupa) {
         for (TipoRoupa tipoRoupa : tiposRoupa) {
             bdTable.insert(tipoRoupa);
         }
@@ -80,20 +93,17 @@ public class SingletonTiposRoupa {
         this.tiposRoupa = tiposRoupa;
     }
 
-    public boolean adicionarTipo(TipoRoupa tipo)
-    {
+    public boolean adicionarTipo(TipoRoupa tipo) {
         TipoRoupa tipoRoupaInserido = bdTable.insert(tipo);
 
         return tipoRoupaInserido != null && tiposRoupa.add(tipoRoupaInserido);
     }
 
-    public boolean removerTipo(TipoRoupa tipo)
-    {
+    public boolean removerTipo(TipoRoupa tipo) {
         return bdTable.delete(tipo.getId()) && tiposRoupa.remove(tipo);
     }
 
-    public boolean editarTipo(TipoRoupa tipo)
-    {
+    public boolean editarTipo(TipoRoupa tipo) {
         if(bdTable.update(tipo)) {
             TipoRoupa novoTipo = tiposRoupa.set(tipo.getId().intValue(), tipo);
 
@@ -106,5 +116,9 @@ public class SingletonTiposRoupa {
     public TipoRoupa pesquisarTipoRoupaID(Long id)
     {
         return tiposRoupa.get(id.intValue());
+    }
+
+    public void setTiposRoupaListener(TiposRoupaListener tiposRoupaListener) {
+        this.tiposRoupaListener = tiposRoupaListener;
     }
 }

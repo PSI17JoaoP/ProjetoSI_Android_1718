@@ -43,20 +43,32 @@ public class SingletonAnuncios {
         this.context = context;
         anuncios = new ArrayList<>();
         bdTable = new AnuncioBDTable(context);
-        getAnuncios();
+        anuncios = bdTable.select();
+        getAnunciosAPI();
     }
 
-    private void getAnuncios() {
+    public ArrayList<Anuncio> getAnuncios() {
+        return anuncios;
+    }
+
+    private void getAnunciosAPI() {
+
+        //SharedPreferences preferences = getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
+        //String pin = preferences.getString("pin", "");
+
+        //Para efeito de desenvolvimento.
+        String pin = "MPW7P";
 
         if (anuncios.isEmpty())
         {
             if (SingletonAPIManager.getInstance(context).ligadoInternet())
             {
+                SingletonAPIManager.getInstance(context).setAuth(pin);
+
                 JsonArrayRequest anunciosAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("anuncios", new SingletonAPIManager.APIJsonArrayResposta() {
                     @Override
                     public void Sucesso(JSONArray resultados) {
                         anuncios = AnunciosParser.paraObjeto(resultados, context);
-
                         adicionarAnunciosLocal(anuncios);
 
                         if (anunciosListener != null)
@@ -65,14 +77,13 @@ public class SingletonAnuncios {
 
                     @Override
                     public void Erro(VolleyError erro) {
-                        Toast.makeText(context, "Não foi possível sincronizar os anúncios com a API - " + erro.networkResponse.statusCode, Toast.LENGTH_SHORT).show();
+                        if (anunciosListener != null)
+                            anunciosListener.onErrorAnunciosAPI("Não foi possível sincronizar os anúncios com a API - " + erro.networkResponse.statusCode, erro);
                     }
                 });
 
                 SingletonAPIManager.getInstance(context).getRequestQueue().add(anunciosAPI);
             } else {
-                anuncios = bdTable.select();
-
                 if (anunciosListener != null)
                     anunciosListener.onRefreshAnuncios(anuncios);
             }
@@ -100,7 +111,8 @@ public class SingletonAnuncios {
 
                 @Override
                 public void Erro(VolleyError erro) {
-                    Toast.makeText(context, "Não foi possível sincronizar os anúncios com a API - " + erro.networkResponse.statusCode, Toast.LENGTH_SHORT).show();
+                    if (anunciosListener != null)
+                        anunciosListener.onErrorAnunciosAPI("Não foi possível sincronizar os anúncios com a API - " + erro.networkResponse.statusCode, erro);
                 }
             });
 
@@ -112,7 +124,7 @@ public class SingletonAnuncios {
 
         if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
 
-            StringRequest adicionarAPI = SingletonAPIManager.getInstance(context).enviarAPI("anuncios/",
+            final StringRequest adicionarAPI = SingletonAPIManager.getInstance(context).enviarAPI("anuncios",
                     Request.Method.POST, AnunciosParser.paraJson(anuncio), new SingletonAPIManager.APIStringResposta() {
                         @Override
                         public void Sucesso(String resposta) {
@@ -122,17 +134,19 @@ public class SingletonAnuncios {
 
                                 if (adicionarAnuncioLocal(novoAnuncio)) {
                                     if (anunciosListener != null)
-                                        anunciosListener.onUpdateAnuncios(novoAnuncio, 1);
+                                        anunciosListener.onSuccessAnunciosAPI(novoAnuncio);
                                 }
 
                             } catch (JSONException e) {
-                                e.printStackTrace();
+                                if (anunciosListener != null)
+                                    anunciosListener.onErrorAnunciosAPI("Ocorreu um erro no processamento do Anúncio.", e);
                             }
                         }
 
                         @Override
                         public void Erro(VolleyError erro) {
-                            Toast.makeText(context, "Não foi possível adicionar o anúncio", Toast.LENGTH_SHORT).show();
+                            if (anunciosListener != null)
+                                anunciosListener.onErrorAnunciosAPI("Ocorreu um erro no envio do Anúncio para a API.", erro);
                         }
                     });
 
@@ -201,9 +215,10 @@ public class SingletonAnuncios {
     //LOCAL A PARTIR DAQUI
 
     public void adicionarAnunciosLocal(ArrayList<Anuncio> anuncioList) {
+
         for(Anuncio anuncio : anuncioList)
         {
-            adicionarAnuncioLocal(anuncio);
+            bdTable.insert(anuncio);
         }
     }
 
