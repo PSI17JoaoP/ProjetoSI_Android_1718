@@ -20,6 +20,7 @@ import android.widget.FrameLayout;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -330,14 +331,19 @@ public class CriarAnuncioActivity extends AppCompatActivity implements AdapterVi
 
         Anuncio anuncio = null;
 
+        Calendar c = Calendar.getInstance();
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-M-dd");
+        String data = df.format(c.getTime());
+
         if (categoriaPor != null && quantidadePor != null) {
 
             //TODO: ID do user autenticado passado pelo Intent.
             //TODO: Implementação dos comentários.
 
-            anuncio = new Anuncio(anuncioTitulo, 1L, categoriaTroco.getId(), quantidadeTroco, categoriaPor.getId(), quantidadePor, "ABERTO", Calendar.getInstance().getTime().toString(), "PLACEHOLDER");
+            anuncio = new Anuncio(anuncioTitulo, 2L, categoriaTroco.getId(), quantidadeTroco, categoriaPor.getId(), quantidadePor, "ATIVO", data , "PLACEHOLDER");
         } else if (categoriaPor == null && quantidadePor == null) {
-            anuncio = new Anuncio(anuncioTitulo, 1L, categoriaTroco.getId(), quantidadeTroco, null, null, "ABERTO", Calendar.getInstance().getTime().toString(), "PLACEHOLDER");
+            anuncio = new Anuncio(anuncioTitulo, 2L, categoriaTroco.getId(), quantidadeTroco, null, null, "ATIVO", data, "PLACEHOLDER");
         }
 
         if (anuncio != null) {

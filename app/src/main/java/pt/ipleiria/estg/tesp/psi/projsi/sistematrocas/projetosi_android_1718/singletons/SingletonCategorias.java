@@ -72,6 +72,7 @@ public class SingletonCategorias {
         //Para efeito de desenvolvimento.
         String pin = "MPW7P";
 
+
         if(!pin.isEmpty()) {
 
             String categoriaClassPath = categoria.getClass().getName();
@@ -88,6 +89,7 @@ public class SingletonCategorias {
 
                     if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
 
+                        //TEST ONLY: REMOVER ASAP
                         SingletonAPIManager.getInstance(context).setAuth(pin);
 
                         final String bodyString = "{\"Categoria\":\"jogos\",\"CategoriaMae\":" + CategoriasParser.paraJson(categoriaJogo) +
