@@ -66,364 +66,339 @@ public class SingletonCategorias {
 
     public synchronized void adicionarCategoria(final Categoria categoria, final SingletonActivityAPIResponse interfaceSA) {
 
-        //SharedPreferences preferences = getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
-        //String pin = preferences.getString("pin", "");
+        String categoriaClassPath = categoria.getClass().getName();
 
-        //Para efeito de desenvolvimento.
-        String pin = "MPW7P";
+        String categoriaClass = categoriaClassPath.substring(categoriaClassPath.lastIndexOf(".") + 1);
 
+        switch (categoriaClass) {
 
-        if(!pin.isEmpty()) {
+            case "Jogo":
 
-            String categoriaClassPath = categoria.getClass().getName();
+                Jogo jogo = (Jogo) categoria;
+                Brinquedo brinquedoJogo = new Brinquedo(jogo.getNome(), jogo.getEditora(), jogo.getFaixaEtaria(), jogo.getDescricao());
+                Categoria categoriaJogo = new Categoria(jogo.getNome());
 
-            String categoriaClass = categoriaClassPath.substring(categoriaClassPath.lastIndexOf(".") + 1);
+                if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
 
-            switch (categoriaClass) {
+                    final String bodyString = "{\"Categoria\":\"jogos\",\"CategoriaMae\":" + CategoriasParser.paraJson(categoriaJogo) +
+                            ",\"CategoriaFilha\":" + BrinquedosParser.paraJson(brinquedoJogo) +
+                            ",\"CategoriaNeta\":" + JogosParser.paraJson(jogo) + "}";
 
-                case "Jogo":
+                    StringRequest jogoPOST = SingletonAPIManager.getInstance(context).enviarAPI(
+                            "categorias",
+                            Request.Method.POST,
+                            bodyString,
+                            new SingletonAPIManager.APIStringResposta() {
 
-                    Jogo jogo = (Jogo) categoria;
-                    Brinquedo brinquedoJogo = new Brinquedo(jogo.getNome(), jogo.getEditora(), jogo.getFaixaEtaria(), jogo.getDescricao());
-                    Categoria categoriaJogo = new Categoria(jogo.getNome());
+                                @Override
+                                public void Sucesso(String resposta) {
 
-                    if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(resposta);
 
-                        //TEST ONLY: REMOVER ASAP
-                        SingletonAPIManager.getInstance(context).setAuth(pin);
+                                        Long id = jsonObject.getLong("ID");
+                                        categoria.setId(id);
 
-                        final String bodyString = "{\"Categoria\":\"jogos\",\"CategoriaMae\":" + CategoriasParser.paraJson(categoriaJogo) +
-                                ",\"CategoriaFilha\":" + BrinquedosParser.paraJson(brinquedoJogo) +
-                                ",\"CategoriaNeta\":" + JogosParser.paraJson(jogo) + "}";
-
-                        StringRequest jogoPOST = SingletonAPIManager.getInstance(context).enviarAPI(
-                                "categorias",
-                                Request.Method.POST,
-                                bodyString,
-                                new SingletonAPIManager.APIStringResposta() {
-
-                                    @Override
-                                    public void Sucesso(String resposta) {
-
-                                        try {
-                                            JSONObject jsonObject = new JSONObject(resposta);
-
-                                            Long id = jsonObject.getLong("ID");
-                                            categoria.setId(id);
-
-                                            if (SingletonCategorias.getInstance(context).adicionarCategoriaLocal(categoria)) {
-                                                interfaceSA.onSuccessEnvioAPI(categoria);
-                                            }
-
-                                        } catch (JSONException ex) {
-                                            interfaceSA.onErrorEnvioAPI("Ocorreu um erro no processamento do Jogo.", ex);
+                                        if (SingletonCategorias.getInstance(context).adicionarCategoriaLocal(categoria)) {
+                                            interfaceSA.onSuccessEnvioAPI(categoria);
                                         }
-                                    }
 
-                                    @Override
-                                    public void Erro(VolleyError erro) {
-                                        interfaceSA.onErrorEnvioAPI("Ocorreu um erro no envio do Jogo para a API.", erro);
+                                    } catch (JSONException ex) {
+                                        interfaceSA.onErrorEnvioAPI("Ocorreu um erro no processamento do Jogo.", ex);
                                     }
                                 }
-                        );
 
-                        SingletonAPIManager.getInstance(context).getRequestQueue().add(jogoPOST);
-                    }
+                                @Override
+                                public void Erro(VolleyError erro) {
+                                    interfaceSA.onErrorEnvioAPI("Ocorreu um erro no envio do Jogo para a API.", erro);
+                                }
+                            }
+                    );
 
-                    break;
+                    SingletonAPIManager.getInstance(context).getRequestQueue().add(jogoPOST);
+                }
 
-                case "Brinquedo":
+                break;
 
-                    Brinquedo brinquedo = (Brinquedo) categoria;
-                    Categoria categoriaBrinquedo = new Categoria(brinquedo.getNome());
+            case "Brinquedo":
 
-                    if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+                Brinquedo brinquedo = (Brinquedo) categoria;
+                Categoria categoriaBrinquedo = new Categoria(brinquedo.getNome());
 
-                        SingletonAPIManager.getInstance(context).setAuth(pin);
+                if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
 
-                        final String bodyString = "{\"Categoria\":\"brinquedos\",\"CategoriaMae\":" + CategoriasParser.paraJson(categoriaBrinquedo) +
-                                ",\"CategoriaFilha\":" + BrinquedosParser.paraJson(brinquedo) + "}";
+                    final String bodyString = "{\"Categoria\":\"brinquedos\",\"CategoriaMae\":" + CategoriasParser.paraJson(categoriaBrinquedo) +
+                            ",\"CategoriaFilha\":" + BrinquedosParser.paraJson(brinquedo) + "}";
 
-                        StringRequest brinquedoPOST = SingletonAPIManager.getInstance(context).enviarAPI(
-                                "categorias",
-                                Request.Method.POST,
-                                bodyString,
-                                new SingletonAPIManager.APIStringResposta() {
+                    StringRequest brinquedoPOST = SingletonAPIManager.getInstance(context).enviarAPI(
+                            "categorias",
+                            Request.Method.POST,
+                            bodyString,
+                            new SingletonAPIManager.APIStringResposta() {
 
-                                    @Override
-                                    public void Sucesso(String resposta) {
+                                @Override
+                                public void Sucesso(String resposta) {
 
-                                        try {
-                                            JSONObject jsonObject = new JSONObject(resposta);
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(resposta);
 
-                                            Long id = jsonObject.getLong("ID");
-                                            categoria.setId(id);
+                                        Long id = jsonObject.getLong("ID");
+                                        categoria.setId(id);
 
-                                            if (SingletonCategorias.getInstance(context).adicionarCategoriaLocal(categoria)) {
-                                                interfaceSA.onSuccessEnvioAPI(categoria);
-                                            }
-
-                                        } catch (JSONException ex) {
-                                            interfaceSA.onErrorEnvioAPI("Ocorreu um erro no processamento do Brinquedo.", ex);
+                                        if (SingletonCategorias.getInstance(context).adicionarCategoriaLocal(categoria)) {
+                                            interfaceSA.onSuccessEnvioAPI(categoria);
                                         }
-                                    }
 
-                                    @Override
-                                    public void Erro(VolleyError erro) {
-                                        interfaceSA.onErrorEnvioAPI("Ocorreu um erro no envio do Brinquedo para a API.", erro);
+                                    } catch (JSONException ex) {
+                                        interfaceSA.onErrorEnvioAPI("Ocorreu um erro no processamento do Brinquedo.", ex);
                                     }
                                 }
-                        );
 
-                        SingletonAPIManager.getInstance(context).getRequestQueue().add(brinquedoPOST);
-                    }
+                                @Override
+                                public void Erro(VolleyError erro) {
+                                    interfaceSA.onErrorEnvioAPI("Ocorreu um erro no envio do Brinquedo para a API.", erro);
+                                }
+                            }
+                    );
 
-                    break;
+                    SingletonAPIManager.getInstance(context).getRequestQueue().add(brinquedoPOST);
+                }
 
-                case "Computador":
+                break;
 
-                    Computador computador = (Computador) categoria;
-                    Eletronica eletronicaComputador = new Eletronica(computador.getNome(), computador.getDescricao(), computador.getMarca());
-                    Categoria categoriaComputador = new Categoria(computador.getNome());
+            case "Computador":
 
-                    if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+                Computador computador = (Computador) categoria;
+                Eletronica eletronicaComputador = new Eletronica(computador.getNome(), computador.getDescricao(), computador.getMarca());
+                Categoria categoriaComputador = new Categoria(computador.getNome());
 
-                        SingletonAPIManager.getInstance(context).setAuth(pin);
+                if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
 
-                        final String bodyString = "{\"Categoria\":\"computadores\",\"CategoriaMae\":" + CategoriasParser.paraJson(categoriaComputador) +
-                                ",\"CategoriaFilha\":" + EletronicaParser.paraJson(eletronicaComputador) +
-                                ",\"CategoriaNeta\":" + ComputadoresParser.paraJson(computador) + "}";
+                    final String bodyString = "{\"Categoria\":\"computadores\",\"CategoriaMae\":" + CategoriasParser.paraJson(categoriaComputador) +
+                            ",\"CategoriaFilha\":" + EletronicaParser.paraJson(eletronicaComputador) +
+                            ",\"CategoriaNeta\":" + ComputadoresParser.paraJson(computador) + "}";
 
-                        StringRequest computadorPOST = SingletonAPIManager.getInstance(context).enviarAPI(
-                                "categorias",
-                                Request.Method.POST,
-                                bodyString,
-                                new SingletonAPIManager.APIStringResposta() {
+                    StringRequest computadorPOST = SingletonAPIManager.getInstance(context).enviarAPI(
+                            "categorias",
+                            Request.Method.POST,
+                            bodyString,
+                            new SingletonAPIManager.APIStringResposta() {
 
-                                    @Override
-                                    public void Sucesso(String resposta) {
+                                @Override
+                                public void Sucesso(String resposta) {
 
-                                        try {
-                                            JSONObject jsonObject = new JSONObject(resposta);
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(resposta);
 
-                                            Long id = jsonObject.getLong("ID");
-                                            categoria.setId(id);
+                                        Long id = jsonObject.getLong("ID");
+                                        categoria.setId(id);
 
-                                            if (SingletonCategorias.getInstance(context).adicionarCategoriaLocal(categoria)) {
-                                                interfaceSA.onSuccessEnvioAPI(categoria);
-                                            }
-
-                                        } catch (JSONException ex) {
-                                            interfaceSA.onErrorEnvioAPI("Ocorreu um erro no processamento do Computador.", ex);
+                                        if (SingletonCategorias.getInstance(context).adicionarCategoriaLocal(categoria)) {
+                                            interfaceSA.onSuccessEnvioAPI(categoria);
                                         }
-                                    }
 
-                                    @Override
-                                    public void Erro(VolleyError erro) {
-                                        interfaceSA.onErrorEnvioAPI("Ocorreu um erro no envio do Computador para a API.", erro);
+                                    } catch (JSONException ex) {
+                                        interfaceSA.onErrorEnvioAPI("Ocorreu um erro no processamento do Computador.", ex);
                                     }
                                 }
-                        );
 
-                        SingletonAPIManager.getInstance(context).getRequestQueue().add(computadorPOST);
-                    }
+                                @Override
+                                public void Erro(VolleyError erro) {
+                                    interfaceSA.onErrorEnvioAPI("Ocorreu um erro no envio do Computador para a API.", erro);
+                                }
+                            }
+                    );
 
-                    break;
+                    SingletonAPIManager.getInstance(context).getRequestQueue().add(computadorPOST);
+                }
 
-                case "Smartphone":
+                break;
 
-                    Smartphone smartphone = (Smartphone) categoria;
-                    Eletronica smartphoneEletronica = new Eletronica(smartphone.getNome(), smartphone.getDescricao(), smartphone.getMarca());
-                    Categoria categoriaSmartphone = new Categoria(smartphone.getNome());
+            case "Smartphone":
 
-                    if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+                Smartphone smartphone = (Smartphone) categoria;
+                Eletronica smartphoneEletronica = new Eletronica(smartphone.getNome(), smartphone.getDescricao(), smartphone.getMarca());
+                Categoria categoriaSmartphone = new Categoria(smartphone.getNome());
 
-                        SingletonAPIManager.getInstance(context).setAuth(pin);
+                if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
 
-                        final String bodyString = "{\"Categoria\":\"smartphones\",\"CategoriaMae\":" + CategoriasParser.paraJson(categoriaSmartphone) +
-                                ",\"CategoriaFilha\":" + EletronicaParser.paraJson(smartphoneEletronica) +
-                                ",\"CategoriaNeta\":" + SmartphonesParser.paraJson(smartphone) + "}";
+                    final String bodyString = "{\"Categoria\":\"smartphones\",\"CategoriaMae\":" + CategoriasParser.paraJson(categoriaSmartphone) +
+                            ",\"CategoriaFilha\":" + EletronicaParser.paraJson(smartphoneEletronica) +
+                            ",\"CategoriaNeta\":" + SmartphonesParser.paraJson(smartphone) + "}";
 
-                        StringRequest smartphonePOST = SingletonAPIManager.getInstance(context).enviarAPI(
-                                "categorias",
-                                Request.Method.POST,
-                                bodyString,
-                                new SingletonAPIManager.APIStringResposta() {
+                    StringRequest smartphonePOST = SingletonAPIManager.getInstance(context).enviarAPI(
+                            "categorias",
+                            Request.Method.POST,
+                            bodyString,
+                            new SingletonAPIManager.APIStringResposta() {
 
-                                    @Override
-                                    public void Sucesso(String resposta) {
+                                @Override
+                                public void Sucesso(String resposta) {
 
-                                        try {
-                                            JSONObject jsonObject = new JSONObject(resposta);
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(resposta);
 
-                                            Long id = jsonObject.getLong("ID");
-                                            categoria.setId(id);
+                                        Long id = jsonObject.getLong("ID");
+                                        categoria.setId(id);
 
-                                            if (SingletonCategorias.getInstance(context).adicionarCategoriaLocal(categoria)) {
-                                                interfaceSA.onSuccessEnvioAPI(categoria);
-                                            }
-
-                                        } catch (JSONException ex) {
-                                            interfaceSA.onErrorEnvioAPI("Ocorreu um erro no processamento do Smartphone.", ex);
+                                        if (SingletonCategorias.getInstance(context).adicionarCategoriaLocal(categoria)) {
+                                            interfaceSA.onSuccessEnvioAPI(categoria);
                                         }
-                                    }
 
-                                    @Override
-                                    public void Erro(VolleyError erro) {
-                                        interfaceSA.onErrorEnvioAPI("Ocorreu um erro no envio do Smartphone para a API.", erro);
+                                    } catch (JSONException ex) {
+                                        interfaceSA.onErrorEnvioAPI("Ocorreu um erro no processamento do Smartphone.", ex);
                                     }
                                 }
-                        );
 
-                        SingletonAPIManager.getInstance(context).getRequestQueue().add(smartphonePOST);
-                    }
+                                @Override
+                                public void Erro(VolleyError erro) {
+                                    interfaceSA.onErrorEnvioAPI("Ocorreu um erro no envio do Smartphone para a API.", erro);
+                                }
+                            }
+                    );
 
-                    break;
+                    SingletonAPIManager.getInstance(context).getRequestQueue().add(smartphonePOST);
+                }
 
-                case "Eletronica":
+                break;
 
-                    Eletronica eletronica = (Eletronica) categoria;
-                    Categoria categoriaEletronica = new Categoria(eletronica.getNome());
+            case "Eletronica":
 
-                    if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+                Eletronica eletronica = (Eletronica) categoria;
+                Categoria categoriaEletronica = new Categoria(eletronica.getNome());
 
-                        SingletonAPIManager.getInstance(context).setAuth(pin);
+                if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
 
-                        final String bodyString = "{\"Categoria\":\"eletronica\",\"CategoriaMae\":" + CategoriasParser.paraJson(categoriaEletronica) +
-                                ",\"CategoriaFilha\":" + EletronicaParser.paraJson(eletronica) + "}";
+                    final String bodyString = "{\"Categoria\":\"eletronica\",\"CategoriaMae\":" + CategoriasParser.paraJson(categoriaEletronica) +
+                            ",\"CategoriaFilha\":" + EletronicaParser.paraJson(eletronica) + "}";
 
-                        StringRequest eletronicaPOST = SingletonAPIManager.getInstance(context).enviarAPI(
-                                "categorias",
-                                Request.Method.POST,
-                                bodyString,
-                                new SingletonAPIManager.APIStringResposta() {
+                    StringRequest eletronicaPOST = SingletonAPIManager.getInstance(context).enviarAPI(
+                            "categorias",
+                            Request.Method.POST,
+                            bodyString,
+                            new SingletonAPIManager.APIStringResposta() {
 
-                                    @Override
-                                    public void Sucesso(String resposta) {
+                                @Override
+                                public void Sucesso(String resposta) {
 
-                                        try {
-                                            JSONObject jsonObject = new JSONObject(resposta);
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(resposta);
 
-                                            Long id = jsonObject.getLong("ID");
-                                            categoria.setId(id);
+                                        Long id = jsonObject.getLong("ID");
+                                        categoria.setId(id);
 
-                                            if (SingletonCategorias.getInstance(context).adicionarCategoriaLocal(categoria)) {
-                                                interfaceSA.onSuccessEnvioAPI(categoria);
-                                            }
-
-                                        } catch (JSONException ex) {
-                                            interfaceSA.onErrorEnvioAPI("Ocorreu um erro no processamento da Eletronica.", ex);
+                                        if (SingletonCategorias.getInstance(context).adicionarCategoriaLocal(categoria)) {
+                                            interfaceSA.onSuccessEnvioAPI(categoria);
                                         }
-                                    }
 
-                                    @Override
-                                    public void Erro(VolleyError erro) {
-                                        interfaceSA.onErrorEnvioAPI("Ocorreu um erro no envio da Eletronica para a API.", erro);
+                                    } catch (JSONException ex) {
+                                        interfaceSA.onErrorEnvioAPI("Ocorreu um erro no processamento da Eletronica.", ex);
                                     }
                                 }
-                        );
 
-                        SingletonAPIManager.getInstance(context).getRequestQueue().add(eletronicaPOST);
-                    }
+                                @Override
+                                public void Erro(VolleyError erro) {
+                                    interfaceSA.onErrorEnvioAPI("Ocorreu um erro no envio da Eletronica para a API.", erro);
+                                }
+                            }
+                    );
 
-                    break;
+                    SingletonAPIManager.getInstance(context).getRequestQueue().add(eletronicaPOST);
+                }
 
-                case "Roupa":
+                break;
 
-                    Roupa roupa = (Roupa) categoria;
-                    Categoria categoriaRoupa = new Categoria(roupa.getNome());
+            case "Roupa":
 
-                    if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+                Roupa roupa = (Roupa) categoria;
+                Categoria categoriaRoupa = new Categoria(roupa.getNome());
 
-                        SingletonAPIManager.getInstance(context).setAuth(pin);
+                if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
 
-                        final String bodyString = "{\"Categoria\":\"roupa\",\"CategoriaMae\":" + CategoriasParser.paraJson(categoriaRoupa) +
-                                ",\"CategoriaFilha\":" + RoupasParser.paraJson(roupa) + "}";
+                    final String bodyString = "{\"Categoria\":\"roupa\",\"CategoriaMae\":" + CategoriasParser.paraJson(categoriaRoupa) +
+                            ",\"CategoriaFilha\":" + RoupasParser.paraJson(roupa) + "}";
 
-                        StringRequest roupaPOST = SingletonAPIManager.getInstance(context).enviarAPI(
-                                "categorias",
-                                Request.Method.POST,
-                                bodyString,
-                                new SingletonAPIManager.APIStringResposta() {
+                    StringRequest roupaPOST = SingletonAPIManager.getInstance(context).enviarAPI(
+                            "categorias",
+                            Request.Method.POST,
+                            bodyString,
+                            new SingletonAPIManager.APIStringResposta() {
 
-                                    @Override
-                                    public void Sucesso(String resposta) {
+                                @Override
+                                public void Sucesso(String resposta) {
 
-                                        try {
-                                            JSONObject jsonObject = new JSONObject(resposta);
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(resposta);
 
-                                            Long id = jsonObject.getLong("ID");
-                                            categoria.setId(id);
+                                        Long id = jsonObject.getLong("ID");
+                                        categoria.setId(id);
 
-                                            if (SingletonCategorias.getInstance(context).adicionarCategoriaLocal(categoria)) {
-                                                interfaceSA.onSuccessEnvioAPI(categoria);
-                                            }
-
-                                        } catch (JSONException ex) {
-                                            interfaceSA.onErrorEnvioAPI("Ocorreu um erro no processamento da Roupa.", ex);
+                                        if (SingletonCategorias.getInstance(context).adicionarCategoriaLocal(categoria)) {
+                                            interfaceSA.onSuccessEnvioAPI(categoria);
                                         }
-                                    }
 
-                                    @Override
-                                    public void Erro(VolleyError erro) {
-                                        interfaceSA.onErrorEnvioAPI("Ocorreu um erro no envio da Roupa para a API.", erro);
+                                    } catch (JSONException ex) {
+                                        interfaceSA.onErrorEnvioAPI("Ocorreu um erro no processamento da Roupa.", ex);
                                     }
                                 }
-                        );
 
-                        SingletonAPIManager.getInstance(context).getRequestQueue().add(roupaPOST);
-                    }
+                                @Override
+                                public void Erro(VolleyError erro) {
+                                    interfaceSA.onErrorEnvioAPI("Ocorreu um erro no envio da Roupa para a API.", erro);
+                                }
+                            }
+                    );
 
-                    break;
+                    SingletonAPIManager.getInstance(context).getRequestQueue().add(roupaPOST);
+                }
 
-                case "Livro":
+                break;
 
-                    Livro livro = (Livro) categoria;
-                    Categoria categoriaLivro = new Categoria(livro.getNome());
+            case "Livro":
 
-                    if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+                Livro livro = (Livro) categoria;
+                Categoria categoriaLivro = new Categoria(livro.getNome());
 
-                        SingletonAPIManager.getInstance(context).setAuth(pin);
+                if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
 
-                        final String bodyString = "{\"Categoria\":\"livros\",\"CategoriaMae\":" + CategoriasParser.paraJson(categoriaLivro) +
-                                ",\"CategoriaFilha\":" + LivrosParser.paraJson(livro) + "}";
+                    final String bodyString = "{\"Categoria\":\"livros\",\"CategoriaMae\":" + CategoriasParser.paraJson(categoriaLivro) +
+                            ",\"CategoriaFilha\":" + LivrosParser.paraJson(livro) + "}";
 
-                        StringRequest livroPOST = SingletonAPIManager.getInstance(context).enviarAPI(
-                                "categorias",
-                                Request.Method.POST,
-                                bodyString,
-                                new SingletonAPIManager.APIStringResposta() {
+                    StringRequest livroPOST = SingletonAPIManager.getInstance(context).enviarAPI(
+                            "categorias",
+                            Request.Method.POST,
+                            bodyString,
+                            new SingletonAPIManager.APIStringResposta() {
 
-                                    @Override
-                                    public void Sucesso(String resposta) {
+                                @Override
+                                public void Sucesso(String resposta) {
 
-                                        try {
-                                            JSONObject jsonObject = new JSONObject(resposta);
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(resposta);
 
-                                            Long id = jsonObject.getLong("ID");
-                                            categoria.setId(id);
+                                        Long id = jsonObject.getLong("ID");
+                                        categoria.setId(id);
 
-                                            if (SingletonCategorias.getInstance(context).adicionarCategoriaLocal(categoria)) {
-                                                interfaceSA.onSuccessEnvioAPI(categoria);
-                                            }
-
-                                        } catch (JSONException ex) {
-                                            interfaceSA.onErrorEnvioAPI("Ocorreu um erro no processamento do Livro.", ex);
+                                        if (SingletonCategorias.getInstance(context).adicionarCategoriaLocal(categoria)) {
+                                            interfaceSA.onSuccessEnvioAPI(categoria);
                                         }
-                                    }
 
-                                    @Override
-                                    public void Erro(VolleyError erro) {
-                                        interfaceSA.onErrorEnvioAPI("Ocorreu um erro no envio do Livro para a API.", erro);
+                                    } catch (JSONException ex) {
+                                        interfaceSA.onErrorEnvioAPI("Ocorreu um erro no processamento do Livro.", ex);
                                     }
                                 }
-                        );
 
-                        SingletonAPIManager.getInstance(context).getRequestQueue().add(livroPOST);
-                    }
+                                @Override
+                                public void Erro(VolleyError erro) {
+                                    interfaceSA.onErrorEnvioAPI("Ocorreu um erro no envio do Livro para a API.", erro);
+                                }
+                            }
+                    );
 
-                    break;
-            }
+                    SingletonAPIManager.getInstance(context).getRequestQueue().add(livroPOST);
+                }
+
+                break;
         }
     }
 

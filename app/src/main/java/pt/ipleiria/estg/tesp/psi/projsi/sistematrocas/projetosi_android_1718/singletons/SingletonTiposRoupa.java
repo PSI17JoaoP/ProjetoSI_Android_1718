@@ -45,17 +45,9 @@ public class SingletonTiposRoupa {
 
     private void getTiposRoupaAPI() {
 
-        //SharedPreferences preferences = getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
-        //String pin = preferences.getString("pin", "");
-
-        //Para efeito de desenvolvimento.
-        String pin = "MPW7P";
-
         if (tiposRoupa.isEmpty()) {
 
             if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
-
-                SingletonAPIManager.getInstance(context).setAuth(pin);
 
                 JsonArrayRequest tiposAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("categorias/tipos", new SingletonAPIManager.APIJsonArrayResposta() {
                     @Override

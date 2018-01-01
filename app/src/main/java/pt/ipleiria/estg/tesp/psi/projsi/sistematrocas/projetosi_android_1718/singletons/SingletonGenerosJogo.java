@@ -45,17 +45,9 @@ public class SingletonGenerosJogo {
 
     private void getGenerosJogosAPI() {
 
-        //SharedPreferences preferences = getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
-        //String pin = preferences.getString("pin", "");
-
-        //Para efeito de desenvolvimento.
-        String pin = "MPW7P";
-
         if(generosJogos.isEmpty()) {
 
             if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
-
-                SingletonAPIManager.getInstance(context).setAuth(pin);
 
                 JsonArrayRequest generosAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("categorias/generos", new SingletonAPIManager.APIJsonArrayResposta() {
                     @Override

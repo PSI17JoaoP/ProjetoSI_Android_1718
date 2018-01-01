@@ -53,18 +53,10 @@ public class SingletonAnuncios {
 
     private void getAnunciosAPI() {
 
-        //SharedPreferences preferences = getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
-        //String pin = preferences.getString("pin", "");
-
-        //Para efeito de desenvolvimento.
-        String pin = "MPW7P";
-
         if (anuncios.isEmpty())
         {
             if (SingletonAPIManager.getInstance(context).ligadoInternet())
             {
-                SingletonAPIManager.getInstance(context).setAuth(pin);
-
                 JsonArrayRequest anunciosAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("anuncios", new SingletonAPIManager.APIJsonArrayResposta() {
                     @Override
                     public void Sucesso(JSONArray resultados) {

@@ -53,16 +53,10 @@ public class SingletonPropostas {
     {
         SharedPreferences preferences = context.getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
         String username = preferences.getString("username", "");
-        //String pin = preferences.getString("pin", "");
-
-        //Para efeito de desenvolvimento.
-        String pin = "MPW7P";
 
         if (propostas.isEmpty()) {
 
             if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
-
-                SingletonAPIManager.getInstance(context).setAuth(pin);
 
                 JsonArrayRequest propostasAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("anuncios/propostas/"+username, new SingletonAPIManager.APIJsonArrayResposta() {
                     @Override

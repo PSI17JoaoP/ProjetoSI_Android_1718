@@ -76,11 +76,11 @@ public class LoginActivity extends AppCompatActivity {
 
                         JSONObject userResult = resultado.getJSONObject("User");
 
-                        Integer id = userResult.getInt("ID");
+                        Long id = userResult.getLong("ID");
                         String username = userResult.getString("Username");
                         String email = userResult.getString("Email");
 
-                        prefEditor.putInt("id", id);
+                        prefEditor.putLong("id", id);
                         prefEditor.putString("username", username);
                         prefEditor.putString("email", email);
                         prefEditor.putString("pin", pinString);

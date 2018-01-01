@@ -1,6 +1,8 @@
 package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -331,19 +333,17 @@ public class CriarAnuncioActivity extends AppCompatActivity implements AdapterVi
 
         Anuncio anuncio = null;
 
-        Calendar c = Calendar.getInstance();
+        SharedPreferences preferences = getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
+        Long ID = preferences.getLong("id", 0);
 
+        Calendar c = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-M-dd");
         String data = df.format(c.getTime());
 
         if (categoriaPor != null && quantidadePor != null) {
-
-            //TODO: ID do user autenticado passado pelo Intent.
-            //TODO: Implementação dos comentários.
-
-            anuncio = new Anuncio(anuncioTitulo, 2L, categoriaTroco.getId(), quantidadeTroco, categoriaPor.getId(), quantidadePor, "ATIVO", data , "PLACEHOLDER");
+            anuncio = new Anuncio(anuncioTitulo, ID, categoriaTroco.getId(), quantidadeTroco, categoriaPor.getId(), quantidadePor, "ATIVO", data , "PLACEHOLDER");
         } else if (categoriaPor == null && quantidadePor == null) {
-            anuncio = new Anuncio(anuncioTitulo, 2L, categoriaTroco.getId(), quantidadeTroco, null, null, "ATIVO", data, "PLACEHOLDER");
+            anuncio = new Anuncio(anuncioTitulo, ID, categoriaTroco.getId(), quantidadeTroco, null, null, "ATIVO", data, "PLACEHOLDER");
         }
 
         if (anuncio != null) {
