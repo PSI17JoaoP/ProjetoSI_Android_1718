@@ -55,10 +55,8 @@ public class SingletonPropostas {
 
     private void getPropostasAPI() {
 
-        //SharedPreferences preferences = context.getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
-        //String username = preferences.getString("username", "");
-
-        String username = "TesteUser";
+        SharedPreferences preferences = context.getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
+        String username = preferences.getString("username", "");
 
         if (propostas.isEmpty()) {
 

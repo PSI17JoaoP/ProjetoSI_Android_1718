@@ -69,10 +69,6 @@ public class EnviarPropostaActivity extends AppCompatActivity implements Adapter
         textViewEnviarProposta.setText(textViewEnviarProposta.getText() + "");
         //TODO: Titulo do anúncio passado no Intent.
 
-        //TEMPORÁRIO. Para desenvolvimento.
-        String pin = "MPW7P";
-        SingletonAPIManager.getInstance(this).setAuth(pin);
-
         Spinner dropDownCategorias = findViewById(R.id.dropDownEnviarPropostaCategorias);
 
         spinnerCategorias.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -229,10 +225,7 @@ public class EnviarPropostaActivity extends AppCompatActivity implements Adapter
     private void getProposta(@NonNull final Categoria categoria, @NonNull final Integer quantidade) {
 
         SharedPreferences preferences = getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
-        //Long userID = preferences.getLong("id", 0);
-
-        //Para desenvolvimento.
-        Long userID = 2L;
+        Long userID = preferences.getLong("id", 0);
 
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-M-dd");
