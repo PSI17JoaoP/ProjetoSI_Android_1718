@@ -43,7 +43,7 @@ public class SingletonAnuncios {
         this.context = context;
         anuncios = new ArrayList<>();
         bdTable = new AnuncioBDTable(context);
-        anuncios = bdTable.select();
+        //anuncios = bdTable.select();
         getAnunciosAPI();
     }
 
@@ -61,10 +61,13 @@ public class SingletonAnuncios {
                     @Override
                     public void Sucesso(JSONArray resultados) {
                         anuncios = AnunciosParser.paraObjeto(resultados, context);
+
                         adicionarAnunciosLocal(anuncios);
 
+                        /*
                         if (anunciosListener != null)
                             anunciosListener.onRefreshAnuncios(anuncios);
+                        */
                     }
 
                     @Override
@@ -98,7 +101,7 @@ public class SingletonAnuncios {
                     adicionarAnunciosLocal(anunciosAPI);
 
                     if (anunciosListener != null)
-                        anunciosListener.onRefreshAnuncios(anuncios);
+                        anunciosListener.onRefreshAnuncios(anunciosAPI);
                 }
 
                 @Override
@@ -236,7 +239,7 @@ public class SingletonAnuncios {
 
     public Anuncio pesquisarAnuncioID(Long id) {
         for (Anuncio anuncio : anuncios) {
-            if (anuncio.getId().equals(id)) {
+            if (anuncio.getId() == id) {
                 return anuncio;
             }
         }

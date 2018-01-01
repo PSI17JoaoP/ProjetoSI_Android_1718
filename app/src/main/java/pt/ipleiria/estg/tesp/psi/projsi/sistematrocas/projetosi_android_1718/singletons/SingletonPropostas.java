@@ -7,6 +7,7 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.JsonArray;
 
@@ -46,7 +47,7 @@ public class SingletonPropostas {
         propostas = new ArrayList<>();
         bdTable = new PropostaBDTable(context);
         propostas = bdTable.select();
-        getPropostasAPI();
+        //getPropostasAPI();
     }
 
     public void getPropostasAPI()
@@ -54,17 +55,18 @@ public class SingletonPropostas {
         SharedPreferences preferences = context.getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
         String username = preferences.getString("username", "");
 
-        if (propostas.isEmpty()) {
+
 
             if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
 
-                JsonArrayRequest propostasAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("anuncios/propostas/"+username, new SingletonAPIManager.APIJsonArrayResposta() {
-                    @Override
-                    public void Sucesso(JSONArray resultados) {
+                JsonObjectRequest propostasAPI = SingletonAPIManager.getInstance(context).pedirAPI("anuncios/propostas/"+username, new SingletonAPIManager.APIJsonResposta() {
 
+                    @Override
+                    public void Sucesso(JSONObject resultado) {
                         try {
-                            JSONArray propostasJson = (JSONArray) resultados.get(0);
+                            JSONArray propostasJson = resultado.getJSONArray("Propostas");
                             propostas = PropostasParser.paraObjeto(propostasJson, context);
+
                             adicionarPropostasLocal(propostas);
 
                             if (propostasListener != null)
@@ -88,7 +90,7 @@ public class SingletonPropostas {
                 if (propostasListener != null)
                     propostasListener.onRefreshPropostas(propostas);
             }
-        }
+
     }
 
     public void adicionarProposta(Proposta proposta)
