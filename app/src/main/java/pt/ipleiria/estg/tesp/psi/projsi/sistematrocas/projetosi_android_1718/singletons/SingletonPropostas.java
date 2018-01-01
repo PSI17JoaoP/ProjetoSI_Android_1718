@@ -7,6 +7,7 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.JsonArray;
 
@@ -46,45 +47,49 @@ public class SingletonPropostas {
         propostas = new ArrayList<>();
         bdTable = new PropostaBDTable(context);
         propostas = bdTable.select();
-        getPropostasAPI();
     }
 
     public ArrayList<Proposta> getPropostas() {
         return propostas;
     }
 
-    private void getPropostasAPI() {
+    public void getPropostasAPI() {
 
         SharedPreferences preferences = context.getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
         String username = preferences.getString("username", "");
 
-        if (propostas.isEmpty()) {
+        if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
 
-            if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+            JsonObjectRequest propostasAPI = SingletonAPIManager.getInstance(context).pedirAPI("anuncios/propostas/"+username, new SingletonAPIManager.APIJsonResposta() {
 
-                JsonArrayRequest propostasAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("anuncios/propostas/"+username, "Propostas",new SingletonAPIManager.APIJsonArrayResposta() {
-                    @Override
-                    public void Sucesso(JSONArray resultados) {
+                @Override
+                public void Sucesso(JSONObject resultado) {
+                    try {
+                        JSONArray propostasJson = resultado.getJSONArray("Propostas");
+                        propostas = PropostasParser.paraObjeto(propostasJson, context);
 
-                        propostas = PropostasParser.paraObjeto(resultados, context);
                         adicionarPropostasLocal(propostas);
 
                         if (propostasListener != null)
                             propostasListener.onRefreshPropostas(propostas);
-                    }
 
-                    @Override
-                    public void Erro(VolleyError erro) {
-                        if (propostasListener != null)
-                            propostasListener.onErrorPropostasAPI("Não foi possível sincronizar as propostas com a API - " + erro.networkResponse.statusCode, erro);
-                    }
-                });
+                    } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                }
 
-                SingletonAPIManager.getInstance(context).getRequestQueue().add(propostasAPI);
-            } else {
-                if (propostasListener != null)
-                    propostasListener.onRefreshPropostas(propostas);
-            }
+                @Override
+                public void Erro(VolleyError erro) {
+                    if (propostasListener != null)
+                        propostasListener.onErrorPropostasAPI("Não foi possível sincronizar as propostas com a API - " + erro.networkResponse.statusCode, erro);
+                }
+            });
+
+            SingletonAPIManager.getInstance(context).getRequestQueue().add(propostasAPI);
+
+        } else {
+            if (propostasListener != null)
+                propostasListener.onRefreshPropostas(propostas);
         }
     }
 

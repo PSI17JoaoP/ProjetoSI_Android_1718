@@ -49,7 +49,7 @@ public class SingletonTiposRoupa {
 
             if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
 
-                JsonArrayRequest tiposAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("categorias/tipos", null, new SingletonAPIManager.APIJsonArrayResposta() {
+                JsonArrayRequest tiposAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("categorias/tipos", new SingletonAPIManager.APIJsonArrayResposta() {
                     @Override
                     public void Sucesso(JSONArray resultados) {
                         tiposRoupa = TiposRoupaParser.paraObjeto(resultados, context);

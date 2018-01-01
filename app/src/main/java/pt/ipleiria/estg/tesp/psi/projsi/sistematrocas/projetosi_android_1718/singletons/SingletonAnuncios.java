@@ -43,7 +43,7 @@ public class SingletonAnuncios {
         this.context = context;
         anuncios = new ArrayList<>();
         bdTable = new AnuncioBDTable(context);
-        anuncios = bdTable.select();
+        //anuncios = bdTable.select();
         getAnunciosAPI();
     }
 
@@ -57,14 +57,17 @@ public class SingletonAnuncios {
         {
             if (SingletonAPIManager.getInstance(context).ligadoInternet())
             {
-                JsonArrayRequest anunciosAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("anuncios", null, new SingletonAPIManager.APIJsonArrayResposta() {
+                JsonArrayRequest anunciosAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("anuncios", new SingletonAPIManager.APIJsonArrayResposta() {
                     @Override
                     public void Sucesso(JSONArray resultados) {
                         anuncios = AnunciosParser.paraObjeto(resultados, context);
+
                         adicionarAnunciosLocal(anuncios);
 
+                        /*
                         if (anunciosListener != null)
                             anunciosListener.onRefreshAnuncios(anuncios);
+                        */
                     }
 
                     @Override
@@ -87,9 +90,9 @@ public class SingletonAnuncios {
         SharedPreferences preferences = context.getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
         String username = preferences.getString("username", "");
 
-        if (SingletonAPIManager.getInstance(context).ligadoInternet())
-        {
-            JsonArrayRequest anunciosAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("anuncios/sugeridos/"+username, null, new SingletonAPIManager.APIJsonArrayResposta() {
+        if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+
+            JsonArrayRequest anunciosAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("anuncios/sugeridos/"+username, new SingletonAPIManager.APIJsonArrayResposta() {
                 @Override
                 public void Sucesso(JSONArray resultados) {
 
@@ -98,7 +101,7 @@ public class SingletonAnuncios {
                     adicionarAnunciosLocal(anunciosAPI);
 
                     if (anunciosListener != null)
-                        anunciosListener.onRefreshAnuncios(anuncios);
+                        anunciosListener.onRefreshAnuncios(anunciosAPI);
                 }
 
                 @Override
@@ -236,7 +239,7 @@ public class SingletonAnuncios {
 
     public Anuncio pesquisarAnuncioID(Long id) {
         for (Anuncio anuncio : anuncios) {
-            if (anuncio.getId().equals(id)) {
+            if (anuncio.getId() == id) {
                 return anuncio;
             }
         }

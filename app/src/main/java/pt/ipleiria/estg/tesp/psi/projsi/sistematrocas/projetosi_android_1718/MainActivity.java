@@ -58,16 +58,14 @@ public class MainActivity extends NavDrawerActivity implements AnunciosListener,
 
             SingletonAnuncios.getInstance(this).setAnunciosListener(this);
             SingletonAnuncios.getInstance(this).getAnunciosSugeridos();
-/*
+
             SingletonPropostas.getInstance(this).setPropostasListener(this);
-            SingletonPropostas.getInstance(this).getPropostas();
-*/
+            SingletonPropostas.getInstance(this).getPropostasAPI();
 
         }else{
             /*this.gestorAnuncios =  ... savedInstanceState.getSerializable(...);
             this.gestorPropostas =  ... savedInstanceState.getSerializable(...);*/
         }
-
     }
 
     @Override

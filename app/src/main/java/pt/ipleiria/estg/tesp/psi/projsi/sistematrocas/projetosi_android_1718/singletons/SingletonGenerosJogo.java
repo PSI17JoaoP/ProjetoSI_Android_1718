@@ -49,7 +49,7 @@ public class SingletonGenerosJogo {
 
             if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
 
-                JsonArrayRequest generosAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("categorias/generos", null, new SingletonAPIManager.APIJsonArrayResposta() {
+                JsonArrayRequest generosAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("categorias/generos", new SingletonAPIManager.APIJsonArrayResposta() {
                     @Override
                     public void Sucesso(JSONArray resultados) {
                         generosJogos = GeneroJogosParser.paraObjeto(resultados, context);
