@@ -36,6 +36,7 @@ public class SingletonAPIManager {
     private SharedPreferences preferences;
 
     private static final String baseURL = "http://192.168.1.2:8888/";
+    //private static final String baseURL = "http://10.0.2.2:8888/";
     private static String auth = null;
 
     public static synchronized SingletonAPIManager getInstance(Context contexto) {
