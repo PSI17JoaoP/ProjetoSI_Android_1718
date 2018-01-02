@@ -1,5 +1,6 @@
 package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.view.View;
@@ -66,6 +67,9 @@ public class MainActivity extends NavDrawerActivity implements AnunciosListener,
             /*this.gestorAnuncios =  ... savedInstanceState.getSerializable(...);
             this.gestorPropostas =  ... savedInstanceState.getSerializable(...);*/
         }
+        Intent intent = new Intent(this, DetalhesAnuncioActivity.class);
+        intent.putExtra(DetalhesAnuncioActivity.ID_ANUNCIO, 4L);
+        startActivity(intent);
     }
 
     @Override

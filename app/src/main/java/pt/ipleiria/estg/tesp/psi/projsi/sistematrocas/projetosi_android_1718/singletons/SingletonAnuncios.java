@@ -240,9 +240,12 @@ public class SingletonAnuncios {
         }
     }
 
-    public Anuncio pesquisarAnuncioID(Long id) {
-        for (Anuncio anuncio : anuncios) {
-            if (anuncio.getId() == id) {
+    public Anuncio pesquisarAnuncioID(Long id)
+    {
+        for (Anuncio anuncio : anuncios)
+        {
+            if (anuncio.getId().toString().equals(id.toString()))
+            {
                 return anuncio;
             }
         }
