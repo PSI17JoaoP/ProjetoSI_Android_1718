@@ -81,7 +81,7 @@ public class SingletonPropostas {
                 @Override
                 public void Erro(VolleyError erro) {
                     if (propostasListener != null)
-                        propostasListener.onErrorPropostasAPI("Não foi possível sincronizar as propostas com a API - " + erro.networkResponse.statusCode, erro);
+                        propostasListener.onErrorPropostasAPI("Não foi possível sincronizar as propostas com a API.", erro);
                 }
             });
 
@@ -93,8 +93,8 @@ public class SingletonPropostas {
         }
     }
 
-    public void adicionarProposta(Proposta proposta)
-    {
+    public void adicionarProposta(Proposta proposta) {
+
         StringRequest propostasAPI = SingletonAPIManager.getInstance(context).enviarAPI("propostas",
                 Request.Method.POST, PropostasParser.paraJson(proposta), new SingletonAPIManager.APIStringResposta() {
                     @Override

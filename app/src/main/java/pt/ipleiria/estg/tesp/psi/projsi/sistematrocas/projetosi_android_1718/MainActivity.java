@@ -99,7 +99,7 @@ public class MainActivity extends NavDrawerActivity implements AnunciosListener,
     @Override
     public void onErrorPropostasAPI(String message, Exception ex) {
         ex.printStackTrace();
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
     @Override

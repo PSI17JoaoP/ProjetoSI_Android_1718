@@ -108,7 +108,7 @@ public class SingletonAnuncios {
                 @Override
                 public void Erro(VolleyError erro) {
                     if (anunciosListener != null)
-                        anunciosListener.onErrorAnunciosAPI("Não foi possível pedir os seus anúncios à API - " + erro.networkResponse.statusCode, erro);
+                        anunciosListener.onErrorAnunciosAPI("Não foi possível pedir os seus anúncios à API.", erro);
                 }
             });
 
@@ -142,7 +142,7 @@ public class SingletonAnuncios {
                 @Override
                 public void Erro(VolleyError erro) {
                     if (anunciosListener != null)
-                        anunciosListener.onErrorAnunciosAPI("Não foi possível pedir os anúncios sugeridos à API - " + erro.networkResponse.statusCode, erro);
+                        anunciosListener.onErrorAnunciosAPI("Não foi possível pedir os anúncios sugeridos à API.", erro);
                 }
             });
 
