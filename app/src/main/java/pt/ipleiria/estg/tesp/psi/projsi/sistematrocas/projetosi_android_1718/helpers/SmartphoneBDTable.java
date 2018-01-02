@@ -195,35 +195,26 @@ public class SmartphoneBDTable extends BDHelper<Smartphone> {
     @Override
     public Smartphone insert(Smartphone smartphone) {
 
-        CategoriaBDTable categoriaBDTable = new CategoriaBDTable(super.context);
         EletronicaBDTable eletronicaBDTable = new EletronicaBDTable(super.context);
-
-        Categoria categoriaSmartphone = new Categoria(smartphone.getNome());
-        categoriaSmartphone.setId(smartphone.getId());
 
         Eletronica eletronicaSmartphone = new Eletronica(smartphone.getNome(), smartphone.getDescricao(), smartphone.getMarca());
         eletronicaSmartphone.setId(smartphone.getId());
 
-        Categoria categoriaInserida = categoriaBDTable.insert(categoriaSmartphone);
+        Eletronica eletronicaInserida = eletronicaBDTable.insert(eletronicaSmartphone);
 
-        if(categoriaInserida != null) {
+        if (eletronicaInserida != null) {
 
-            Eletronica eletronicaInserida = eletronicaBDTable.insert(eletronicaSmartphone);
+            ContentValues values = new ContentValues();
 
-            if (eletronicaInserida != null) {
+            values.put(ID_ELETRONICA_CAT_SMARTPHONE, smartphone.getId());
+            values.put(CPU_CAT_SMARTPHONE, smartphone.getProcessador());
+            values.put(RAM_CAT_SMARTPHONE, smartphone.getRam());
+            values.put(HDD_CAT_SMARTPHONE, smartphone.getHdd());
+            values.put(OS_CAT_SMARTPHONE, smartphone.getOs());
+            values.put(TAMANHO_CAT_SMARTPHONE, smartphone.getTamanho());
 
-                ContentValues values = new ContentValues();
-
-                values.put(ID_ELETRONICA_CAT_SMARTPHONE, smartphone.getId());
-                values.put(CPU_CAT_SMARTPHONE, smartphone.getProcessador());
-                values.put(RAM_CAT_SMARTPHONE, smartphone.getRam());
-                values.put(HDD_CAT_SMARTPHONE, smartphone.getHdd());
-                values.put(OS_CAT_SMARTPHONE, smartphone.getOs());
-                values.put(TAMANHO_CAT_SMARTPHONE, smartphone.getTamanho());
-
-                if ((database.insert(TABLE_NAME, null, values)) >= 0) {
-                    return smartphone;
-                }
+            if ((database.insert(TABLE_NAME, null, values)) >= 0) {
+                return smartphone;
             }
         }
 

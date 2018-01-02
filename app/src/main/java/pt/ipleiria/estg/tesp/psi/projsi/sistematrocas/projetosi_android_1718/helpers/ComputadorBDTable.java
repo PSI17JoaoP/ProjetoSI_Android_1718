@@ -201,37 +201,27 @@ public class ComputadorBDTable extends BDHelper<Computador> {
     @Override
     public Computador insert(Computador computador) {
 
-        CategoriaBDTable categoriaBDTable = new CategoriaBDTable(super.context);
         EletronicaBDTable eletronicaBDTable = new EletronicaBDTable(super.context);
-
-        Categoria categoriaComputador = new Categoria(computador.getNome());
-        categoriaComputador.setId(computador.getId());
 
         Eletronica eletronicaComputador = new Eletronica(computador.getNome(), computador.getDescricao(), computador.getMarca());
         eletronicaComputador.setId(computador.getId());
 
+        Eletronica eletronicaInserida = eletronicaBDTable.insert(eletronicaComputador);
 
-        Categoria categoriaInserida = categoriaBDTable.insert(categoriaComputador);
+        if (eletronicaInserida != null) {
 
-        if(categoriaInserida != null) {
+            ContentValues values = new ContentValues();
 
-            Eletronica eletronicaInserida = eletronicaBDTable.insert(eletronicaComputador);
+            values.put(ID_ELETRONICA_CAT_COMPUTADOR, eletronicaInserida.getId());
+            values.put(CPU_CAT_COMPUTADOR, computador.getProcessador());
+            values.put(RAM_CAT_COMPUTADOR, computador.getRam());
+            values.put(HDD_CAT_COMPUTADOR, computador.getHdd());
+            values.put(GPU_CAT_COMPUTADOR, computador.getGpu());
+            values.put(OS_CAT_COMPUTADOR, computador.getOs());
+            values.put(PORTATIL_CAT_COMPUTADOR, computador.getPortatil());
 
-            if (eletronicaInserida != null) {
-
-                ContentValues values = new ContentValues();
-
-                values.put(ID_ELETRONICA_CAT_COMPUTADOR, eletronicaInserida.getId());
-                values.put(CPU_CAT_COMPUTADOR, computador.getProcessador());
-                values.put(RAM_CAT_COMPUTADOR, computador.getRam());
-                values.put(HDD_CAT_COMPUTADOR, computador.getHdd());
-                values.put(GPU_CAT_COMPUTADOR, computador.getGpu());
-                values.put(OS_CAT_COMPUTADOR, computador.getOs());
-                values.put(PORTATIL_CAT_COMPUTADOR, computador.getPortatil());
-
-                if (database.insert(TABLE_NAME, null, values) >= 0) {
-                    return computador;
-                }
+            if (database.insert(TABLE_NAME, null, values) >= 0) {
+                return computador;
             }
         }
 
