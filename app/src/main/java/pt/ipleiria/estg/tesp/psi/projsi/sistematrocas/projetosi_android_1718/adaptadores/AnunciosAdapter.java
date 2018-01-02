@@ -65,4 +65,9 @@ public class AnunciosAdapter extends BaseAdapter {
 
         return item;
     }
+
+    public void refresh(List<Anuncio> anuncios) {
+        this.listaAnuncios = anuncios;
+        notifyDataSetChanged();
+    }
 }

@@ -97,14 +97,8 @@ public class LoginActivity extends AppCompatActivity {
 
                 @Override
                 public void Erro(VolleyError erro) {
-                    //TODO: Switch para vários tipos de erros.
-                    if(erro.networkResponse.statusCode == 404) {
-                        textViewMensagem.setText(R.string.mensagem_pin_incorreto);
-                        textViewMensagem.setTextColor(Color.RED);
-                    } else {
-                        Snackbar snackbar = Snackbar.make(findViewById(R.id.loginCoordinatorLayout), getString(R.string.mensagem_login_erro) + " (" + erro.networkResponse.statusCode + ").", Snackbar.LENGTH_LONG);
-                        snackbar.show();
-                    }
+                    textViewMensagem.setText(R.string.mensagem_pin_incorreto);
+                    textViewMensagem.setTextColor(Color.RED);
                 }
             });
 

@@ -53,7 +53,7 @@ public class SingletonPropostas {
         return propostas;
     }
 
-    public void getPropostasAPI() {
+    public void getPropostasAnunciosUser() {
 
         SharedPreferences preferences = context.getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
         String username = preferences.getString("username", "");

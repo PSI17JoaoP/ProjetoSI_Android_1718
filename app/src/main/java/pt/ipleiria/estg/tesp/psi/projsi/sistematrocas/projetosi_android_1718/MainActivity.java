@@ -53,16 +53,17 @@ public class MainActivity extends NavDrawerActivity implements AnunciosListener,
         lvPropostas = findViewById(R.id.lvPropostas);
         //------------------------------------
 
-        if (savedInstanceState == null)
-        {
+        if (savedInstanceState == null) {
 
+            SingletonAnuncios.getInstance(this).getAnunciosAPI();
             SingletonAnuncios.getInstance(this).setAnunciosListener(this);
             SingletonAnuncios.getInstance(this).getAnunciosSugeridos();
 
             SingletonPropostas.getInstance(this).setPropostasListener(this);
-            SingletonPropostas.getInstance(this).getPropostasAPI();
+            SingletonPropostas.getInstance(this).getPropostasAnunciosUser();
+        }
 
-        }else{
+        else {
             /*this.gestorAnuncios =  ... savedInstanceState.getSerializable(...);
             this.gestorPropostas =  ... savedInstanceState.getSerializable(...);*/
         }

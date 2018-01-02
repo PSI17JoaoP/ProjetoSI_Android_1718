@@ -2,6 +2,7 @@ package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
@@ -12,9 +13,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -36,7 +36,7 @@ import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.sin
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonAnuncios;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonCategorias;
 
-public class CriarAnuncioActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener, AnunciosListener {
+public class CriarAnuncioActivity extends NavDrawerActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener, AnunciosListener {
 
     private HashMap<Integer, String> categoriasHashMap;
 
@@ -46,9 +46,8 @@ public class CriarAnuncioActivity extends AppCompatActivity implements AdapterVi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_criar_anuncio);
-        Toolbar toolbar = findViewById(R.id.toolbarCriarAnuncio);
-        setSupportActionBar(toolbar);
+        //setContentView(R.layout.activity_criar_anuncio);
+        View.inflate(this, R.layout.activity_criar_anuncio, (ViewGroup) findViewById(R.id.app_content));
 
         String[] categoriasValues = getResources().getStringArray(R.array.categorias_values);
         String[] categoriasKeys = getResources().getStringArray(R.array.categorias_keys);
@@ -365,13 +364,13 @@ public class CriarAnuncioActivity extends AppCompatActivity implements AdapterVi
                 SingletonAnuncios.getInstance(this).adicionarAnuncio(anuncio);
             }
         }
-
-        //TODO: Intent para a actividade dos visualização dos anúncios do user autenticado.
     }
 
     @Override
     public void onSuccessAnunciosAPI(Anuncio anuncio) {
-        showNotification("SUCCESS - Envio do anúncio " + anuncio.getTitulo() + " para a API");
+        showNotification("Criação do anúncio " + anuncio.getTitulo() + " com sucesso.");
+        Intent intent = new Intent(getApplicationContext(), MeusAnunciosActivity.class);
+        startActivity(intent);
     }
 
     @Override

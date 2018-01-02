@@ -54,4 +54,6 @@
     <string name="title_activity_enviar_proposta">Enviar Proposta</string>
     <string name="enviar_proposta_text_view">Proposta ao anúncio </string>
 
+    <string name="title_activity_meus_anuncios">Os meus anúncios</string>
+
 </resources>

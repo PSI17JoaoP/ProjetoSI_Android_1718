@@ -7,6 +7,7 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONArray;
@@ -44,14 +45,13 @@ public class SingletonAnuncios {
         anuncios = new ArrayList<>();
         bdTable = new AnuncioBDTable(context);
         anuncios = bdTable.select();
-        getAnunciosAPI();
     }
 
     public ArrayList<Anuncio> getAnuncios() {
         return anuncios;
     }
 
-    private void getAnunciosAPI() {
+    public void getAnunciosAPI() {
 
         if (anuncios.isEmpty())
         {
@@ -82,6 +82,46 @@ public class SingletonAnuncios {
         }
     }
 
+    public void getAnunciosUser() {
+
+        SharedPreferences preferences = context.getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
+        Long userId = preferences.getLong("id", 0);
+
+        if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+
+            JsonObjectRequest anunciosUserAPI = SingletonAPIManager.getInstance(context).pedirAPI("clientes/" + String.valueOf(userId) + "/anuncios", new SingletonAPIManager.APIJsonResposta() {
+                @Override
+                public void Sucesso(JSONObject resultado) {
+
+                    try {
+                        ArrayList<Anuncio> anunciosAPI = AnunciosParser.paraObjeto(resultado.getJSONArray("Anuncios"), context);
+
+                        if (anunciosListener != null)
+                            anunciosListener.onRefreshAnuncios(anunciosAPI);
+
+                    } catch (JSONException e) {
+                        if (anunciosListener != null)
+                            anunciosListener.onErrorAnunciosAPI("Ocorreu um erro no processamento dos seus anúncios.", e);
+                    }
+                }
+
+                @Override
+                public void Erro(VolleyError erro) {
+                    if (anunciosListener != null)
+                        anunciosListener.onErrorAnunciosAPI("Não foi possível pedir os seus anúncios à API - " + erro.networkResponse.statusCode, erro);
+                }
+            });
+
+            SingletonAPIManager.getInstance(context).getRequestQueue().add(anunciosUserAPI);
+        } else {
+
+            ArrayList<Anuncio> anunciosUser = bdTable.select("WHERE " + AnuncioBDTable.ID_USER_ANUNCIO + " = ?", new String[]{String.valueOf(userId)});
+
+            if (anunciosListener != null)
+                anunciosListener.onRefreshAnuncios(anunciosUser);
+        }
+    }
+
     public void getAnunciosSugeridos() {
 
         SharedPreferences preferences = context.getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
@@ -95,8 +135,6 @@ public class SingletonAnuncios {
 
                     ArrayList<Anuncio> anunciosAPI = AnunciosParser.paraObjeto(resultados, context);
 
-                    adicionarAnunciosLocal(anunciosAPI);
-
                     if (anunciosListener != null)
                         anunciosListener.onRefreshAnuncios(anunciosAPI);
                 }
@@ -104,7 +142,7 @@ public class SingletonAnuncios {
                 @Override
                 public void Erro(VolleyError erro) {
                     if (anunciosListener != null)
-                        anunciosListener.onErrorAnunciosAPI("Não foi possível sincronizar os anúncios com a API - " + erro.networkResponse.statusCode, erro);
+                        anunciosListener.onErrorAnunciosAPI("Não foi possível pedir os anúncios sugeridos à API - " + erro.networkResponse.statusCode, erro);
                 }
             });
 

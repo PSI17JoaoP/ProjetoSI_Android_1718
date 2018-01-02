@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/coordinatorLayoutEnviarProposta"
+    android:id="@+id/coordinatorLayoutMeusAnuncios"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.EnviarPropostaActivity">
+    tools:context="pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.MeusAnunciosActivity">
 
-    <include layout="@layout/content_enviar_proposta" />
+    <ListView
+        android:id="@+id/listMeusAnuncios"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabEnviarProposta"
-        android:layout_width="wrap_content"
+        android:id="@+id/fabMeusAnuncios"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_menu_add" />
+        android:onClick="onClickCriarAnuncio"
+        android:src="@android:drawable/ic_menu_add"
+        app:backgroundTint="@color/colorPrimaryDark" />
 
 </android.support.design.widget.CoordinatorLayout>
