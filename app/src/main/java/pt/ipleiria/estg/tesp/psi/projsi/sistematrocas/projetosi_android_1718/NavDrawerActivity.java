@@ -68,6 +68,9 @@ public class NavDrawerActivity extends AppCompatActivity
         {
             case R.id.nav_home:
 
+                Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(mainIntent);
+
                 break;
 
             case R.id.nav_meusAnuncios:
