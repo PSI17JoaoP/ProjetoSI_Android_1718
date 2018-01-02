@@ -34,7 +34,7 @@ public class RoupaBDTable extends BDHelper<Roupa> {
                 "(" + ID_CATEGORIA_CAT_ROUPA + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 MARCA_CAT_ROUPA + " TEXT NOT NULL," +
                 TAMANHO_CAT_ROUPA + " TEXT NOT NULL," +
-                ID_TIPO_ROUPA_CAT_ROUPA + " INTEGER NOT NULL" +
+                ID_TIPO_ROUPA_CAT_ROUPA + " INTEGER NOT NULL," +
                 "FOREIGN KEY(" + ID_TIPO_ROUPA_CAT_ROUPA + ") REFERENCES " +
                 TipoRoupaBDTable.TABLE_NAME + "(id)," +
                 "FOREIGN KEY(" + ID_CATEGORIA_CAT_ROUPA + ") REFERENCES " +
