@@ -54,4 +54,8 @@
     <string name="title_activity_enviar_proposta">Enviar Proposta</string>
     <string name="enviar_proposta_text_view">Proposta ao anúncio </string>
 
+    <string name="detalhes_anuncio_titulo">Titulo:</string>
+    <string name="detalhes_anuncio_data_criacao">Criado a:</string>
+    <string name="detalhes_anuncio_data_conclusao">Concluído a:</string>
+
 </resources>

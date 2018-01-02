@@ -43,43 +43,49 @@ public class SingletonAnuncios {
         this.context = context;
         anuncios = new ArrayList<>();
         bdTable = new AnuncioBDTable(context);
+        carregar();
+        /*
         anuncios = bdTable.select();
         getAnunciosAPI();
+        */
+    }
+
+    private void carregar()
+    {
+        if (SingletonAPIManager.getInstance(context).ligadoInternet())
+        {
+            getAnunciosAPI();
+        }else
+        {
+            anuncios = bdTable.select();
+        }
     }
 
     public ArrayList<Anuncio> getAnuncios() {
         return anuncios;
     }
 
-    private void getAnunciosAPI() {
+    private void getAnunciosAPI()
+    {
+        JsonArrayRequest anunciosAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("anuncios", new SingletonAPIManager.APIJsonArrayResposta() {
+            @Override
+            public void Sucesso(JSONArray resultados) {
+                anuncios = AnunciosParser.paraObjeto(resultados, context);
 
-        if (anuncios.isEmpty())
-        {
-            if (SingletonAPIManager.getInstance(context).ligadoInternet())
-            {
-                JsonArrayRequest anunciosAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("anuncios", new SingletonAPIManager.APIJsonArrayResposta() {
-                    @Override
-                    public void Sucesso(JSONArray resultados) {
-                        anuncios = AnunciosParser.paraObjeto(resultados, context);
-                        adicionarAnunciosLocal(anuncios);
+                adicionarAnunciosLocal(anuncios);
 
-                        if (anunciosListener != null)
-                            anunciosListener.onRefreshAnuncios(anuncios);
-                    }
-
-                    @Override
-                    public void Erro(VolleyError erro) {
-                        if (anunciosListener != null)
-                            anunciosListener.onErrorAnunciosAPI("Não foi possível sincronizar os anúncios com a API - " + erro.networkResponse.statusCode, erro);
-                    }
-                });
-
-                SingletonAPIManager.getInstance(context).getRequestQueue().add(anunciosAPI);
-            } else {
-                if (anunciosListener != null)
-                    anunciosListener.onRefreshAnuncios(anuncios);
+                /*if (anunciosListener != null)
+                    anunciosListener.onRefreshAnuncios(anuncios);*/
             }
-        }
+
+            @Override
+            public void Erro(VolleyError erro) {
+                if (anunciosListener != null)
+                    anunciosListener.onErrorAnunciosAPI("Não foi possível sincronizar os anúncios com a API - " + erro.networkResponse.statusCode, erro);
+            }
+        });
+
+        SingletonAPIManager.getInstance(context).getRequestQueue().add(anunciosAPI);
     }
 
     public void getAnunciosSugeridos() {
