@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.helpers.AnuncioBDTable;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.AnunciosListener;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.CategoriasListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Anuncio;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Brinquedo;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Categoria;
@@ -48,6 +49,7 @@ public class SingletonAnuncios {
     private Context context;
 
     private AnunciosListener anunciosListener;
+    private CategoriasListener categoriasListener;
 
     public static synchronized SingletonAnuncios getInstance(Context context) {
         if (INSTANCE == null)
@@ -105,9 +107,9 @@ public class SingletonAnuncios {
         SingletonAPIManager.getInstance(context).getRequestQueue().add(anunciosAPI);
     }
 
-    public void getCategoriasAnuncio(Long id)
+    public void getCategoriasAnuncio(Long id, final String tipo)
     {
-        JsonObjectRequest pedido = SingletonAPIManager.getInstance(context).pedirAPI("anuncios/" + id + "/categorias", new SingletonAPIManager.APIJsonResposta() {
+        JsonObjectRequest pedido = SingletonAPIManager.getInstance(context).pedirAPI("anuncios/" + id + "/categoria"+tipo, new SingletonAPIManager.APIJsonResposta() {
             @Override
             public void Sucesso(JSONObject resultado)
             {
@@ -133,6 +135,7 @@ public class SingletonAnuncios {
                             cat.put("descricao", filha.getJSONObject(0).get("descricao"));
 
                             Brinquedo categoriaB = BrinquedosParser.paraObjeto(cat, context);
+                            categoriasListener.onObterCategoria(categoriaB, tipoCategoria, tipo);
                             break;
                         case "Jogos":
                             cat.put("id", base.get("id"));
@@ -142,8 +145,9 @@ public class SingletonAnuncios {
                             cat.put("descricao", filha.getJSONObject(0).get("descricao"));
                             cat.put("id_genero", filha.getJSONObject(1).get("id_genero"));
                             cat.put("produtora", filha.getJSONObject(1).get("produtora"));
-                            Toast.makeText(context, cat.toString(), Toast.LENGTH_SHORT).show();
+
                             Jogo categoriaJ = JogosParser.paraObjeto(cat, context);
+                            categoriasListener.onObterCategoria(categoriaJ, tipoCategoria, tipo);
                             break;
                         case "Eletrónica":
                             cat.put("id", base.get("id"));
@@ -152,6 +156,7 @@ public class SingletonAnuncios {
                             cat.put("marca", filha.getJSONObject(0).get("marca"));
 
                             Eletronica categoriaE = EletronicaParser.paraObjeto(cat, context);
+                            categoriasListener.onObterCategoria(categoriaE, tipoCategoria, tipo);
                             break;
                         case "Computadores":
                             cat.put("id", base.get("id"));
@@ -166,6 +171,7 @@ public class SingletonAnuncios {
                             cat.put("portatil", filha.getJSONObject(1).get("portatil"));
 
                             Computador categoriaC = ComputadoresParser.paraObjeto(cat, context);
+                            categoriasListener.onObterCategoria(categoriaC, tipoCategoria, tipo);
                             break;
                         case "Smartphones":
                             cat.put("id", base.get("id"));
@@ -179,6 +185,7 @@ public class SingletonAnuncios {
                             cat.put("tamanho", filha.getJSONObject(1).get("tamanho"));
 
                             Smartphone categoriaS = SmartphonesParser.paraObjeto(cat, context);
+                            categoriasListener.onObterCategoria(categoriaS, tipoCategoria, tipo);
                             break;
                         case "Livros":
                             cat.put("id", base.get("id"));
@@ -189,6 +196,7 @@ public class SingletonAnuncios {
                             cat.put("isbn", filha.getJSONObject(0).get("isbn"));
 
                             Livro categoriaL = LivrosParser.paraObjeto(cat, context);
+                            categoriasListener.onObterCategoria(categoriaL, tipoCategoria, tipo);
                             break;
                         case "Roupa":
                             cat.put("id", base.get("id"));
@@ -198,6 +206,7 @@ public class SingletonAnuncios {
                             cat.put("id_tipo", filha.getJSONObject(0).get("id_tipo"));
 
                             Roupa categoriaR = RoupasParser.paraObjeto(cat, context);
+                            categoriasListener.onObterCategoria(categoriaR, tipoCategoria, tipo);
                             break;
                     }
                 } catch (JSONException e) {
@@ -390,5 +399,10 @@ public class SingletonAnuncios {
 
     public void setAnunciosListener(AnunciosListener anunciosListener) {
         this.anunciosListener = anunciosListener;
+    }
+
+    public void setCategoriasListener(CategoriasListener categoriasListener)
+    {
+        this.categoriasListener = categoriasListener;
     }
 }

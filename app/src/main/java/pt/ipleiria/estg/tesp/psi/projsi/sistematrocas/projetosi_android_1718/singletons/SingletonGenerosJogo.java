@@ -107,7 +107,15 @@ public class SingletonGenerosJogo {
 
     public GeneroJogo pesquisarGeneroJogosID(Long id)
     {
-        return generosJogos.get(id.intValue());
+        for (GeneroJogo genero : generosJogos)
+        {
+            if (genero.getId().toString().equals(id.toString()))
+            {
+                return genero;
+            }
+        }
+
+        return null;
     }
 
     public void setGenerosJogosListener(GenerosJogosListener generosJogosListener) {
