@@ -10,10 +10,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.CategoriasListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Anuncio;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Categoria;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Jogo;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonAnuncios;
 
-public class DetalhesAnuncioActivity extends NavDrawerActivity {
+public class DetalhesAnuncioActivity extends NavDrawerActivity implements CategoriasListener{
 
     private SharedPreferences preferences;
     public static final String ID_ANUNCIO = "ID";
@@ -35,7 +38,6 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity {
 
         Anuncio anuncio = SingletonAnuncios.getInstance(this).pesquisarAnuncioID(idAnuncioTemp);
 
-
         titulo.setText(anuncio.getTitulo());
         dataCriacao.setText(anuncio.getDataCriacao());
         if (anuncio.getDataConclusao().isEmpty())
@@ -46,5 +48,31 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity {
             dataConclusao.setText(anuncio.getDataConclusao());
         }
 
+
+        SingletonAnuncios.getInstance(this).getCategoriasAnuncio(idAnuncioTemp);
+    }
+
+    @Override
+    public void onObterCategoria(Categoria categoria, String tipo)
+    {
+        switch (tipo)
+        {
+            case "Brinquedos":
+                break;
+            case "Jogos":
+                Jogo jogo = (Jogo) categoria;
+
+                break;
+            case "Eletrónica":
+                break;
+            case "Computadores":
+                break;
+            case "Smartphones":
+                break;
+            case "Livros":
+                break;
+            case "Roupa":
+                break;
+        }
     }
 }
