@@ -60,11 +60,15 @@ public class SingletonAnuncios {
                 JsonArrayRequest anunciosAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("anuncios", new SingletonAPIManager.APIJsonArrayResposta() {
                     @Override
                     public void Sucesso(JSONArray resultados) {
-                        anuncios = AnunciosParser.paraObjeto(resultados, context);
-                        adicionarAnunciosLocal(anuncios);
 
-                        if (anunciosListener != null)
-                            anunciosListener.onRefreshAnuncios(anuncios);
+                        if(resultados.length() > 0) {
+                            anuncios = AnunciosParser.paraObjeto(resultados, context);
+                            adicionarAnunciosLocal(anuncios);
+
+                            if (anunciosListener != null)
+                                anunciosListener.onRefreshAnuncios(anuncios);
+                        }
+
                     }
 
                     @Override
@@ -94,10 +98,14 @@ public class SingletonAnuncios {
                 public void Sucesso(JSONObject resultado) {
 
                     try {
-                        ArrayList<Anuncio> anunciosAPI = AnunciosParser.paraObjeto(resultado.getJSONArray("Anuncios"), context);
+                        JSONArray anunciosAPI = resultado.getJSONArray("Anuncios");
 
-                        if (anunciosListener != null)
-                            anunciosListener.onRefreshAnuncios(anunciosAPI);
+                        if(anunciosAPI.length() > 0) {
+                            ArrayList<Anuncio> anunciosUser = AnunciosParser.paraObjeto(anunciosAPI, context);
+
+                            if (anunciosListener != null)
+                                anunciosListener.onRefreshAnuncios(anunciosUser);
+                        }
 
                     } catch (JSONException e) {
                         if (anunciosListener != null)
@@ -115,7 +123,7 @@ public class SingletonAnuncios {
             SingletonAPIManager.getInstance(context).getRequestQueue().add(anunciosUserAPI);
         } else {
 
-            ArrayList<Anuncio> anunciosUser = bdTable.select("WHERE " + AnuncioBDTable.ID_USER_ANUNCIO + " = ?", new String[]{String.valueOf(userId)});
+            ArrayList<Anuncio> anunciosUser = bdTable.select(" WHERE " + AnuncioBDTable.ID_USER_ANUNCIO + " = ? AND " + AnuncioBDTable.ESTADO_ANUNCIO + " = ?", new String[]{String.valueOf(userId), "ABERTO"});
 
             if (anunciosListener != null)
                 anunciosListener.onRefreshAnuncios(anunciosUser);

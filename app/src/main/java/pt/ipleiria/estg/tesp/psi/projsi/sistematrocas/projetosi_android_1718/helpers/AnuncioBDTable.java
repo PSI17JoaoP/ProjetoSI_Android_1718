@@ -24,7 +24,7 @@ public class AnuncioBDTable extends BDHelper<Anuncio> {
     private static final String QUANT_OFERECER_ANUNCIO = "quantOferecer";
     private static final String ID_CAT_RECEBER_ANUNCIO = "idCatReceber";
     private static final String QUANT_RECEBER_ANUNCIO = "quantReceber";
-    private static final String ESTADO_ANUNCIO = "estado";
+    public static final String ESTADO_ANUNCIO = "estado";
     private static final String COMENTARIOS_ANUNCIO = "comentarios";
     private static final String DATA_CRIACAO_ANUNCIO = "dataCriacao";
     private static final String DATA_CONCLUSAO_ANUNCIO = "dataConclusao";

@@ -22,7 +22,7 @@ public class PropostaBDTable extends BDHelper<Proposta> {
     private static final String QUANT_PROPOSTA = "quant";
     private static final String ID_USER_PROPOSTA = "idUser";
     private static final String ID_ANUNCIO_PROPOSTA = "idAnuncio";
-    private static final String ESTADO_PROPOSTA = "estado";
+    public static final String ESTADO_PROPOSTA = "estado";
     private static final String DATA_PROPOSTA_PROPOSTA = "dataProposta";
 
     public PropostaBDTable(Context context) {

@@ -506,7 +506,7 @@ public class SingletonCategorias {
         return false;
     }
 
-    public boolean removerCategoria(Categoria categoria) {
+    public boolean removerCategoriaLocal(Categoria categoria) {
 
         String categoriaNome = categoria.getClass().getName();
 
@@ -560,7 +560,7 @@ public class SingletonCategorias {
         }
     }
 
-    public boolean editarCategoria(Categoria categoria) {
+    public boolean editarCategoriaLocal(Categoria categoria) {
 
         String categoriaNome = categoria.getClass().getName();
 
