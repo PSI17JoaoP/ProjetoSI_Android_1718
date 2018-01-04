@@ -12,5 +12,4 @@ public interface AnunciosListener {
     void onSuccessAnunciosAPI(Anuncio anuncio);
     void onErrorAnunciosAPI(String message, Exception ex);
     void onRefreshAnuncios(ArrayList<Anuncio> anuncios);
-    void onUpdateAnuncios(Anuncio anuncio, int acao);
 }

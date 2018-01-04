@@ -87,11 +87,6 @@ public class MainActivity extends NavDrawerActivity implements AnunciosListener,
     }
 
     @Override
-    public void onUpdateAnuncios(Anuncio anuncio, int acao) {
-
-    }
-
-    @Override
     public void onSuccessPropostasAPI(Proposta proposta) {
 
     }
@@ -106,10 +101,5 @@ public class MainActivity extends NavDrawerActivity implements AnunciosListener,
     public void onRefreshPropostas(ArrayList<Proposta> propostas) {
         propostasAdapter = new PropostasAdapter(this, propostas);
         lvPropostas.setAdapter(propostasAdapter);
-    }
-
-    @Override
-    public void onUpdatePropostas(Proposta proposta, int acao) {
-
     }
 }

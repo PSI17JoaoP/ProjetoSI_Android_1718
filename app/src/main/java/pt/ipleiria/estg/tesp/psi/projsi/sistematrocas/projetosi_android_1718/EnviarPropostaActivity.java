@@ -66,7 +66,7 @@ public class EnviarPropostaActivity extends AppCompatActivity implements Adapter
                 categoriasValues);
 
         TextView textViewEnviarProposta = findViewById(R.id.textViewEnviarProposta);
-        textViewEnviarProposta.setText(textViewEnviarProposta.getText() + "");
+        textViewEnviarProposta.setText(textViewEnviarProposta.getText());
         //TODO: Titulo do anúncio passado no Intent.
 
         Spinner dropDownCategorias = findViewById(R.id.dropDownEnviarPropostaCategorias);
@@ -270,10 +270,5 @@ public class EnviarPropostaActivity extends AppCompatActivity implements Adapter
         if (!propostas.contains(proposta)) {
             SingletonPropostas.getInstance(this).adicionarProposta(proposta);
         }
-    }
-
-    @Override
-    public void onUpdatePropostas(Proposta proposta, int acao) {
-
     }
 }

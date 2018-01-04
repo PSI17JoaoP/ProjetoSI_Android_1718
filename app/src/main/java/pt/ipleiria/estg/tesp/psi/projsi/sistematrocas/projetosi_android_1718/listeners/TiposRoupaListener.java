@@ -14,5 +14,4 @@ import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.mod
 public interface TiposRoupaListener {
     void onErrorTiposRoupaAPI(String message, Exception ex);
     void onRefreshTiposRoupa(ArrayList<TipoRoupa> tiposRoupa, Context context);
-    void onUpdateTiposRoupa(TipoRoupa tipoRoupa, int acao);
 }

@@ -62,9 +62,4 @@ public class MeusAnunciosActivity extends NavDrawerActivity implements AnunciosL
         listaAnuncios.setAdapter(anunciosAdapter);
         anunciosAdapter.refresh(anuncios);
     }
-
-    @Override
-    public void onUpdateAnuncios(Anuncio anuncio, int acao) {
-
-    }
 }

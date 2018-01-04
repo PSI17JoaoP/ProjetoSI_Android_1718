@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -86,7 +87,8 @@ public class RoupaFragment extends Fragment implements TiposRoupaListener {
 
     @Override
     public void onErrorTiposRoupaAPI(String message, Exception ex) {
-
+        ex.printStackTrace();
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -97,10 +99,5 @@ public class RoupaFragment extends Fragment implements TiposRoupaListener {
 
         spinnerTamanhos.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerTipoRoupa.setAdapter(spinnerTamanhos);
-    }
-
-    @Override
-    public void onUpdateTiposRoupa(TipoRoupa tipoRoupa, int acao) {
-
     }
 }

@@ -6,17 +6,14 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
-import com.google.gson.JsonArray;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.helpers.PropostaBDTable;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.PropostasListener;
@@ -66,16 +63,20 @@ public class SingletonPropostas {
                 public void Sucesso(JSONObject resultado) {
                     try {
                         JSONArray propostasJson = resultado.getJSONArray("Propostas");
-                        propostas = PropostasParser.paraObjeto(propostasJson, context);
 
-                        adicionarPropostasLocal(propostas);
+                        if(propostasJson != null) {
+                            propostas = PropostasParser.paraObjeto(propostasJson, context);
 
-                        if (propostasListener != null)
-                            propostasListener.onRefreshPropostas(propostas);
+                            adicionarPropostasLocal(propostas);
+
+                            if (propostasListener != null)
+                                propostasListener.onRefreshPropostas(propostas);
+                        }
 
                     } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        if (propostasListener != null)
+                            propostasListener.onErrorPropostasAPI("Ocorreu um erro no processamento das propostas recebidas da API.", e);
+                    }
                 }
 
                 @Override
@@ -130,18 +131,23 @@ public class SingletonPropostas {
                     @Override
                     public void Sucesso(String resposta) {
                         try {
-                            Proposta altProposta = PropostasParser.paraObjeto(new JSONObject(resposta), context);
+                            Proposta propostaAlterada = PropostasParser.paraObjeto(new JSONObject(resposta), context);
 
-                            if (propostasListener != null)
-                                propostasListener.onUpdatePropostas(altProposta, 2);
+                            if(editarPropostaLocal(propostaAlterada)) {
+                                if (propostasListener != null)
+                                    propostasListener.onSuccessPropostasAPI(propostaAlterada);
+                            }
+
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            if (propostasListener != null)
+                                propostasListener.onErrorPropostasAPI("Ocorreu um erro no processamento da proposta alterada.", e);
                         }
                     }
 
                     @Override
                     public void Erro(VolleyError erro) {
-                        Toast.makeText(context, "Não foi possível alterar a proposta", Toast.LENGTH_SHORT).show();
+                        if (propostasListener != null)
+                            propostasListener.onErrorPropostasAPI("Não foi possível alterar a proposta.", erro);
                     }
                 });
 
@@ -154,13 +160,17 @@ public class SingletonPropostas {
                 Request.Method.DELETE, null, new SingletonAPIManager.APIStringResposta() {
                     @Override
                     public void Sucesso(String resposta) {
-                        if (propostasListener != null)
-                            propostasListener.onUpdatePropostas(proposta, 3);
+
+                        if(removerPropostaLocal(proposta)) {
+                            if (propostasListener != null)
+                                propostasListener.onSuccessPropostasAPI(proposta);
+                        }
                     }
 
                     @Override
                     public void Erro(VolleyError erro) {
-                        Toast.makeText(context, "Não foi possível apagar a proposta", Toast.LENGTH_SHORT).show();
+                        if (propostasListener != null)
+                            propostasListener.onErrorPropostasAPI("Não foi possível apagar a proposta.", erro);
                     }
                 });
 

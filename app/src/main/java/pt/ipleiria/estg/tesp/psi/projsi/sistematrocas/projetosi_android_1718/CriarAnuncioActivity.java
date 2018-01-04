@@ -385,9 +385,4 @@ public class CriarAnuncioActivity extends NavDrawerActivity implements AdapterVi
             SingletonAnuncios.getInstance(this).adicionarAnuncio(anuncio);
         }
     }
-
-    @Override
-    public void onUpdateAnuncios(Anuncio anuncio, int acao) {
-
-    }
 }

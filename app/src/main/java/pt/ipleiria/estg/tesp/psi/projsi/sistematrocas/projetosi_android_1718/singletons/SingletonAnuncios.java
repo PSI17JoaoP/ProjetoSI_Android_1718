@@ -198,7 +198,7 @@ public class SingletonAnuncios {
 
                                 if (editarAnuncioLocal(anuncioAlterado)) {
                                     if (anunciosListener != null)
-                                        anunciosListener.onUpdateAnuncios(anuncioAlterado, 2);
+                                        anunciosListener.onSuccessAnunciosAPI(anuncioAlterado);
                                 }
 
                             } catch (JSONException e) {
@@ -227,7 +227,7 @@ public class SingletonAnuncios {
 
                             if (removerAnuncioLocal(anuncio)) {
                                 if (anunciosListener != null)
-                                    anunciosListener.onUpdateAnuncios(anuncio, 3);
+                                    anunciosListener.onSuccessAnunciosAPI(anuncio);
                             }
                         }
 

@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -99,7 +100,8 @@ public class JogosFragment extends Fragment implements GenerosJogosListener {
 
     @Override
     public void onErrorGenerosJogosAPI(String message, Exception ex) {
-
+        ex.printStackTrace();
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -110,10 +112,5 @@ public class JogosFragment extends Fragment implements GenerosJogosListener {
 
         spinnerGeneros.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerGeneroJogos.setAdapter(spinnerGeneros);
-    }
-
-    @Override
-    public void onUpdateGenerosJogos(GeneroJogo generoJogo, int acao) {
-
     }
 }

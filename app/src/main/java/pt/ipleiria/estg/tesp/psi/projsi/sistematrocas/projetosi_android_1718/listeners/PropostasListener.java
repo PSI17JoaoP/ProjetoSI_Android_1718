@@ -12,5 +12,4 @@ public interface PropostasListener {
     void onSuccessPropostasAPI(Proposta proposta);
     void onErrorPropostasAPI(String message, Exception ex);
     void onRefreshPropostas(ArrayList<Proposta> propostas);
-    void onUpdatePropostas(Proposta proposta, int acao);
 }

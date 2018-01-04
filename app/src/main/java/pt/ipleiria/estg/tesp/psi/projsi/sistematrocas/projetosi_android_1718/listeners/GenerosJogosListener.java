@@ -14,5 +14,4 @@ import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.mod
 public interface GenerosJogosListener {
     void onErrorGenerosJogosAPI(String message, Exception ex);
     void onRefreshGenerosJogos(ArrayList<GeneroJogo> generosJogos, Context context);
-    void onUpdateGenerosJogos(GeneroJogo generoJogo, int acao);
 }
