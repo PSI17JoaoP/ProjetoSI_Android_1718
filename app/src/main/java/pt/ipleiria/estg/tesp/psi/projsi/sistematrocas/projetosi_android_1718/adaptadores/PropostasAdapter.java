@@ -72,8 +72,8 @@ public class PropostasAdapter extends BaseAdapter implements AnunciosListener, P
         TextView txtOfertaTitle = item.findViewById(R.id.txtOferta);
         TextView txtPropostaTitle = item.findViewById(R.id.txtProposta);
 
-        Button btnAceitar = item.findViewById(R.id.btnAceitar);
-        Button btnRecusar = item.findViewById(R.id.btnRecusar);
+        final Button btnAceitar = item.findViewById(R.id.btnAceitar);
+        final Button btnRecusar = item.findViewById(R.id.btnRecusar);
 
         proposta = listaPropostas.get(i);
         anuncioProposta = SingletonAnuncios.getInstance(context).pesquisarAnuncioID(proposta.getIdAnuncio());
@@ -81,9 +81,13 @@ public class PropostasAdapter extends BaseAdapter implements AnunciosListener, P
         SingletonPropostas.getInstance(context).setPropostasListener(this);
         SingletonAnuncios.getInstance(context).setAnunciosListener(this);
 
+        btnAceitar.setTag(i);
         btnAceitar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                Integer position = (Integer) btnAceitar.getTag();
+                Proposta proposta = listaPropostas.get(position);
 
                 proposta.setEstado("ACEITE");
                 anuncioProposta.setEstado("FECHADO");
@@ -92,9 +96,13 @@ public class PropostasAdapter extends BaseAdapter implements AnunciosListener, P
             }
         });
 
+        btnRecusar.setTag(i);
         btnRecusar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                Integer position = (Integer) btnRecusar.getTag();
+                Proposta proposta = listaPropostas.get(position);
 
                 proposta.setEstado("RECUSADO");
                 anuncioProposta.setEstado("FECHADO");
@@ -103,13 +111,13 @@ public class PropostasAdapter extends BaseAdapter implements AnunciosListener, P
             }
         });
 
+        txtPropostaTitle.setText(String.valueOf(proposta.getCatProposto()));
+
         if (anuncioProposta != null) {
             txtOfertaTitle.setText(anuncioProposta.getTitulo());
         } else {
             txtOfertaTitle.setText(String.valueOf(proposta.getIdAnuncio()));
         }
-
-        txtPropostaTitle.setText(String.valueOf(proposta.getCatProposto()));
 
         return item;
     }
