@@ -217,7 +217,12 @@ public class SingletonAnuncios {
             @Override
             public void Erro(VolleyError erro) {
                 if (anunciosListener != null)
+                {
+                    Integer code = 0;
+                    if (erro.networkResponse != null)
+                            code = erro.networkResponse.statusCode;
                     anunciosListener.onErrorAnunciosAPI("Não foi possível obter os dados do bem do anúncio - " + erro.networkResponse.statusCode, erro);
+                }
             }
         });
 

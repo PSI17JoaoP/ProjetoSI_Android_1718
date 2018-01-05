@@ -56,7 +56,6 @@ public class MainActivity extends NavDrawerActivity implements AnunciosListener,
 
         if (savedInstanceState == null) {
 
-            SingletonAnuncios.getInstance(this).getAnunciosAPI();
             SingletonAnuncios.getInstance(this).setAnunciosListener(this);
             SingletonAnuncios.getInstance(this).getAnunciosSugeridos();
 

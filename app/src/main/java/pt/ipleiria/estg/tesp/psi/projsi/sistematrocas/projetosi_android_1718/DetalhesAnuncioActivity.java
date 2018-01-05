@@ -224,14 +224,15 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Anunci
     @Override
     public void onSuccessAnunciosAPI(Anuncio anuncio)
     {
-        titulo.setText(anuncio.getTitulo());
-        dataCriacao.setText(anuncio.getDataCriacao());
-        if (anuncio.getDataConclusao().isEmpty())
+        if (anuncio != null)
         {
-            dataConclusao.setText("ATIVO");
-        }else
-        {
-            dataConclusao.setText(anuncio.getDataConclusao());
+            titulo.setText(anuncio.getTitulo());
+            dataCriacao.setText(anuncio.getDataCriacao());
+            if (anuncio.getDataConclusao() == null) {
+                dataConclusao.setText("ATIVO");
+            } else {
+                dataConclusao.setText(anuncio.getDataConclusao());
+            }
         }
 
     }
