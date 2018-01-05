@@ -14,6 +14,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.adaptadores.CategoriasAdapter;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.AnunciosListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.CategoriasListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Anuncio;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Brinquedo;
@@ -28,11 +29,14 @@ import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.sin
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonGenerosJogo;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonTiposRoupa;
 
-public class DetalhesAnuncioActivity extends NavDrawerActivity implements CategoriasListener{
+public class DetalhesAnuncioActivity extends NavDrawerActivity implements AnunciosListener,CategoriasListener{
 
-    private SharedPreferences preferences;
     private ListView lvTroco;
     private ListView lvPor;
+    private TextView titulo;
+    private TextView dataCriacao;
+    private TextView dataConclusao;
+
     public static final String ID_ANUNCIO = "ID";
 
     @Override
@@ -41,12 +45,12 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Catego
         super.onCreate(savedInstanceState);
         View.inflate(this, R.layout.activity_detalhes_anuncio, (ViewGroup) findViewById(R.id.app_content));
 
-        preferences = getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
+        SingletonAnuncios.getInstance(this).setAnunciosListener(this);
         SingletonAnuncios.getInstance(this).setCategoriasListener(this);
 
-        TextView titulo = findViewById(R.id.txtDetalhesTitulo);
-        TextView dataCriacao = findViewById(R.id.txtDetalhesDataCriacao);
-        TextView dataConclusao = findViewById(R.id.txtDetalhesDataConclusao);
+        titulo = findViewById(R.id.txtDetalhesTitulo);
+        dataCriacao = findViewById(R.id.txtDetalhesDataCriacao);
+        dataConclusao = findViewById(R.id.txtDetalhesDataConclusao);
 
         lvTroco = findViewById(R.id.lvDetalhesTroco);
         lvPor = findViewById(R.id.lvDetalhesPor);
@@ -55,7 +59,7 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Catego
         Long idAnuncioTemp = intent.getLongExtra(ID_ANUNCIO, 4L);
 
         Anuncio anuncio = SingletonAnuncios.getInstance(this).pesquisarAnuncioID(idAnuncioTemp);
-
+/*
         titulo.setText(anuncio.getTitulo());
         dataCriacao.setText(anuncio.getDataCriacao());
         if (anuncio.getDataConclusao().isEmpty())
@@ -65,8 +69,7 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Catego
         {
             dataConclusao.setText(anuncio.getDataConclusao());
         }
-
-
+*/
         SingletonAnuncios.getInstance(this).getCategoriasAnuncio(idAnuncioTemp, "Oferecer");
         SingletonAnuncios.getInstance(this).getCategoriasAnuncio(idAnuncioTemp, "Receber");
     }
@@ -216,5 +219,35 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Catego
         }else{
             lvPor.setAdapter(adapter);
         }
+    }
+
+    @Override
+    public void onSuccessAnunciosAPI(Anuncio anuncio)
+    {
+        titulo.setText(anuncio.getTitulo());
+        dataCriacao.setText(anuncio.getDataCriacao());
+        if (anuncio.getDataConclusao().isEmpty())
+        {
+            dataConclusao.setText("ATIVO");
+        }else
+        {
+            dataConclusao.setText(anuncio.getDataConclusao());
+        }
+
+    }
+
+    @Override
+    public void onErrorAnunciosAPI(String message, Exception ex) {
+
+    }
+
+    @Override
+    public void onRefreshAnuncios(ArrayList<Anuncio> anuncios) {
+
+    }
+
+    @Override
+    public void onUpdateAnuncios(Anuncio anuncio, int acao) {
+
     }
 }

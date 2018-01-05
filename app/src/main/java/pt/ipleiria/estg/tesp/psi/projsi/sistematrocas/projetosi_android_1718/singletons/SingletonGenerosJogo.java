@@ -1,6 +1,7 @@
 package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons;
 
 import android.content.Context;
+import android.content.Intent;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -46,7 +47,6 @@ public class SingletonGenerosJogo {
     private void getGenerosJogosAPI() {
 
         if(generosJogos.isEmpty()) {
-
             if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
 
                 JsonArrayRequest generosAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("categorias/generos", new SingletonAPIManager.APIJsonArrayResposta() {

@@ -67,9 +67,6 @@ public class MainActivity extends NavDrawerActivity implements AnunciosListener,
             /*this.gestorAnuncios =  ... savedInstanceState.getSerializable(...);
             this.gestorPropostas =  ... savedInstanceState.getSerializable(...);*/
         }
-        Intent intent = new Intent(this, DetalhesAnuncioActivity.class);
-        intent.putExtra(DetalhesAnuncioActivity.ID_ANUNCIO, 4L);
-        startActivity(intent);
     }
 
     @Override

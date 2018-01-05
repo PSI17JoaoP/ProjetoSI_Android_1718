@@ -382,6 +382,7 @@ public class SingletonAnuncios {
         {
             if (anuncio.getId().toString().equals(id.toString()))
             {
+                anunciosListener.onSuccessAnunciosAPI(anuncio);
                 return anuncio;
             }
         }
