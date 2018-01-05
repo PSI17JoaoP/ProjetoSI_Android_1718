@@ -107,7 +107,15 @@ public class SingletonTiposRoupa {
 
     public TipoRoupa pesquisarTipoRoupaID(Long id)
     {
-        return tiposRoupa.get(id.intValue());
+        for (TipoRoupa tipo : tiposRoupa)
+        {
+            if (tipo.getId().toString().equals(id.toString()))
+            {
+                return tipo;
+            }
+        }
+
+        return null;
     }
 
     public void setTiposRoupaListener(TiposRoupaListener tiposRoupaListener) {

@@ -55,7 +55,8 @@ public class SingletonPropostas {
         SharedPreferences preferences = context.getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
         String username = preferences.getString("username", "");
 
-        if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+        if (SingletonAPIManager.getInstance(context).ligadoInternet())
+        {
 
             JsonObjectRequest propostasAPI = SingletonAPIManager.getInstance(context).pedirAPI("anuncios/propostas/" + username, new SingletonAPIManager.APIJsonResposta() {
 
