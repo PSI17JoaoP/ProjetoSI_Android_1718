@@ -25,17 +25,17 @@ public class NavDrawerActivity extends AppCompatActivity
         SharedPreferences preferences;
         preferences = getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         View h = navigationView.getHeaderView(0);
 
         TextView txtUsername = h.findViewById(R.id.txtNavUsername);
@@ -50,7 +50,7 @@ public class NavDrawerActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -75,8 +75,8 @@ public class NavDrawerActivity extends AppCompatActivity
 
             case R.id.nav_meusAnuncios:
 
-                Intent intent = new Intent(getApplicationContext(), MeusAnunciosActivity.class);
-                startActivity(intent);
+                Intent intentAnuncios = new Intent(getApplicationContext(), MeusAnunciosActivity.class);
+                startActivity(intentAnuncios);
 
                 break;
 
@@ -89,9 +89,17 @@ public class NavDrawerActivity extends AppCompatActivity
                 break;
 
             case R.id.nav_logout:
+
+                SharedPreferences preferences = getApplicationContext().getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
+
+                if(preferences.edit().clear().commit()) {
+                    Intent intentLogin = new Intent(getApplicationContext(), LoginActivity.class);
+                    intentLogin.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intentLogin);
+                }
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

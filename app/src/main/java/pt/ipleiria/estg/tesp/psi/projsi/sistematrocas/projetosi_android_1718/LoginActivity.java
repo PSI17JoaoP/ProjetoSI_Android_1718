@@ -67,42 +67,48 @@ public class LoginActivity extends AppCompatActivity {
             textViewMensagem.setTextColor(Color.RED);
         } else {
 
-            SingletonAPIManager.getInstance(this).setAuth(pinString);
+            if(SingletonAPIManager.getInstance(this).ligadoInternet()) {
 
-            JsonObjectRequest user = SingletonAPIManager.getInstance(this).pedirAPI("clientes/pin/"+pinString, new SingletonAPIManager.APIJsonResposta() {
-                @Override
-                public void Sucesso(JSONObject resultado) {
-                    try {
+                SingletonAPIManager.getInstance(this).setAuth(pinString);
 
-                        JSONObject userResult = resultado.getJSONObject("User");
+                JsonObjectRequest user = SingletonAPIManager.getInstance(this).pedirAPI("clientes/pin/" + pinString, new SingletonAPIManager.APIJsonResposta() {
+                    @Override
+                    public void Sucesso(JSONObject resultado) {
+                        try {
 
-                        Long id = userResult.getLong("ID");
-                        String username = userResult.getString("Username");
-                        String email = userResult.getString("Email");
+                            JSONObject userResult = resultado.getJSONObject("User");
 
-                        prefEditor.putLong("id", id);
-                        prefEditor.putString("username", username);
-                        prefEditor.putString("email", email);
-                        prefEditor.putString("pin", pinString);
-                        prefEditor.apply();
+                            Long id = userResult.getLong("ID");
+                            String username = userResult.getString("Username");
+                            String email = userResult.getString("Email");
 
-                        //Toast.makeText(LoginActivity.this, "Sucesso", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        startActivity(intent);
+                            prefEditor.putLong("id", id);
+                            prefEditor.putString("username", username);
+                            prefEditor.putString("email", email);
+                            prefEditor.putString("pin", pinString);
+                            prefEditor.apply();
 
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
-                }
 
-                @Override
-                public void Erro(VolleyError erro) {
-                    textViewMensagem.setText(R.string.mensagem_pin_incorreto);
-                    textViewMensagem.setTextColor(Color.RED);
-                }
-            });
+                    @Override
+                    public void Erro(VolleyError erro) {
+                        textViewMensagem.setText(R.string.mensagem_pin_incorreto);
+                        textViewMensagem.setTextColor(Color.RED);
+                    }
+                });
 
-            SingletonAPIManager.getInstance(this).getRequestQueue().add(user);
+                SingletonAPIManager.getInstance(this).getRequestQueue().add(user);
+            } else {
+                textViewMensagem.setText(R.string.mensagem_ligacao_internet);
+                textViewMensagem.setTextColor(Color.RED);
+            }
         }
     }
 }
