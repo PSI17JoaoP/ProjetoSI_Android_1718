@@ -43,8 +43,7 @@ public class PesquisaActivity extends NavDrawerActivity implements AnunciosListe
 
     @Override
     public void onRefreshAnuncios(ArrayList<Anuncio> anuncios) {
-        adapter = new AnunciosAdapter(this, anuncios);
-        lvPesquisa.setAdapter(adapter);
+        adapter.refresh(anuncios);
     }
 
     public void pesquisa(View view) {
@@ -55,7 +54,7 @@ public class PesquisaActivity extends NavDrawerActivity implements AnunciosListe
 
         String titulo = editTextTitulo.getText().toString().trim();
         String categoria = (String) spinnerCategorias.getSelectedItem();
-        String regiao = (String) spinnerCategorias.getSelectedItem();
+        String regiao = (String) spinnerRegioes.getSelectedItem();
 
         SingletonAnuncios.getInstance(this).setAnunciosListener(this);
 

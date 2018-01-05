@@ -44,7 +44,9 @@
             android:name=".DetalhesAnuncioActivity"
             android:label="@string/title_activity_detalhes_anuncio"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".PesquisaActivity"></activity>
+        <activity android:name=".PesquisaActivity"
+            android:label="@string/pesquisa"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

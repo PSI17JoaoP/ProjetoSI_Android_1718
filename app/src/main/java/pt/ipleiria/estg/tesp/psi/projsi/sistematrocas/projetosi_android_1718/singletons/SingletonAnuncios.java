@@ -414,10 +414,10 @@ public class SingletonAnuncios {
         if (!titulo.isEmpty()){
             url = url + "titulo/"+titulo;
         }
-        if (!regiao.isEmpty()){
+        if (regiao != null){
             url = url + "regiao/"+regiao;
         }
-        if (!categoria.isEmpty()){
+        if (categoria != null){
             url = url + "catetoria/"+categoria;
         }
 
@@ -426,9 +426,9 @@ public class SingletonAnuncios {
             public void Sucesso(JSONArray resultados)
             {
                 try {
-                    JSONArray results = resultados.getJSONArray(1);
-
-                    anunciosListener.onRefreshAnuncios(AnunciosParser.paraObjeto(resultados, context));
+                    JSONObject results = resultados.getJSONObject(1);
+                    JSONArray dados = results.getJSONArray("Anuncios");
+                    anunciosListener.onRefreshAnuncios(AnunciosParser.paraObjeto(dados, context));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
