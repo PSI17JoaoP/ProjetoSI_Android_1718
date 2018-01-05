@@ -407,6 +407,22 @@ public class SingletonAnuncios {
         }
     }
 
+    public void pesquisarAnuncios(String titulo, String regiao, String categoria)
+    {
+        String url = "anuncios/";
+
+        if (!titulo.isEmpty()){
+            url = url + "titulo/"+titulo;
+        }
+        if (!regiao.isEmpty()){
+            url = url + "regiao/"+regiao;
+        }
+        if (!categoria.isEmpty()){
+            url = url + "catetoria/"+categoria;
+        }
+
+
+    }
     //------------------------------------------------------------
     //LOCAL A PARTIR DAQUI
 

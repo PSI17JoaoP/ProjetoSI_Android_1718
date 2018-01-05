@@ -31,18 +31,20 @@
         <activity
             android:name=".CriarAnuncioActivity"
             android:label="@string/title_activity_criar_anuncio"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".EnviarPropostaActivity"
             android:label="@string/title_activity_enviar_proposta"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MeusAnunciosActivity"
             android:label="@string/title_activity_meus_anuncios"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".DetalhesAnuncioActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".DetalhesAnuncioActivity"
             android:label="@string/title_activity_detalhes_anuncio"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".PesquisaActivity"></activity>
     </application>
 
 </manifest>
