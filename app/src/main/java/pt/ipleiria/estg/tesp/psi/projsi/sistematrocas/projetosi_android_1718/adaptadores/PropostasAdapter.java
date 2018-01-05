@@ -78,6 +78,9 @@ public class PropostasAdapter extends BaseAdapter implements AnunciosListener, P
         proposta = listaPropostas.get(i);
         anuncioProposta = SingletonAnuncios.getInstance(context).pesquisarAnuncioID(proposta.getIdAnuncio());
 
+        SingletonPropostas.getInstance(context).setPropostasListener(this);
+        SingletonAnuncios.getInstance(context).setAnunciosListener(this);
+
         btnAceitar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

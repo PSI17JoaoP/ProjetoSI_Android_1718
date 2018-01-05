@@ -192,35 +192,45 @@ public class SingletonAnuncios {
         }
     }
 
-    public void alterarAnuncio(Anuncio anuncio) {
+    public void alterarAnuncio(final Anuncio anuncio) {
 
         if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+            JSONObject object = new JSONObject();
+            try {
+                object.put("estado", anuncio.getEstado());
 
-            StringRequest alterarAPI = SingletonAPIManager.getInstance(context).enviarAPI("anuncios/" + anuncio.getId().intValue(),
-                    Request.Method.PUT, AnunciosParser.paraJson(anuncio), new SingletonAPIManager.APIStringResposta() {
-                        @Override
-                        public void Sucesso(String resposta) {
-                            try {
+                StringRequest alterarAPI = SingletonAPIManager.getInstance(context).enviarAPI("anuncios/" + anuncio.getId().intValue(),
+                        Request.Method.PUT, object.toString(), new SingletonAPIManager.APIStringResposta() {
+                            @Override
+                            public void Sucesso(String resposta) {
+                                try {
+                                    Anuncio anuncioAlterado = AnunciosParser.paraObjeto(new JSONObject(resposta), context);
+                                    Integer posicao = anuncios.indexOf(anuncio);
 
-                                Anuncio anuncioAlterado = AnunciosParser.paraObjeto(new JSONObject(resposta), context);
+                                    if (editarAnuncioLocal(anuncioAlterado, posicao)) {
+                                        if (anunciosListener != null)
+                                            anunciosListener.onSuccessAnunciosAPI(anuncioAlterado);
+                                    }
 
-                                if (editarAnuncioLocal(anuncioAlterado)) {
+                                } catch (JSONException e) {
                                     if (anunciosListener != null)
-                                        anunciosListener.onSuccessAnunciosAPI(anuncioAlterado);
+                                        anunciosListener.onErrorAnunciosAPI("Ocorreu um erro no processamento do anúncio alterado.", e);
                                 }
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
                             }
-                        }
 
-                        @Override
-                        public void Erro(VolleyError erro) {
-                            Toast.makeText(context, "Não foi possível alterar o anúncio", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                            @Override
+                            public void Erro(VolleyError erro) {
+                                if (anunciosListener != null)
+                                    anunciosListener.onErrorAnunciosAPI("Não foi possível alterar o anúncio.", erro);
+                            }
+                        });
 
-            SingletonAPIManager.getInstance(context).getRequestQueue().add(alterarAPI);
+                SingletonAPIManager.getInstance(context).getRequestQueue().add(alterarAPI);
+
+            } catch (JSONException e) {
+                if (anunciosListener != null)
+                    anunciosListener.onErrorAnunciosAPI("Ocorreu um erro no processamento do anúncio alterado.", e);
+            }
         }
     }
 
@@ -241,7 +251,8 @@ public class SingletonAnuncios {
 
                         @Override
                         public void Erro(VolleyError erro) {
-                            Toast.makeText(context, "Não foi possível apagar o anúncio", Toast.LENGTH_SHORT).show();
+                            if (anunciosListener != null)
+                                anunciosListener.onErrorAnunciosAPI("Não foi possível apagar o anúncio.", erro);
                         }
                     });
 
@@ -270,14 +281,12 @@ public class SingletonAnuncios {
         return bdTable.delete(anuncio.getId()) && anuncios.remove(anuncio);
     }
 
-    public boolean editarAnuncioLocal(Anuncio anuncio) {
+    public boolean editarAnuncioLocal(Anuncio anuncio, int posicao) {
         if(bdTable.update(anuncio)) {
-            Anuncio novoAnuncio = anuncios.set(anuncio.getId().intValue(), anuncio);
-
-            return anuncios.contains(novoAnuncio);
-        } else {
-            return false;
+            anuncios.set(posicao, anuncio);
         }
+
+        return anuncios.contains(anuncio);
     }
 
     public Anuncio pesquisarAnuncioID(Long id) {
