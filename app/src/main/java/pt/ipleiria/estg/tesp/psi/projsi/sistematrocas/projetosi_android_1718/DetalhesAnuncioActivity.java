@@ -246,9 +246,4 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Anunci
     public void onRefreshAnuncios(ArrayList<Anuncio> anuncios) {
 
     }
-
-    @Override
-    public void onUpdateAnuncios(Anuncio anuncio, int acao) {
-
-    }
 }
