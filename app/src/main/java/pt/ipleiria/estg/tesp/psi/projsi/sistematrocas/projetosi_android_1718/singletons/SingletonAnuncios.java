@@ -421,7 +421,31 @@ public class SingletonAnuncios {
             url = url + "catetoria/"+categoria;
         }
 
+        JsonArrayRequest request = SingletonAPIManager.getInstance(context).pedirVariosAPI(url, new SingletonAPIManager.APIJsonArrayResposta() {
+            @Override
+            public void Sucesso(JSONArray resultados)
+            {
+                try {
+                    JSONArray results = resultados.getJSONArray(1);
 
+                    anunciosListener.onRefreshAnuncios(AnunciosParser.paraObjeto(resultados, context));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void Erro(VolleyError erro) {
+                if (anunciosListener != null) {
+                    Integer code = 0;
+                    if (erro.networkResponse != null)
+                        code = erro.networkResponse.statusCode;
+                    anunciosListener.onErrorAnunciosAPI("Não foi possível sincronizar os anúncios com a API - " + code, erro);
+                }
+            }
+        });
+
+        SingletonAPIManager.getInstance(context).getRequestQueue().add(request);
     }
     //------------------------------------------------------------
     //LOCAL A PARTIR DAQUI
