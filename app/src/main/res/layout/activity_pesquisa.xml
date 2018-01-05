@@ -12,16 +12,33 @@
         android:id="@+id/pesquisaFields"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_weight="0.2">
+
+        <EditText
+            android:id="@+id/editTextTitulo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Titulo"
+            android:inputType="textPersonName" />
+
+        <Spinner
+            android:id="@+id/spinnerCategorias"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Spinner
+            android:id="@+id/spinnerRegioes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <Button
             android:id="@+id/btnPesquisa"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:onClick="pesquisa"
-            android:text="Pesquisa" />
+            android:text="@string/pesquisa" />
     </LinearLayout>
 
     <LinearLayout

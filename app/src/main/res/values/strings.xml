@@ -62,5 +62,6 @@
     <string name="detalhes_anuncio_titulo">Titulo:</string>
     <string name="detalhes_anuncio_data_criacao">Criado a:</string>
     <string name="detalhes_anuncio_data_conclusao">Concluído a:</string>
+    <string name="pesquisa">Pesquisa</string>
 
 </resources>
