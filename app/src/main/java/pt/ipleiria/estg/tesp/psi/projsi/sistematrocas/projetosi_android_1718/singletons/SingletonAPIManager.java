@@ -208,7 +208,8 @@ public class SingletonAPIManager {
     {
         if (ligadoInternet())
         {
-            StringRequest stringRequest = new StringRequest(tipoPedido, baseURL+url, new Response.Listener<String>() {
+            StringRequest stringRequest = new StringRequest(tipoPedido, baseURL+url, new Response.Listener<String>()
+            {
                 @Override
                 public void onResponse(String response) {
                     usar.Sucesso(response);
