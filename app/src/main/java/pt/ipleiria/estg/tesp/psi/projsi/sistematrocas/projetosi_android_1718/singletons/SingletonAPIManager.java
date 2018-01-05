@@ -214,7 +214,8 @@ public class SingletonAPIManager {
                 public void onResponse(String response) {
                     usar.Sucesso(response);
                 }
-            }, new Response.ErrorListener() {
+            }, new Response.ErrorListener()
+            {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     usar.Erro(error);
