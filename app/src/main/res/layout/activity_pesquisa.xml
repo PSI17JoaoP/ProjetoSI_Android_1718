@@ -13,25 +13,27 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
-        android:layout_weight="0.2">
+        android:layout_weight="0.3">
 
         <EditText
             android:id="@+id/editTextTitulo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Titulo"
+            android:hint="@string/pesquisa_titulo"
             android:inputType="textPersonName" />
 
         <Spinner
             android:id="@+id/spinnerCategorias"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="0dp"
+            android:layout_weight="0.5"/>
 
         <Spinner
             android:id="@+id/spinnerRegioes"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="0dp"
+            android:layout_weight="0.5"/>
 
         <Button
             android:id="@+id/btnPesquisa"
@@ -45,7 +47,7 @@
         android:id="@+id/pesquisaResults"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.8"
+        android:layout_weight="0.7"
         android:orientation="vertical">
 
         <ListView

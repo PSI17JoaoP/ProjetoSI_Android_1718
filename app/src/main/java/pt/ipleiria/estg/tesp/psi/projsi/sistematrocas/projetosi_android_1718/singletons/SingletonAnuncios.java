@@ -270,7 +270,7 @@ public class SingletonAnuncios {
             SingletonAPIManager.getInstance(context).getRequestQueue().add(anunciosUserAPI);
         } else {
 
-            ArrayList<Anuncio> anunciosUser = bdTable.select(" WHERE " + AnuncioBDTable.ID_USER_ANUNCIO + " = ? AND " + AnuncioBDTable.ESTADO_ANUNCIO + " = ?", new String[]{String.valueOf(userId), "ABERTO"});
+            ArrayList<Anuncio> anunciosUser = bdTable.select(" WHERE " + AnuncioBDTable.ID_USER_ANUNCIO + " = ? AND " + AnuncioBDTable.ESTADO_ANUNCIO + " = ?", new String[]{String.valueOf(userId), "ATIVO"});
 
             if (anunciosListener != null)
                 anunciosListener.onRefreshAnuncios(anunciosUser);
@@ -409,25 +409,25 @@ public class SingletonAnuncios {
 
     public void pesquisarAnuncios(String titulo, String regiao, String categoria)
     {
-        String url = "anuncios/";
+        String url = "anuncios";
 
         if (!titulo.isEmpty()){
-            url = url + "titulo/"+titulo;
+            url = url + "/titulo/"+titulo;
         }
         if (regiao != null){
-            url = url + "regiao/"+regiao;
+            url = url + "/regiao/"+regiao;
         }
         if (categoria != null){
-            url = url + "catetoria/"+categoria;
+            url = url + "/categoria/"+categoria;
         }
 
-        JsonArrayRequest request = SingletonAPIManager.getInstance(context).pedirVariosAPI(url, new SingletonAPIManager.APIJsonArrayResposta() {
+        JsonObjectRequest pesquisa = SingletonAPIManager.getInstance(context).pedirAPI(url, new SingletonAPIManager.APIJsonResposta() {
             @Override
-            public void Sucesso(JSONArray resultados)
+            public void Sucesso(JSONObject resultado)
             {
                 try {
-                    JSONObject results = resultados.getJSONObject(1);
-                    JSONArray dados = results.getJSONArray("Anuncios");
+                    JSONArray dados = resultado.getJSONArray("Anuncios");
+                    System.out.println(dados);
                     anunciosListener.onRefreshAnuncios(AnunciosParser.paraObjeto(dados, context));
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -440,12 +440,14 @@ public class SingletonAnuncios {
                     Integer code = 0;
                     if (erro.networkResponse != null)
                         code = erro.networkResponse.statusCode;
-                    anunciosListener.onErrorAnunciosAPI("Não foi possível sincronizar os anúncios com a API - " + code, erro);
+                    //anunciosListener.onErrorAnunciosAPI("Não foi possível sincronizar os anúncios com a API - " + code, erro);
+                    anunciosListener.onRefreshAnuncios(new ArrayList<Anuncio>());
                 }
             }
         });
 
-        SingletonAPIManager.getInstance(context).getRequestQueue().add(request);
+        SingletonAPIManager.getInstance(context).getRequestQueue().add(pesquisa);
+
     }
     //------------------------------------------------------------
     //LOCAL A PARTIR DAQUI

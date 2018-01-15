@@ -46,7 +46,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".PesquisaActivity"
             android:label="@string/pesquisa"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan"/>
     </application>
 
 </manifest>
