@@ -1,8 +1,6 @@
 package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -50,8 +48,10 @@ public class MainActivity extends NavDrawerActivity implements AnunciosListener,
         spec.setIndicator("Anúncios Sugeridos");
         host.addTab(spec);
 
+        //List Views
         lvAnuncios = findViewById(R.id.lvAnuncios);
         lvPropostas = findViewById(R.id.lvPropostas);
+
         //------------------------------------
 
         if (savedInstanceState == null) {
@@ -63,10 +63,10 @@ public class MainActivity extends NavDrawerActivity implements AnunciosListener,
             SingletonPropostas.getInstance(this).getPropostasAnunciosUser();
         }
 
-        else {
-            /*this.gestorAnuncios =  ... savedInstanceState.getSerializable(...);
-            this.gestorPropostas =  ... savedInstanceState.getSerializable(...);*/
-        }
+        /*else {
+            this.gestorAnuncios =  ... savedInstanceState.getSerializable(...);
+            this.gestorPropostas =  ... savedInstanceState.getSerializable(...);
+        }*/
     }
 
     @Override
