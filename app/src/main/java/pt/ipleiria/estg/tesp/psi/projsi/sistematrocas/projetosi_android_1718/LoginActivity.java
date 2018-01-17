@@ -34,9 +34,9 @@ public class LoginActivity extends AppCompatActivity {
         String pin = preferences.getString("pin", "");
 
         if (!pin.isEmpty()) {
-            SingletonAPIManager.getInstance(this).setAuth(pin);
+            SingletonAPIManager.getInstance(getApplicationContext()).setAuth(pin);
 
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
 
             finish();
@@ -63,9 +63,9 @@ public class LoginActivity extends AppCompatActivity {
 
             if(SingletonAPIManager.getInstance(this).ligadoInternet(this)) {
 
-                SingletonAPIManager.getInstance(this).setAuth(pinString);
+                SingletonAPIManager.getInstance(getApplicationContext()).setAuth(pinString);
 
-                JsonObjectRequest user = SingletonAPIManager.getInstance(this).pedirAPI("clientes/pin/" + pinString, this, new SingletonAPIManager.APIJsonResposta() {
+                JsonObjectRequest user = SingletonAPIManager.getInstance(getApplicationContext()).pedirAPI("clientes/pin/" + pinString, getApplicationContext(), new SingletonAPIManager.APIJsonResposta() {
                     @Override
                     public void Sucesso(JSONObject resultado) {
                         try {

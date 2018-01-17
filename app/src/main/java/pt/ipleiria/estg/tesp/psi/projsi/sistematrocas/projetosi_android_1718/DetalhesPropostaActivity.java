@@ -34,37 +34,40 @@ public class DetalhesPropostaActivity extends NavDrawerActivity implements Anunc
         if(getIntent().hasExtra(ID_PROPOSTA)) {
 
             Long propostaId = getIntent().getLongExtra(ID_PROPOSTA, 0);
-            proposta = SingletonPropostas.getInstance(this).pesquisarPropostaID(propostaId);
-            anuncioProposta = SingletonAnuncios.getInstance(this).pesquisarAnuncioID(proposta.getIdAnuncio());
+            proposta = SingletonPropostas.getInstance(getApplicationContext()).pesquisarPropostaID(propostaId);
 
-            SingletonPropostas.getInstance(this).setPropostasListener(this);
-            SingletonAnuncios.getInstance(this).setAnunciosListener(this);
+            if(proposta != null) {
+                anuncioProposta = SingletonAnuncios.getInstance(getApplicationContext()).pesquisarAnuncioID(proposta.getIdAnuncio());
 
-            fabAceitar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    proposta.setEstado("ACEITE");
-                    anuncioProposta.setEstado("FECHADO");
+                SingletonPropostas.getInstance(getApplicationContext()).setPropostasListener(this);
+                SingletonAnuncios.getInstance(getApplicationContext()).setAnunciosListener(this);
 
-                    SingletonPropostas.getInstance(getApplicationContext()).alterarProposta(proposta, getApplicationContext());
-                }
-            });
+                fabAceitar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        proposta.setEstado("ACEITE");
+                        anuncioProposta.setEstado("FECHADO");
 
-            fabRecusar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    proposta.setEstado("RECUSADA");
-                    anuncioProposta.setEstado("FECHADO");
+                        SingletonPropostas.getInstance(getApplicationContext()).alterarProposta(proposta, getApplicationContext());
+                    }
+                });
 
-                    SingletonPropostas.getInstance(getApplicationContext()).alterarProposta(proposta, getApplicationContext());
-                }
-            });
+                fabRecusar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        proposta.setEstado("RECUSADA");
+                        anuncioProposta.setEstado("FECHADO");
+
+                        SingletonPropostas.getInstance(getApplicationContext()).alterarProposta(proposta, getApplicationContext());
+                    }
+                });
+            }
         }
     }
 
     private void showNotification(String message) {
         Snackbar snackbar = Snackbar
-                .make(findViewById(R.id.coordinatorLayoutMeusAnuncios), message, Snackbar.LENGTH_LONG);
+                .make(findViewById(R.id.coordinatorLayoutDetalhesProposta), message, Snackbar.LENGTH_LONG);
 
         snackbar.show();
     }
@@ -88,7 +91,7 @@ public class DetalhesPropostaActivity extends NavDrawerActivity implements Anunc
     @Override
     public void onSuccessPropostasAPI(Proposta proposta) {
         if(proposta != null) {
-            SingletonAnuncios.getInstance(this).alterarAnuncio(anuncioProposta, getApplicationContext());
+            SingletonAnuncios.getInstance(getApplicationContext()).alterarAnuncio(anuncioProposta, getApplicationContext());
         }
     }
 

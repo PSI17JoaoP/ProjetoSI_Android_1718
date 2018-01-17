@@ -290,7 +290,7 @@ public class CriarAnuncioActivity extends NavDrawerActivity implements AdapterVi
                                       @NonNull final Categoria categoriaTroco, @NonNull final Integer quantidadeTroco,
                                       @Nullable final Categoria categoriaPor, @Nullable final Integer quantidadePor) {
 
-        SingletonCategorias.getInstance().adicionarCategoria(categoriaTroco, this, new SingletonActivityAPIResponse() {
+        SingletonCategorias.getInstance().adicionarCategoria(categoriaTroco, getApplicationContext(), new SingletonActivityAPIResponse() {
             @Override
             public void onSuccessEnvioAPI(Categoria categoria) {
                 if (categoriaPor != null && quantidadePor != null) {
@@ -312,7 +312,7 @@ public class CriarAnuncioActivity extends NavDrawerActivity implements AdapterVi
                                  @NonNull final Categoria categoriaTroco, @NonNull final Integer quantidadeTroco,
                                  @NonNull final Categoria categoriaPor, @NonNull final Integer quantidadePor) {
 
-        SingletonCategorias.getInstance().adicionarCategoria(categoriaPor, this, new SingletonActivityAPIResponse() {
+        SingletonCategorias.getInstance().adicionarCategoria(categoriaPor, getApplicationContext(), new SingletonActivityAPIResponse() {
             @Override
             public void onSuccessEnvioAPI(Categoria categoria) {
                 getAnuncio(anuncioTitulo, categoriaTroco, quantidadeTroco, categoria, quantidadePor);
@@ -355,13 +355,13 @@ public class CriarAnuncioActivity extends NavDrawerActivity implements AdapterVi
         //Guardada como variável global, para ser visivel no onRefreshAnuncios.
         this.anuncio = anuncio;
 
-        SingletonAnuncios.getInstance(this).setAnunciosListener(this);
+        SingletonAnuncios.getInstance(getApplicationContext()).setAnunciosListener(this);
 
-        ArrayList<Anuncio> anuncios = SingletonAnuncios.getInstance(this).getAnuncios();
+        ArrayList<Anuncio> anuncios = SingletonAnuncios.getInstance(getApplicationContext()).getAnuncios();
 
         if(!anuncios.isEmpty()) {
             if (!anuncios.contains(anuncio)) {
-                SingletonAnuncios.getInstance(this).adicionarAnuncio(anuncio, this);
+                SingletonAnuncios.getInstance(getApplicationContext()).adicionarAnuncio(anuncio, getApplicationContext());
             }
         }
     }
@@ -382,7 +382,7 @@ public class CriarAnuncioActivity extends NavDrawerActivity implements AdapterVi
     @Override
     public void onRefreshAnuncios(ArrayList<Anuncio> anuncios) {
         if(!anuncios.contains(anuncio)) {
-            SingletonAnuncios.getInstance(this).adicionarAnuncio(anuncio, this);
+            SingletonAnuncios.getInstance(getApplicationContext()).adicionarAnuncio(anuncio, getApplicationContext());
         }
     }
 }

@@ -41,6 +41,7 @@ public class SingletonPropostas {
         propostas = new ArrayList<>();
         bdTable = new PropostaBDTable(context);
         propostas = bdTable.select();
+        getPropostasAnunciosUser(context);
     }
 
     public ArrayList<Proposta> getPropostas() {
@@ -49,40 +50,49 @@ public class SingletonPropostas {
 
     public void getPropostasAnunciosUser(final Context context) {
 
-        SharedPreferences preferences = context.getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
-        String username = preferences.getString("username", "");
+        if(propostas.isEmpty()) {
 
-        if (SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
+            SharedPreferences preferences = context.getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
+            String username = preferences.getString("username", "");
 
-            JsonObjectRequest propostasAPI = SingletonAPIManager.getInstance(context).pedirAPI("anuncios/propostas/" + username, context, new SingletonAPIManager.APIJsonResposta() {
+            if (SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
 
-                @Override
-                public void Sucesso(JSONObject resultado) {
-                    try {
-                        JSONArray propostasJson = resultado.getJSONArray("Propostas");
+                JsonObjectRequest propostasAPI = SingletonAPIManager.getInstance(context).pedirAPI("anuncios/propostas/" + username, context, new SingletonAPIManager.APIJsonResposta() {
 
-                        if (propostasJson.length() > 0) {
-                            ArrayList<Proposta> propostas = PropostasParser.paraObjeto(propostasJson, context);
+                    @Override
+                    public void Sucesso(JSONObject resultado) {
+                        try {
+                            JSONArray propostasJson = resultado.getJSONArray("Propostas");
 
+                            if (propostasJson.length() > 0) {
+
+                                if(propostas.isEmpty()) {
+                                    propostas = PropostasParser.paraObjeto(propostasJson, context);
+                                    adicionarPropostasLocal(propostas);
+                                }
+
+                                if (propostasListener != null)
+                                    propostasListener.onRefreshPropostas(propostas);
+                            }
+
+                        } catch (JSONException e) {
                             if (propostasListener != null)
-                                propostasListener.onRefreshPropostas(propostas);
+                                propostasListener.onErrorPropostasAPI("Ocorreu um erro no processamento das propostas recebidas da API.", e);
                         }
-
-                    } catch (JSONException e) {
-                        if (propostasListener != null)
-                            propostasListener.onErrorPropostasAPI("Ocorreu um erro no processamento das propostas recebidas da API.", e);
                     }
-                }
 
-                @Override
-                public void Erro(VolleyError erro) {
-                    if (propostasListener != null)
-                        propostasListener.onErrorPropostasAPI("Não foi possível sincronizar as propostas com a API.", erro);
-                }
-            });
+                    @Override
+                    public void Erro(VolleyError erro) {
+                        if (propostasListener != null)
+                            propostasListener.onErrorPropostasAPI("Não foi possível sincronizar as propostas com a API.", erro);
+                    }
+                });
 
-            SingletonAPIManager.getInstance(context).getRequestQueue(context).add(propostasAPI);
-
+                SingletonAPIManager.getInstance(context).getRequestQueue(context).add(propostasAPI);
+            }
+        } else {
+            if (propostasListener != null)
+                propostasListener.onRefreshPropostas(propostas);
         }
     }
 
@@ -182,8 +192,8 @@ public class SingletonPropostas {
     //------------------------------------------------------------
     //LOCAL A PARTIR DAQUI
 
-    public void adicionarPropostasLocal(ArrayList<Proposta> propostasList) {
-        for(Proposta proposta:propostasList) {
+    public void adicionarPropostasLocal(ArrayList<Proposta> propostas) {
+        for(Proposta proposta : propostas) {
             bdTable.insert(proposta);
         }
     }

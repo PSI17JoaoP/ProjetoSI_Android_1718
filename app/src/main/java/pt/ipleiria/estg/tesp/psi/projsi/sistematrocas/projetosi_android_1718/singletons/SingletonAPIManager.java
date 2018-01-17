@@ -30,8 +30,8 @@ public class SingletonAPIManager {
     private static SingletonAPIManager INSTANCE = null;
     private RequestQueue requestQueue;
 
-    //private static final String baseURL = "http://192.168.1.2:8888/";
-    private static final String baseURL = "http://10.0.2.2:8888/";
+    private static final String baseURL = "http://192.168.1.2:8888/";
+    //private static final String baseURL = "http://10.0.2.2:8888/";
     private static String auth = null;
 
     public static synchronized SingletonAPIManager getInstance(Context contexto) {
@@ -54,7 +54,7 @@ public class SingletonAPIManager {
     public RequestQueue getRequestQueue(Context context)
     {
         if (requestQueue == null) {
-            requestQueue = Volley.newRequestQueue(context.getApplicationContext());
+            requestQueue = Volley.newRequestQueue(context);
         }
 
         return requestQueue;

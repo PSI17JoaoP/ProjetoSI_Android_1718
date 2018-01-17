@@ -51,42 +51,38 @@ public class MainActivity extends NavDrawerActivity implements AnunciosListener,
         lvAnuncios = findViewById(R.id.lvAnuncios);
         lvPropostas = findViewById(R.id.lvPropostas);
 
-        lvAnuncios.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        lvAnuncios.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Anuncio anuncio = (Anuncio) parent.getSelectedItem();
-                Intent intent = new Intent(getApplicationContext(), DetalhesAnuncioActivity.class);
-                intent.putExtra(DetalhesAnuncioActivity.ID_ANUNCIO, anuncio.getId());
-                startActivity(intent);
-            }
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Anuncio anuncio = (Anuncio) parent.getItemAtPosition(position);
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
+                if(anuncio != null) {
+                    Intent intent = new Intent(getApplicationContext(), DetalhesAnuncioActivity.class);
+                    intent.putExtra(DetalhesAnuncioActivity.ID_ANUNCIO, anuncio.getId());
+                    startActivity(intent);
+                }
             }
         });
 
-        lvPropostas.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        lvPropostas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Proposta proposta = (Proposta) parent.getSelectedItem();
-                Intent intent = new Intent(getApplicationContext(), DetalhesPropostaActivity.class);
-                intent.putExtra(DetalhesPropostaActivity.ID_PROPOSTA, proposta.getId());
-                startActivity(intent);
-            }
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Proposta proposta = (Proposta) parent.getItemAtPosition(position);
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
+                if(proposta != null) {
+                    Intent intent = new Intent(getApplicationContext(), DetalhesPropostaActivity.class);
+                    intent.putExtra(DetalhesPropostaActivity.ID_PROPOSTA, proposta.getId());
+                    startActivity(intent);
+                }
             }
         });
 
         if (savedInstanceState == null) {
-            SingletonAnuncios.getInstance(this).setAnunciosListener(this);
-            SingletonAnuncios.getInstance(this).getAnunciosSugeridos(this);
+            SingletonAnuncios.getInstance(getApplicationContext()).setAnunciosListener(this);
+            SingletonAnuncios.getInstance(getApplicationContext()).getAnunciosSugeridos(getApplicationContext());
 
-            SingletonPropostas.getInstance(this).setPropostasListener(this);
-            SingletonPropostas.getInstance(this).getPropostasAnunciosUser(this);
+            SingletonPropostas.getInstance(getApplicationContext()).setPropostasListener(this);
+            SingletonPropostas.getInstance(getApplicationContext()).getPropostasAnunciosUser(getApplicationContext());
         }
 
         /*else {

@@ -27,21 +27,19 @@ public class MeusAnunciosActivity extends NavDrawerActivity implements AnunciosL
 
         listaAnuncios = findViewById(R.id.listMeusAnuncios);
 
-        SingletonAnuncios.getInstance(this).setAnunciosListener(this);
-        SingletonAnuncios.getInstance(this).getAnunciosUser(this);
+        SingletonAnuncios.getInstance(getApplicationContext()).setAnunciosListener(this);
+        SingletonAnuncios.getInstance(getApplicationContext()).getAnunciosUser(getApplicationContext());
 
-        listaAnuncios.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        listaAnuncios.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Anuncio anuncio = (Anuncio) parent.getItemAtPosition(position);
-                Intent intent = new Intent(getApplicationContext(), DetalhesAnuncioActivity.class);
-                intent.putExtra(DetalhesAnuncioActivity.ID_ANUNCIO, anuncio.getId());
-                startActivity(intent);
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
+                if(anuncio != null) {
+                    Intent intent = new Intent(getApplicationContext(), DetalhesAnuncioActivity.class);
+                    intent.putExtra(DetalhesAnuncioActivity.ID_ANUNCIO, anuncio.getId());
+                    startActivity(intent);
+                }
             }
         });
     }

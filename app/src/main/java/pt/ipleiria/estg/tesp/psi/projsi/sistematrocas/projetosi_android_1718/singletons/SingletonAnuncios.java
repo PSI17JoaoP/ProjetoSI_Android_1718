@@ -2,7 +2,6 @@ package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.si
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
@@ -99,6 +98,9 @@ public class SingletonAnuncios {
 
                 SingletonAPIManager.getInstance(context).getRequestQueue(context).add(anunciosAPI);
             }
+        } else {
+            if (anunciosListener != null)
+                anunciosListener.onRefreshAnuncios(anuncios);
         }
     }
 

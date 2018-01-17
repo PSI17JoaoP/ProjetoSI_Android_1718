@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -42,9 +43,8 @@ public class EnviarPropostaActivity extends NavDrawerActivity implements Adapter
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_enviar_proposta);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //setContentView(R.layout.activity_enviar_proposta);
+        View.inflate(this, R.layout.activity_enviar_proposta, (ViewGroup) findViewById(R.id.app_content));
 
         String[] categoriasValues = getResources().getStringArray(R.array.categorias_values);
         String[] categoriasKeys = getResources().getStringArray(R.array.categorias_keys);
@@ -61,9 +61,12 @@ public class EnviarPropostaActivity extends NavDrawerActivity implements Adapter
                 categoriasValues);
 
         TextView textViewEnviarProposta = findViewById(R.id.textViewEnviarProposta);
-        textViewEnviarProposta.setText(textViewEnviarProposta.getText());
 
-        //TODO: Titulo do anúncio passado no Intent.
+        if(getIntent().hasExtra(DetalhesAnuncioActivity.TITULO_ANUNCIO)) {
+            String titulo = getIntent().getStringExtra(DetalhesAnuncioActivity.TITULO_ANUNCIO);
+            String textViewEnviarPropostaTitulo = textViewEnviarProposta.getText() + " " + titulo;
+            textViewEnviarProposta.setText(textViewEnviarPropostaTitulo);
+        }
 
         Spinner dropDownCategorias = findViewById(R.id.dropDownEnviarPropostaCategorias);
 
@@ -204,7 +207,7 @@ public class EnviarPropostaActivity extends NavDrawerActivity implements Adapter
 
     private void getCategoriaProposta(@NonNull final Categoria categoria, @NonNull final Integer quantidade) {
 
-        SingletonCategorias.getInstance().adicionarCategoria(categoria, this, new SingletonActivityAPIResponse() {
+        SingletonCategorias.getInstance().adicionarCategoria(categoria, getApplicationContext(), new SingletonActivityAPIResponse() {
             @Override
             public void onSuccessEnvioAPI(Categoria categoria) {
                 getProposta(categoria, quantidade);
@@ -227,11 +230,11 @@ public class EnviarPropostaActivity extends NavDrawerActivity implements Adapter
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-M-dd");
         String data = dateFormat.format(calendar.getTime());
 
-        //TODO: ID do anúncio passado pelo Intent.
-
-        Proposta proposta = new Proposta(categoria.getId(), quantidade, userID, 3L, "PENDENTE", data);
-
-        saveProposta(proposta);
+        if(getIntent().hasExtra(DetalhesAnuncioActivity.ID_ANUNCIO)) {
+            Long anuncioId = getIntent().getLongExtra(DetalhesAnuncioActivity.ID_ANUNCIO, 0L);
+            Proposta proposta = new Proposta(categoria.getId(), quantidade, userID, anuncioId, "PENDENTE", data);
+            saveProposta(proposta);
+        }
     }
 
     private void saveProposta(Proposta proposta) {
@@ -239,13 +242,13 @@ public class EnviarPropostaActivity extends NavDrawerActivity implements Adapter
         //Guardada como variável global, para ser visivel no onRefreshPropostas.
         this.proposta = proposta;
 
-        SingletonPropostas.getInstance(this).setPropostasListener(this);
+        SingletonPropostas.getInstance(getApplicationContext()).setPropostasListener(this);
 
-        ArrayList<Proposta> propostas = SingletonPropostas.getInstance(this).getPropostas();
+        ArrayList<Proposta> propostas = SingletonPropostas.getInstance(getApplicationContext()).getPropostas();
 
         if(!propostas.isEmpty()) {
             if (!propostas.contains(proposta)) {
-                SingletonPropostas.getInstance(this).adicionarProposta(proposta, this);
+                SingletonPropostas.getInstance(getApplicationContext()).adicionarProposta(proposta, getApplicationContext());
             }
         }
     }
@@ -264,7 +267,7 @@ public class EnviarPropostaActivity extends NavDrawerActivity implements Adapter
     @Override
     public void onRefreshPropostas(ArrayList<Proposta> propostas) {
         if (!propostas.contains(proposta)) {
-            SingletonPropostas.getInstance(this).adicionarProposta(proposta, this);
+            SingletonPropostas.getInstance(getApplicationContext()).adicionarProposta(proposta, getApplicationContext());
         }
     }
 }

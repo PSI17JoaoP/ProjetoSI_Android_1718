@@ -19,10 +19,12 @@ import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.mod
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Categoria;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Computador;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Eletronica;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.GeneroJogo;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Jogo;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Livro;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Roupa;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Smartphone;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.TipoRoupa;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonAnuncios;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonGenerosJogo;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonTiposRoupa;
@@ -53,14 +55,14 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Catego
         if(getIntent().hasExtra(ID_ANUNCIO)) {
 
             Long anuncioId = getIntent().getLongExtra(ID_ANUNCIO, 0L);
-            anuncio = SingletonAnuncios.getInstance(this).pesquisarAnuncioID(anuncioId);
+            anuncio = SingletonAnuncios.getInstance(getApplicationContext()).pesquisarAnuncioID(anuncioId);
 
             if (anuncio != null) {
 
                 titulo.setText(anuncio.getTitulo());
                 dataCriacao.setText(anuncio.getDataCriacao());
 
-                if (anuncio.getDataConclusao().isEmpty()) {
+                if (anuncio.getDataConclusao() == null) {
                     dataConclusao.setText(anuncio.getEstado());
                 } else {
                     dataConclusao.setText(anuncio.getDataConclusao());
@@ -72,6 +74,10 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Catego
                 Long userId = preferences.getLong("id", 0);
 
                 if (anuncio.getIdUser().toString().equals(userId.toString())) {
+                    //TODO: Mudança da cor para Vermelho não está a funcionar.
+                    fabDetalhesAnuncio.setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
+                    fabDetalhesAnuncio.setImageResource(android.R.drawable.ic_menu_delete);
+
                     fabDetalhesAnuncio.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -92,9 +98,12 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Catego
                     });
                 }
 
-                SingletonAnuncios.getInstance(this).setCategoriasListener(this);
-                SingletonAnuncios.getInstance(this).getCategoriasAnuncio(anuncioId, "Oferecer", this);
-                SingletonAnuncios.getInstance(this).getCategoriasAnuncio(anuncioId, "Receber", this);
+                SingletonAnuncios.getInstance(getApplicationContext()).setCategoriasListener(this);
+                SingletonAnuncios.getInstance(getApplicationContext()).getCategoriasAnuncio(anuncioId, "Oferecer", getApplicationContext());
+
+                if(anuncio.getCatReceber() != null) {
+                    SingletonAnuncios.getInstance(getApplicationContext()).getCategoriasAnuncio(anuncioId, "Receber", getApplicationContext());
+                }
             }
         }
     }
@@ -136,7 +145,13 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Catego
                 listValores.add(jogo.getEditora());
                 listValores.add(jogo.getFaixaEtaria().toString());
                 listValores.add(jogo.getDescricao());
-                listValores.add(SingletonGenerosJogo.getInstance(this).pesquisarGeneroJogosID(jogo.getIdGenero()).getNome());
+
+                GeneroJogo generoJogo = SingletonGenerosJogo.getInstance(this).pesquisarGeneroJogosID(jogo.getIdGenero());
+
+                if(generoJogo != null) {
+                    listValores.add(generoJogo.getNome());
+                }
+
                 listValores.add(jogo.getProdutora());
                 break;
             case "Eletrónica":
@@ -232,7 +247,13 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Catego
                 listValores.add(roupa.getMarca());
                 listValores.add(roupa.getTamanho());
                 listValores.add(roupa.getTamanho());
-                listValores.add(SingletonTiposRoupa.getInstance(this).pesquisarTipoRoupaID(roupa.getId()).getNome());
+
+                TipoRoupa tipoRoupa = SingletonTiposRoupa.getInstance(this).pesquisarTipoRoupaID(roupa.getId());
+
+                if(tipoRoupa != null) {
+                    listValores.add(tipoRoupa.getNome());
+                }
+
                 break;
         }
 

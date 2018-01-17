@@ -11,38 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/login_box"
-            android:orientation="horizontal"
-            android:weightSum="1">
-
-            <EditText
-                android:id="@+id/editTextLoginPin"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.8"
-                android:ems="10"
-                android:hint="@string/hint_login"
-                android:inputType="text"
-                android:maxLength="5"
-                android:padding="10dp"
-                android:textAppearance="@style/TextAppearance.AppCompat"
-                tools:ignore="TextFields" />
-
-            <Button
-                android:id="@+id/btnLogin"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.16"
-                android:background="@drawable/ic_arrow_forward_black_24dp"
-                android:onClick="onClickLogin" />
-        </LinearLayout>
-
         <TextView
             android:id="@+id/textViewLoginPin"
             android:layout_width="wrap_content"
@@ -52,7 +20,40 @@
             android:layout_marginBottom="50dp"
             android:text="@string/text_login_inserir_pin"
             android:textAppearance="@style/TextAppearance.AppCompat"
-            android:textStyle="bold" />
+            android:textStyle="normal" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <EditText
+                android:id="@+id/editTextLoginPin"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.84"
+                android:ems="12"
+                android:hint="@string/hint_login"
+                android:textAlignment="center"
+                android:inputType="text"
+                android:maxLength="5"
+                android:padding="10dp"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                tools:ignore="TextFields" />
+
+            <ImageButton
+                android:id="@+id/btnLogin"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.16"
+                android:background="?attr/colorButtonNormal"
+                android:onClick="onClickLogin"
+                android:src="@drawable/ic_arrow_forward_black_24dp" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/textViewLoginMensagem"

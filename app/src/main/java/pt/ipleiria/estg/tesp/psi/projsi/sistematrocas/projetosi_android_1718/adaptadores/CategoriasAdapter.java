@@ -48,10 +48,8 @@ public class CategoriasAdapter extends BaseAdapter {
     {
         View item = view;
 
-        if (view == null)
-        {
-            if (inflater == null)
-            {
+        if (view == null) {
+            if (inflater == null) {
                 inflater = LayoutInflater.from(context);
             }
 
