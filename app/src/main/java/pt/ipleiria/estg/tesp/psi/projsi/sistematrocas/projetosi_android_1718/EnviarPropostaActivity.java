@@ -62,6 +62,7 @@ public class EnviarPropostaActivity extends NavDrawerActivity implements Adapter
 
         TextView textViewEnviarProposta = findViewById(R.id.textViewEnviarProposta);
         textViewEnviarProposta.setText(textViewEnviarProposta.getText());
+
         //TODO: Titulo do anúncio passado no Intent.
 
         Spinner dropDownCategorias = findViewById(R.id.dropDownEnviarPropostaCategorias);
@@ -203,7 +204,7 @@ public class EnviarPropostaActivity extends NavDrawerActivity implements Adapter
 
     private void getCategoriaProposta(@NonNull final Categoria categoria, @NonNull final Integer quantidade) {
 
-        SingletonCategorias.getInstance(this).adicionarCategoria(categoria, new SingletonActivityAPIResponse() {
+        SingletonCategorias.getInstance().adicionarCategoria(categoria, this, new SingletonActivityAPIResponse() {
             @Override
             public void onSuccessEnvioAPI(Categoria categoria) {
                 getProposta(categoria, quantidade);
@@ -244,7 +245,7 @@ public class EnviarPropostaActivity extends NavDrawerActivity implements Adapter
 
         if(!propostas.isEmpty()) {
             if (!propostas.contains(proposta)) {
-                SingletonPropostas.getInstance(this).adicionarProposta(proposta);
+                SingletonPropostas.getInstance(this).adicionarProposta(proposta, this);
             }
         }
     }
@@ -263,7 +264,7 @@ public class EnviarPropostaActivity extends NavDrawerActivity implements Adapter
     @Override
     public void onRefreshPropostas(ArrayList<Proposta> propostas) {
         if (!propostas.contains(proposta)) {
-            SingletonPropostas.getInstance(this).adicionarProposta(proposta);
+            SingletonPropostas.getInstance(this).adicionarProposta(proposta, this);
         }
     }
 }

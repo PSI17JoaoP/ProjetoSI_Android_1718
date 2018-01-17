@@ -23,28 +23,26 @@ public class LoginActivity extends AppCompatActivity {
     private EditText editTextLoginPin;
     private TextView textViewMensagem;
 
-    SharedPreferences preferences;
-    SharedPreferences.Editor prefEditor;
-    private String pin;
+    private SharedPreferences.Editor prefEditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        preferences = getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
 
-        pin = preferences.getString("pin", "");
+        String pin = preferences.getString("pin", "");
 
-        if (!pin.isEmpty())
-        {
+        if (!pin.isEmpty()) {
             SingletonAPIManager.getInstance(this).setAuth(pin);
 
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
 
             finish();
-        }else
-        {
+        }
+
+        else {
             setContentView(R.layout.activity_login);
 
             textViewMensagem = findViewById(R.id.textViewLoginMensagem);
@@ -63,11 +61,11 @@ public class LoginActivity extends AppCompatActivity {
             textViewMensagem.setTextColor(Color.RED);
         } else {
 
-            if(SingletonAPIManager.getInstance(this).ligadoInternet()) {
+            if(SingletonAPIManager.getInstance(this).ligadoInternet(this)) {
 
                 SingletonAPIManager.getInstance(this).setAuth(pinString);
 
-                JsonObjectRequest user = SingletonAPIManager.getInstance(this).pedirAPI("clientes/pin/" + pinString, new SingletonAPIManager.APIJsonResposta() {
+                JsonObjectRequest user = SingletonAPIManager.getInstance(this).pedirAPI("clientes/pin/" + pinString, this, new SingletonAPIManager.APIJsonResposta() {
                     @Override
                     public void Sucesso(JSONObject resultado) {
                         try {
@@ -101,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
 
-                SingletonAPIManager.getInstance(this).getRequestQueue().add(user);
+                SingletonAPIManager.getInstance(this).getRequestQueue(this).add(user);
             } else {
                 textViewMensagem.setText(R.string.mensagem_ligacao_internet);
                 textViewMensagem.setTextColor(Color.RED);

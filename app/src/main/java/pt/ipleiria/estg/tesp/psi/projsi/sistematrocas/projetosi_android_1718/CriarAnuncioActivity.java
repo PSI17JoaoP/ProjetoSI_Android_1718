@@ -290,7 +290,7 @@ public class CriarAnuncioActivity extends NavDrawerActivity implements AdapterVi
                                       @NonNull final Categoria categoriaTroco, @NonNull final Integer quantidadeTroco,
                                       @Nullable final Categoria categoriaPor, @Nullable final Integer quantidadePor) {
 
-        SingletonCategorias.getInstance(this).adicionarCategoria(categoriaTroco, new SingletonActivityAPIResponse() {
+        SingletonCategorias.getInstance().adicionarCategoria(categoriaTroco, this, new SingletonActivityAPIResponse() {
             @Override
             public void onSuccessEnvioAPI(Categoria categoria) {
                 if (categoriaPor != null && quantidadePor != null) {
@@ -312,7 +312,7 @@ public class CriarAnuncioActivity extends NavDrawerActivity implements AdapterVi
                                  @NonNull final Categoria categoriaTroco, @NonNull final Integer quantidadeTroco,
                                  @NonNull final Categoria categoriaPor, @NonNull final Integer quantidadePor) {
 
-        SingletonCategorias.getInstance(this).adicionarCategoria(categoriaPor, new SingletonActivityAPIResponse() {
+        SingletonCategorias.getInstance().adicionarCategoria(categoriaPor, this, new SingletonActivityAPIResponse() {
             @Override
             public void onSuccessEnvioAPI(Categoria categoria) {
                 getAnuncio(anuncioTitulo, categoriaTroco, quantidadeTroco, categoria, quantidadePor);
@@ -361,7 +361,7 @@ public class CriarAnuncioActivity extends NavDrawerActivity implements AdapterVi
 
         if(!anuncios.isEmpty()) {
             if (!anuncios.contains(anuncio)) {
-                SingletonAnuncios.getInstance(this).adicionarAnuncio(anuncio);
+                SingletonAnuncios.getInstance(this).adicionarAnuncio(anuncio, this);
             }
         }
     }
@@ -382,7 +382,7 @@ public class CriarAnuncioActivity extends NavDrawerActivity implements AdapterVi
     @Override
     public void onRefreshAnuncios(ArrayList<Anuncio> anuncios) {
         if(!anuncios.contains(anuncio)) {
-            SingletonAnuncios.getInstance(this).adicionarAnuncio(anuncio);
+            SingletonAnuncios.getInstance(this).adicionarAnuncio(anuncio, this);
         }
     }
 }

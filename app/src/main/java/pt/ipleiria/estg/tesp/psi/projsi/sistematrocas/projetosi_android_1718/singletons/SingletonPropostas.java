@@ -2,7 +2,6 @@ package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.si
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
@@ -28,7 +27,6 @@ public class SingletonPropostas {
     private static SingletonPropostas INSTANCE = null;
     private ArrayList<Proposta> propostas;
     private PropostaBDTable bdTable;
-    private Context context;
 
     private PropostasListener propostasListener;
 
@@ -40,7 +38,6 @@ public class SingletonPropostas {
     }
 
     private SingletonPropostas(Context context) {
-        this.context = context;
         propostas = new ArrayList<>();
         bdTable = new PropostaBDTable(context);
         propostas = bdTable.select();
@@ -50,15 +47,14 @@ public class SingletonPropostas {
         return propostas;
     }
 
-    public void getPropostasAnunciosUser() {
+    public void getPropostasAnunciosUser(final Context context) {
 
         SharedPreferences preferences = context.getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
         String username = preferences.getString("username", "");
 
-        if (SingletonAPIManager.getInstance(context).ligadoInternet())
-        {
+        if (SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
 
-            JsonObjectRequest propostasAPI = SingletonAPIManager.getInstance(context).pedirAPI("anuncios/propostas/" + username, new SingletonAPIManager.APIJsonResposta() {
+            JsonObjectRequest propostasAPI = SingletonAPIManager.getInstance(context).pedirAPI("anuncios/propostas/" + username, context, new SingletonAPIManager.APIJsonResposta() {
 
                 @Override
                 public void Sucesso(JSONObject resultado) {
@@ -66,8 +62,7 @@ public class SingletonPropostas {
                         JSONArray propostasJson = resultado.getJSONArray("Propostas");
 
                         if (propostasJson.length() > 0) {
-                            propostas = PropostasParser.paraObjeto(propostasJson, context);
-                            /*adicionarPropostasLocal(propostas);*/
+                            ArrayList<Proposta> propostas = PropostasParser.paraObjeto(propostasJson, context);
 
                             if (propostasListener != null)
                                 propostasListener.onRefreshPropostas(propostas);
@@ -86,22 +81,16 @@ public class SingletonPropostas {
                 }
             });
 
-            SingletonAPIManager.getInstance(context).getRequestQueue().add(propostasAPI);
+            SingletonAPIManager.getInstance(context).getRequestQueue(context).add(propostasAPI);
 
-        }/* else {
-
-            ArrayList<Proposta> propostaUser = bdTable.select(" WHERE " + PropostaBDTable.ESTADO_PROPOSTA + " = ?", new String[]{"ACEITE"});
-
-            if (propostasListener != null)
-                propostasListener.onRefreshPropostas(propostaUser);
-        }*/
+        }
     }
 
-    public void adicionarProposta(Proposta proposta) {
+    public void adicionarProposta(Proposta proposta, final Context context) {
 
-        if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+        if (SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
 
-            StringRequest propostasAPI = SingletonAPIManager.getInstance(context).enviarAPI("propostas",
+            StringRequest propostasAPI = SingletonAPIManager.getInstance(context).enviarAPI("propostas", context,
                     Request.Method.POST, PropostasParser.paraJson(proposta), new SingletonAPIManager.APIStringResposta() {
                         @Override
                         public void Sucesso(String resposta) {
@@ -126,16 +115,16 @@ public class SingletonPropostas {
                         }
                     });
 
-            SingletonAPIManager.getInstance(context).getRequestQueue().add(propostasAPI);
+            SingletonAPIManager.getInstance(context).getRequestQueue(context).add(propostasAPI);
         }
     }
 
-    public void alterarProposta(final Proposta proposta) {
+    public void alterarProposta(final Proposta proposta, final Context context) {
 
-        if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+        if (SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
 
             StringRequest propostasAPI = SingletonAPIManager.getInstance(context).enviarAPI("propostas/" + proposta.getId().intValue(),
-                    Request.Method.PUT, PropostasParser.paraJson(proposta), new SingletonAPIManager.APIStringResposta() {
+                    context, Request.Method.PUT, PropostasParser.paraJson(proposta), new SingletonAPIManager.APIStringResposta() {
                         @Override
                         public void Sucesso(String resposta) {
                             try {
@@ -160,16 +149,16 @@ public class SingletonPropostas {
                         }
                     });
 
-            SingletonAPIManager.getInstance(context).getRequestQueue().add(propostasAPI);
+            SingletonAPIManager.getInstance(context).getRequestQueue(context).add(propostasAPI);
         }
     }
 
-    public void apagarProposta(final Proposta proposta) {
+    public void apagarProposta(final Proposta proposta, Context context) {
 
-        if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+        if (SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
 
             StringRequest propostasAPI = SingletonAPIManager.getInstance(context).enviarAPI("propostas/" + proposta.getId().intValue(),
-                    Request.Method.DELETE, null, new SingletonAPIManager.APIStringResposta() {
+                    context, Request.Method.DELETE, null, new SingletonAPIManager.APIStringResposta() {
                         @Override
                         public void Sucesso(String resposta) {
 
@@ -186,7 +175,7 @@ public class SingletonPropostas {
                         }
                     });
 
-            SingletonAPIManager.getInstance(context).getRequestQueue().add(propostasAPI);
+            SingletonAPIManager.getInstance(context).getRequestQueue(context).add(propostasAPI);
         }
     }
 
@@ -194,9 +183,7 @@ public class SingletonPropostas {
     //LOCAL A PARTIR DAQUI
 
     public void adicionarPropostasLocal(ArrayList<Proposta> propostasList) {
-
-        for(Proposta proposta:propostasList)
-        {
+        for(Proposta proposta:propostasList) {
             bdTable.insert(proposta);
         }
     }
@@ -212,7 +199,6 @@ public class SingletonPropostas {
     }
 
     public boolean editarPropostaLocal(Proposta proposta, int posicao) {
-
         if(bdTable.update(proposta)) {
             propostas.set(posicao, proposta);
         }
@@ -221,9 +207,8 @@ public class SingletonPropostas {
     }
 
     public Proposta pesquisarPropostaID(Long id) {
-
-        for (Proposta proposta:propostas) {
-            if (proposta.getId() == id)
+        for (Proposta proposta : propostas) {
+            if (proposta.getId().toString().equals(id.toString()))
                 return proposta;
         }
 

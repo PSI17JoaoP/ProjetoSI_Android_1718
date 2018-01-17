@@ -1,8 +1,6 @@
 package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons;
 
 import android.content.Context;
-import android.content.Intent;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
@@ -10,7 +8,6 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.helpers.GeneroJogoBDTable;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.GenerosJogosListener;
@@ -22,7 +19,6 @@ import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.par
  */
 
 public class SingletonGenerosJogo {
-    private Context context;
     private static SingletonGenerosJogo INSTANCE = null;
     private ArrayList<GeneroJogo> generosJogos;
     private GeneroJogoBDTable bdTable;
@@ -37,23 +33,22 @@ public class SingletonGenerosJogo {
     }
 
     private SingletonGenerosJogo(Context context) {
-        this.context = context;
         generosJogos = new ArrayList<>();
         bdTable = new GeneroJogoBDTable(context);
         generosJogos = bdTable.select();
-        getGenerosJogosAPI();
+        getGenerosJogosAPI(context);
     }
 
-    private void getGenerosJogosAPI() {
+    private void getGenerosJogosAPI(final Context context) {
 
         if(generosJogos.isEmpty()) {
-            if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+            if (SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
 
-                JsonArrayRequest generosAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("categorias/generos", new SingletonAPIManager.APIJsonArrayResposta() {
+                JsonArrayRequest generosAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("categorias/generos", context, new SingletonAPIManager.APIJsonArrayResposta() {
                     @Override
                     public void Sucesso(JSONArray resultados) {
                         generosJogos = GeneroJogosParser.paraObjeto(resultados, context);
-                        adicionarTiposRoupaBD(generosJogos);
+                        adicionarGenerosJogoLocal(generosJogos);
 
                         if (generosJogosListener != null)
                             generosJogosListener.onRefreshGenerosJogos(generosJogos, context);
@@ -66,12 +61,12 @@ public class SingletonGenerosJogo {
                     }
                 });
 
-                SingletonAPIManager.getInstance(context).getRequestQueue().add(generosAPI);
+                SingletonAPIManager.getInstance(context).getRequestQueue(context).add(generosAPI);
             }
         }
     }
 
-    private void adicionarTiposRoupaBD(ArrayList<GeneroJogo> generosJogos) {
+    private void adicionarGenerosJogoLocal(ArrayList<GeneroJogo> generosJogos) {
         for (GeneroJogo generoJogo : generosJogos) {
             bdTable.insert(generoJogo);
         }
@@ -85,17 +80,17 @@ public class SingletonGenerosJogo {
         this.generosJogos = generosJogos;
     }
 
-    public boolean adicionarGenero(GeneroJogo genero) {
+    public boolean adicionarGeneroJogoLocal(GeneroJogo genero) {
         GeneroJogo generoInserido = bdTable.insert(genero);
 
         return generoInserido != null && generosJogos.add(generoInserido);
     }
 
-    public boolean removerGenero(GeneroJogo genero) {
+    public boolean removerGeneroJogoLocal(GeneroJogo genero) {
         return bdTable.delete(genero.getId()) && generosJogos.remove(genero);
     }
 
-    public boolean editarGenero(GeneroJogo generoJogo) {
+    public boolean editarGeneroJogoLocal(GeneroJogo generoJogo) {
         if(bdTable.update(generoJogo)) {
             GeneroJogo novoGenero = generosJogos.set(generoJogo.getId().intValue(), generoJogo);
 
@@ -105,12 +100,9 @@ public class SingletonGenerosJogo {
         }
     }
 
-    public GeneroJogo pesquisarGeneroJogosID(Long id)
-    {
-        for (GeneroJogo genero : generosJogos)
-        {
-            if (genero.getId().toString().equals(id.toString()))
-            {
+    public GeneroJogo pesquisarGeneroJogosID(Long id) {
+        for (GeneroJogo genero : generosJogos) {
+            if (genero.getId().toString().equals(id.toString())) {
                 return genero;
             }
         }

@@ -1,10 +1,8 @@
 package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.annotation.Nullable;
 import android.util.Base64;
 
 import com.android.volley.AuthFailureError;
@@ -19,14 +17,11 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,9 +29,6 @@ public class SingletonAPIManager {
 
     private static SingletonAPIManager INSTANCE = null;
     private RequestQueue requestQueue;
-    private Context context;
-
-    private SharedPreferences preferences;
 
     //private static final String baseURL = "http://192.168.1.2:8888/";
     private static final String baseURL = "http://10.0.2.2:8888/";
@@ -51,19 +43,16 @@ public class SingletonAPIManager {
         return INSTANCE;
     }
 
-    private SingletonAPIManager(Context contexto) {
-        context = contexto;
-        requestQueue = getRequestQueue();
-
-        preferences = contexto.getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
+    private SingletonAPIManager(Context context) {
+        requestQueue = getRequestQueue(context);
     }
 
     /**
      * Devolve a queue onde os pedidos são executados/guardados em cache
      * @return RequestQueue
      */
-    public RequestQueue getRequestQueue() {
-
+    public RequestQueue getRequestQueue(Context context)
+    {
         if (requestQueue == null) {
             requestQueue = Volley.newRequestQueue(context.getApplicationContext());
         }
@@ -81,9 +70,9 @@ public class SingletonAPIManager {
      * Verifica o estado de ligação à internet
      * @return true/false
      */
-    public boolean ligadoInternet()
+    public boolean ligadoInternet(Context context)
     {
-        ConnectivityManager connManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo internet = null;
 
         if (connManager != null) {
@@ -108,7 +97,6 @@ public class SingletonAPIManager {
         void Erro(VolleyError erro);
     }
 
-
     /**
      * Recebe o URI para fazer o pedido GET a 1 objeto e implementa a função 'usar'
      * para trabalhar a resposta
@@ -116,9 +104,9 @@ public class SingletonAPIManager {
      * @param usar Interface de Resposta
      * @return mixed
      */
-    public JsonObjectRequest pedirAPI(String url, final APIJsonResposta usar)
+    public JsonObjectRequest pedirAPI(String url, Context context, final APIJsonResposta usar)
     {
-        if (ligadoInternet())
+        if (ligadoInternet(context))
         {
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.GET, baseURL+url,null,
@@ -159,9 +147,9 @@ public class SingletonAPIManager {
      * @param usar Interface de Resposta
      * @return mixed
      */
-    public JsonArrayRequest pedirVariosAPI(String url, final APIJsonArrayResposta usar)
+    public JsonArrayRequest pedirVariosAPI(String url, Context context,final APIJsonArrayResposta usar)
     {
-        if (ligadoInternet())
+        if (ligadoInternet(context))
         {
             JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
                 Request.Method.GET, baseURL+url, null,
@@ -204,9 +192,9 @@ public class SingletonAPIManager {
      * @param usar Interface de Resposta
      * @return mixed
      */
-    public StringRequest enviarAPI(String url, Integer tipoPedido, final String requestBody, final APIStringResposta usar)
+    public StringRequest enviarAPI(String url, Context context, Integer tipoPedido, final String requestBody, final APIStringResposta usar)
     {
-        if (ligadoInternet())
+        if (ligadoInternet(context))
         {
             StringRequest stringRequest = new StringRequest(tipoPedido, baseURL+url, new Response.Listener<String>()
             {

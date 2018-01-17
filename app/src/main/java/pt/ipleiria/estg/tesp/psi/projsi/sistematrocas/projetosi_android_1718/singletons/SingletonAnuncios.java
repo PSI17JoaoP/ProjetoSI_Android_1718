@@ -46,7 +46,8 @@ public class SingletonAnuncios {
     private static SingletonAnuncios INSTANCE = null;
     private ArrayList<Anuncio> anuncios;
     private AnuncioBDTable bdTable;
-    private Context context;
+
+    private SharedPreferences preferences;
 
     private AnunciosListener anunciosListener;
     private CategoriasListener categoriasListener;
@@ -59,61 +60,51 @@ public class SingletonAnuncios {
     }
 
     private SingletonAnuncios(Context context) {
-        this.context = context;
+        preferences = context.getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
         anuncios = new ArrayList<>();
         bdTable = new AnuncioBDTable(context);
-        carregar();
-        /*
         anuncios = bdTable.select();
-        getAnunciosAPI();
-        */
+        getAnunciosAPI(context);
     }
 
-    private void carregar()
-    {
-        if (SingletonAPIManager.getInstance(context).ligadoInternet())
-        {
-            getAnunciosAPI();
-        }else
-        {
-            anuncios = bdTable.select();
+    private void getAnunciosAPI(final Context context) {
+
+        if(anuncios.isEmpty()) {
+
+            if (SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
+
+                JsonArrayRequest anunciosAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("anuncios", context, new SingletonAPIManager.APIJsonArrayResposta() {
+                    @Override
+                    public void Sucesso(JSONArray resultados) {
+                        anuncios = AnunciosParser.paraObjeto(resultados, context);
+
+                        adicionarAnunciosLocal(anuncios);
+
+                        if (anunciosListener != null)
+                            anunciosListener.onRefreshAnuncios(anuncios);
+                    }
+
+                    @Override
+                    public void Erro(VolleyError erro) {
+                        if (anunciosListener != null) {
+                            Integer code = 0;
+
+                            if (erro.networkResponse != null)
+                                code = erro.networkResponse.statusCode;
+
+                            anunciosListener.onErrorAnunciosAPI("Não foi possível sincronizar os anúncios com a API - " + code, erro);
+                        }
+                    }
+                });
+
+                SingletonAPIManager.getInstance(context).getRequestQueue(context).add(anunciosAPI);
+            }
         }
     }
 
-    public ArrayList<Anuncio> getAnuncios() {
-        return anuncios;
-    }
+    public void getCategoriasAnuncio(Long id, final String tipo, final Context context) {
 
-    private void getAnunciosAPI()
-    {
-        JsonArrayRequest anunciosAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("anuncios", new SingletonAPIManager.APIJsonArrayResposta() {
-            @Override
-            public void Sucesso(JSONArray resultados) {
-                anuncios = AnunciosParser.paraObjeto(resultados, context);
-
-                adicionarAnunciosLocal(anuncios);
-
-                /*if (anunciosListener != null)
-                    anunciosListener.onRefreshAnuncios(anuncios);*/
-            }
-
-            @Override
-            public void Erro(VolleyError erro) {
-                if (anunciosListener != null) {
-                    Integer code = 0;
-                    if (erro.networkResponse != null)
-                        code = erro.networkResponse.statusCode;
-                    anunciosListener.onErrorAnunciosAPI("Não foi possível sincronizar os anúncios com a API - " + code, erro);
-                }
-            }
-        });
-
-        SingletonAPIManager.getInstance(context).getRequestQueue().add(anunciosAPI);
-    }
-
-    public void getCategoriasAnuncio(Long id, final String tipo)
-    {
-        JsonObjectRequest pedido = SingletonAPIManager.getInstance(context).pedirAPI("anuncios/" + id + "/categoria"+tipo, new SingletonAPIManager.APIJsonResposta() {
+        JsonObjectRequest pedido = SingletonAPIManager.getInstance(context).pedirAPI("anuncios/" + id + "/categoria"+tipo, context, new SingletonAPIManager.APIJsonResposta() {
             @Override
             public void Sucesso(JSONObject resultado)
             {
@@ -220,27 +211,26 @@ public class SingletonAnuncios {
 
             @Override
             public void Erro(VolleyError erro) {
-                if (anunciosListener != null)
-                {
+                if (anunciosListener != null) {
                     Integer code = 0;
+
                     if (erro.networkResponse != null)
                             code = erro.networkResponse.statusCode;
+
                     anunciosListener.onErrorAnunciosAPI("Não foi possível obter os dados do bem do anúncio - " + code, erro);
                 }
             }
         });
 
-        SingletonAPIManager.getInstance(context).getRequestQueue().add(pedido);
+        SingletonAPIManager.getInstance(context).getRequestQueue(context).add(pedido);
     }
 
-    public void getAnunciosUser() {
-
-        SharedPreferences preferences = context.getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
+    public void getAnunciosUser(final Context context) {
         Long userId = preferences.getLong("id", 0);
 
-        if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+        if (SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
 
-            JsonObjectRequest anunciosUserAPI = SingletonAPIManager.getInstance(context).pedirAPI("clientes/" + String.valueOf(userId) + "/anuncios", new SingletonAPIManager.APIJsonResposta() {
+            JsonObjectRequest anunciosUserAPI = SingletonAPIManager.getInstance(context).pedirAPI("clientes/" + String.valueOf(userId) + "/anuncios", context, new SingletonAPIManager.APIJsonResposta() {
                 @Override
                 public void Sucesso(JSONObject resultado) {
 
@@ -267,24 +257,22 @@ public class SingletonAnuncios {
                 }
             });
 
-            SingletonAPIManager.getInstance(context).getRequestQueue().add(anunciosUserAPI);
+            SingletonAPIManager.getInstance(context).getRequestQueue(context).add(anunciosUserAPI);
         } else {
 
-            ArrayList<Anuncio> anunciosUser = bdTable.select(" WHERE " + AnuncioBDTable.ID_USER_ANUNCIO + " = ? AND " + AnuncioBDTable.ESTADO_ANUNCIO + " = ?", new String[]{String.valueOf(userId), "ABERTO"});
+            ArrayList<Anuncio> anunciosUser = bdTable.select(" WHERE " + AnuncioBDTable.ID_USER_ANUNCIO + " = ? AND " + AnuncioBDTable.ESTADO_ANUNCIO + " = ?", new String[]{String.valueOf(userId), "ATIVO"});
 
             if (anunciosListener != null)
                 anunciosListener.onRefreshAnuncios(anunciosUser);
         }
     }
 
-    public void getAnunciosSugeridos() {
-
-        SharedPreferences preferences = context.getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
+    public void getAnunciosSugeridos(final Context context) {
         String username = preferences.getString("username", "");
 
-        if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+        if (SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
 
-            JsonArrayRequest anunciosAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("anuncios/sugeridos/"+username, new SingletonAPIManager.APIJsonArrayResposta() {
+            JsonArrayRequest anunciosAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("anuncios/sugeridos/"+username, context, new SingletonAPIManager.APIJsonArrayResposta() {
                 @Override
                 public void Sucesso(JSONArray resultados) {
 
@@ -301,15 +289,15 @@ public class SingletonAnuncios {
                 }
             });
 
-            SingletonAPIManager.getInstance(context).getRequestQueue().add(anunciosAPI);
+            SingletonAPIManager.getInstance(context).getRequestQueue(context).add(anunciosAPI);
         }
     }
 
-    public void adicionarAnuncio(Anuncio anuncio) {
+    public void adicionarAnuncio(Anuncio anuncio, final Context context) {
 
-        if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+        if (SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
 
-            final StringRequest adicionarAPI = SingletonAPIManager.getInstance(context).enviarAPI("anuncios",
+            final StringRequest adicionarAPI = SingletonAPIManager.getInstance(context).enviarAPI("anuncios", context,
                     Request.Method.POST, AnunciosParser.paraJson(anuncio), new SingletonAPIManager.APIStringResposta() {
                         @Override
                         public void Sucesso(String resposta) {
@@ -335,18 +323,20 @@ public class SingletonAnuncios {
                         }
                     });
 
-            SingletonAPIManager.getInstance(context).getRequestQueue().add(adicionarAPI);
+            SingletonAPIManager.getInstance(context).getRequestQueue(context).add(adicionarAPI);
         }
     }
 
-    public void alterarAnuncio(final Anuncio anuncio) {
+    public void alterarAnuncio(final Anuncio anuncio, final Context context) {
 
-        if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+        if (SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
+
             JSONObject object = new JSONObject();
+
             try {
                 object.put("estado", anuncio.getEstado());
 
-                StringRequest alterarAPI = SingletonAPIManager.getInstance(context).enviarAPI("anuncios/" + anuncio.getId().intValue(),
+                StringRequest alterarAPI = SingletonAPIManager.getInstance(context).enviarAPI("anuncios/" + anuncio.getId().intValue(), context,
                         Request.Method.PUT, object.toString(), new SingletonAPIManager.APIStringResposta() {
                             @Override
                             public void Sucesso(String resposta) {
@@ -372,7 +362,7 @@ public class SingletonAnuncios {
                             }
                         });
 
-                SingletonAPIManager.getInstance(context).getRequestQueue().add(alterarAPI);
+                SingletonAPIManager.getInstance(context).getRequestQueue(context).add(alterarAPI);
 
             } catch (JSONException e) {
                 if (anunciosListener != null)
@@ -381,11 +371,11 @@ public class SingletonAnuncios {
         }
     }
 
-    public void apagarAnuncio(final Anuncio anuncio) {
+    public void apagarAnuncio(final Anuncio anuncio, Context context) {
 
-        if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+        if (SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
 
-            StringRequest alterarAPI = SingletonAPIManager.getInstance(context).enviarAPI("anuncios/" + anuncio.getId().intValue(),
+            StringRequest apagarAPI = SingletonAPIManager.getInstance(context).enviarAPI("anuncios/" + anuncio.getId().intValue(), context,
                     Request.Method.DELETE, null, new SingletonAPIManager.APIStringResposta() {
                         @Override
                         public void Sucesso(String resposta) {
@@ -403,7 +393,7 @@ public class SingletonAnuncios {
                         }
                     });
 
-            SingletonAPIManager.getInstance(context).getRequestQueue().add(alterarAPI);
+            SingletonAPIManager.getInstance(context).getRequestQueue(context).add(apagarAPI);
         }
     }
 
@@ -411,9 +401,7 @@ public class SingletonAnuncios {
     //LOCAL A PARTIR DAQUI
 
     public void adicionarAnunciosLocal(ArrayList<Anuncio> anuncioList) {
-
-        for(Anuncio anuncio : anuncioList)
-        {
+        for(Anuncio anuncio : anuncioList) {
             bdTable.insert(anuncio);
         }
     }
@@ -436,13 +424,9 @@ public class SingletonAnuncios {
         return anuncios.contains(anuncio);
     }
 
-    public Anuncio pesquisarAnuncioID(Long id)
-    {
-        for (Anuncio anuncio : anuncios)
-        {
-            if (anuncio.getId().toString().equals(id.toString()))
-            {
-                anunciosListener.onSuccessAnunciosAPI(anuncio);
+    public Anuncio pesquisarAnuncioID(Long id) {
+        for (Anuncio anuncio : anuncios) {
+            if (anuncio.getId().toString().equals(id.toString())) {
                 return anuncio;
             }
         }
@@ -454,6 +438,10 @@ public class SingletonAnuncios {
         return anuncios.get(i);
     }
 
+    public ArrayList<Anuncio> getAnuncios() {
+        return anuncios;
+    }
+
     public Integer getAnunciosCount() {
         return anuncios.size();
     }
@@ -462,8 +450,7 @@ public class SingletonAnuncios {
         this.anunciosListener = anunciosListener;
     }
 
-    public void setCategoriasListener(CategoriasListener categoriasListener)
-    {
+    public void setCategoriasListener(CategoriasListener categoriasListener) {
         this.categoriasListener = categoriasListener;
     }
 }

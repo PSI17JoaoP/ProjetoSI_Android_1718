@@ -58,9 +58,11 @@
 
     <string name="title_activity_meus_anuncios">Os meus anúncios</string>
 
-    <string name="title_activity_detalhes_anuncio">Detalhes</string>
+    <string name="title_activity_detalhes">Detalhes</string>
     <string name="detalhes_anuncio_titulo">Titulo:</string>
     <string name="detalhes_anuncio_data_criacao">Criado a:</string>
     <string name="detalhes_anuncio_data_conclusao">Concluído a:</string>
+    <string name="detalhes_anuncio_troco">Troco:</string>
+    <string name="detalhes_anuncio_por">Por:</string>
 
 </resources>

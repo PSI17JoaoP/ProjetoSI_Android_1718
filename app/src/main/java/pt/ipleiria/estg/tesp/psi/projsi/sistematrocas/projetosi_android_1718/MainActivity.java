@@ -1,11 +1,13 @@
 package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TabHost;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -22,9 +24,6 @@ public class MainActivity extends NavDrawerActivity implements AnunciosListener,
 
     private ListView lvAnuncios;
     private ListView lvPropostas;
-
-    private PropostasAdapter propostasAdapter;
-    private AnunciosAdapter anunciosAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,21 +51,55 @@ public class MainActivity extends NavDrawerActivity implements AnunciosListener,
         lvAnuncios = findViewById(R.id.lvAnuncios);
         lvPropostas = findViewById(R.id.lvPropostas);
 
-        //------------------------------------
+        lvAnuncios.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Anuncio anuncio = (Anuncio) parent.getSelectedItem();
+                Intent intent = new Intent(getApplicationContext(), DetalhesAnuncioActivity.class);
+                intent.putExtra(DetalhesAnuncioActivity.ID_ANUNCIO, anuncio.getId());
+                startActivity(intent);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        lvPropostas.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Proposta proposta = (Proposta) parent.getSelectedItem();
+                Intent intent = new Intent(getApplicationContext(), DetalhesPropostaActivity.class);
+                intent.putExtra(DetalhesPropostaActivity.ID_PROPOSTA, proposta.getId());
+                startActivity(intent);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         if (savedInstanceState == null) {
-
             SingletonAnuncios.getInstance(this).setAnunciosListener(this);
-            SingletonAnuncios.getInstance(this).getAnunciosSugeridos();
+            SingletonAnuncios.getInstance(this).getAnunciosSugeridos(this);
 
             SingletonPropostas.getInstance(this).setPropostasListener(this);
-            SingletonPropostas.getInstance(this).getPropostasAnunciosUser();
+            SingletonPropostas.getInstance(this).getPropostasAnunciosUser(this);
         }
 
         /*else {
             this.gestorAnuncios =  ... savedInstanceState.getSerializable(...);
             this.gestorPropostas =  ... savedInstanceState.getSerializable(...);
         }*/
+    }
+
+    private void showNotification(String message) {
+        Snackbar snackbar = Snackbar
+                .make(findViewById(R.id.coordinatorLayoutMain), message, Snackbar.LENGTH_LONG);
+
+        snackbar.show();
     }
 
     @Override
@@ -77,12 +110,12 @@ public class MainActivity extends NavDrawerActivity implements AnunciosListener,
     @Override
     public void onErrorAnunciosAPI(String message, Exception ex) {
         ex.printStackTrace();
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+        showNotification(message);
     }
 
     @Override
     public void onRefreshAnuncios(ArrayList<Anuncio> anuncios) {
-        anunciosAdapter = new AnunciosAdapter(this, anuncios);
+        AnunciosAdapter anunciosAdapter = new AnunciosAdapter(this, anuncios);
         lvAnuncios.setAdapter(anunciosAdapter);
     }
 
@@ -94,12 +127,12 @@ public class MainActivity extends NavDrawerActivity implements AnunciosListener,
     @Override
     public void onErrorPropostasAPI(String message, Exception ex) {
         ex.printStackTrace();
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+        showNotification(message);
     }
 
     @Override
     public void onRefreshPropostas(ArrayList<Proposta> propostas) {
-        propostasAdapter = new PropostasAdapter(this, propostas);
+        PropostasAdapter propostasAdapter = new PropostasAdapter(this, propostas);
         lvPropostas.setAdapter(propostasAdapter);
     }
 }

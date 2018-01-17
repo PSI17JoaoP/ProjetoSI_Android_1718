@@ -40,19 +40,17 @@ import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.par
  */
 
 public class SingletonCategorias {
-    private Context context;
     private static SingletonCategorias INSTANCE = null;
     private ArrayList<Categoria> categorias;
 
-    public static SingletonCategorias getInstance(Context context) {
+    public static SingletonCategorias getInstance() {
         if (INSTANCE == null)
-            INSTANCE = new SingletonCategorias(context);
+            INSTANCE = new SingletonCategorias();
 
         return INSTANCE;
     }
 
-    private SingletonCategorias(Context context) {
-        this.context = context;
+    private SingletonCategorias() {
         categorias = new ArrayList<>();
     }
 
@@ -64,7 +62,7 @@ public class SingletonCategorias {
         this.categorias = categorias;
     }
 
-    public synchronized void adicionarCategoria(final Categoria categoria, final SingletonActivityAPIResponse interfaceSA) {
+    public synchronized void adicionarCategoria(final Categoria categoria, final Context context, final SingletonActivityAPIResponse interfaceSA) {
 
         String categoriaClassPath = categoria.getClass().getName();
 
@@ -78,7 +76,7 @@ public class SingletonCategorias {
                 Brinquedo brinquedoJogo = new Brinquedo(jogo.getNome(), jogo.getEditora(), jogo.getFaixaEtaria(), jogo.getDescricao());
                 Categoria categoriaJogo = new Categoria(jogo.getNome());
 
-                if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+                if (SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
 
                     final String bodyString = "{\"Categoria\":\"jogos\",\"CategoriaMae\":" + CategoriasParser.paraJson(categoriaJogo) +
                             ",\"CategoriaFilha\":" + BrinquedosParser.paraJson(brinquedoJogo) +
@@ -86,6 +84,7 @@ public class SingletonCategorias {
 
                     StringRequest jogoPOST = SingletonAPIManager.getInstance(context).enviarAPI(
                             "categorias",
+                            context,
                             Request.Method.POST,
                             bodyString,
                             new SingletonAPIManager.APIStringResposta() {
@@ -99,7 +98,7 @@ public class SingletonCategorias {
                                         Long id = jsonObject.getLong("ID");
                                         categoria.setId(id);
 
-                                        if (SingletonCategorias.getInstance(context).adicionarCategoriaLocal(categoria)) {
+                                        if (SingletonCategorias.getInstance().adicionarCategoriaLocal(categoria, context)) {
                                             interfaceSA.onSuccessEnvioAPI(categoria);
                                         }
 
@@ -115,7 +114,7 @@ public class SingletonCategorias {
                             }
                     );
 
-                    SingletonAPIManager.getInstance(context).getRequestQueue().add(jogoPOST);
+                    SingletonAPIManager.getInstance(context).getRequestQueue(context).add(jogoPOST);
                 }
 
                 break;
@@ -125,13 +124,14 @@ public class SingletonCategorias {
                 Brinquedo brinquedo = (Brinquedo) categoria;
                 Categoria categoriaBrinquedo = new Categoria(brinquedo.getNome());
 
-                if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+                if (SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
 
                     final String bodyString = "{\"Categoria\":\"brinquedos\",\"CategoriaMae\":" + CategoriasParser.paraJson(categoriaBrinquedo) +
                             ",\"CategoriaFilha\":" + BrinquedosParser.paraJson(brinquedo) + "}";
 
                     StringRequest brinquedoPOST = SingletonAPIManager.getInstance(context).enviarAPI(
                             "categorias",
+                            context,
                             Request.Method.POST,
                             bodyString,
                             new SingletonAPIManager.APIStringResposta() {
@@ -145,7 +145,7 @@ public class SingletonCategorias {
                                         Long id = jsonObject.getLong("ID");
                                         categoria.setId(id);
 
-                                        if (SingletonCategorias.getInstance(context).adicionarCategoriaLocal(categoria)) {
+                                        if (SingletonCategorias.getInstance().adicionarCategoriaLocal(categoria, context)) {
                                             interfaceSA.onSuccessEnvioAPI(categoria);
                                         }
 
@@ -161,7 +161,7 @@ public class SingletonCategorias {
                             }
                     );
 
-                    SingletonAPIManager.getInstance(context).getRequestQueue().add(brinquedoPOST);
+                    SingletonAPIManager.getInstance(context).getRequestQueue(context).add(brinquedoPOST);
                 }
 
                 break;
@@ -172,7 +172,7 @@ public class SingletonCategorias {
                 Eletronica eletronicaComputador = new Eletronica(computador.getNome(), computador.getDescricao(), computador.getMarca());
                 Categoria categoriaComputador = new Categoria(computador.getNome());
 
-                if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+                if (SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
 
                     final String bodyString = "{\"Categoria\":\"computadores\",\"CategoriaMae\":" + CategoriasParser.paraJson(categoriaComputador) +
                             ",\"CategoriaFilha\":" + EletronicaParser.paraJson(eletronicaComputador) +
@@ -180,6 +180,7 @@ public class SingletonCategorias {
 
                     StringRequest computadorPOST = SingletonAPIManager.getInstance(context).enviarAPI(
                             "categorias",
+                            context,
                             Request.Method.POST,
                             bodyString,
                             new SingletonAPIManager.APIStringResposta() {
@@ -193,7 +194,7 @@ public class SingletonCategorias {
                                         Long id = jsonObject.getLong("ID");
                                         categoria.setId(id);
 
-                                        if (SingletonCategorias.getInstance(context).adicionarCategoriaLocal(categoria)) {
+                                        if (SingletonCategorias.getInstance().adicionarCategoriaLocal(categoria, context)) {
                                             interfaceSA.onSuccessEnvioAPI(categoria);
                                         }
 
@@ -209,7 +210,7 @@ public class SingletonCategorias {
                             }
                     );
 
-                    SingletonAPIManager.getInstance(context).getRequestQueue().add(computadorPOST);
+                    SingletonAPIManager.getInstance(context).getRequestQueue(context).add(computadorPOST);
                 }
 
                 break;
@@ -220,7 +221,7 @@ public class SingletonCategorias {
                 Eletronica smartphoneEletronica = new Eletronica(smartphone.getNome(), smartphone.getDescricao(), smartphone.getMarca());
                 Categoria categoriaSmartphone = new Categoria(smartphone.getNome());
 
-                if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+                if (SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
 
                     final String bodyString = "{\"Categoria\":\"smartphones\",\"CategoriaMae\":" + CategoriasParser.paraJson(categoriaSmartphone) +
                             ",\"CategoriaFilha\":" + EletronicaParser.paraJson(smartphoneEletronica) +
@@ -228,6 +229,7 @@ public class SingletonCategorias {
 
                     StringRequest smartphonePOST = SingletonAPIManager.getInstance(context).enviarAPI(
                             "categorias",
+                            context,
                             Request.Method.POST,
                             bodyString,
                             new SingletonAPIManager.APIStringResposta() {
@@ -241,7 +243,7 @@ public class SingletonCategorias {
                                         Long id = jsonObject.getLong("ID");
                                         categoria.setId(id);
 
-                                        if (SingletonCategorias.getInstance(context).adicionarCategoriaLocal(categoria)) {
+                                        if (SingletonCategorias.getInstance().adicionarCategoriaLocal(categoria, context)) {
                                             interfaceSA.onSuccessEnvioAPI(categoria);
                                         }
 
@@ -257,7 +259,7 @@ public class SingletonCategorias {
                             }
                     );
 
-                    SingletonAPIManager.getInstance(context).getRequestQueue().add(smartphonePOST);
+                    SingletonAPIManager.getInstance(context).getRequestQueue(context).add(smartphonePOST);
                 }
 
                 break;
@@ -267,13 +269,14 @@ public class SingletonCategorias {
                 Eletronica eletronica = (Eletronica) categoria;
                 Categoria categoriaEletronica = new Categoria(eletronica.getNome());
 
-                if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+                if (SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
 
                     final String bodyString = "{\"Categoria\":\"eletronica\",\"CategoriaMae\":" + CategoriasParser.paraJson(categoriaEletronica) +
                             ",\"CategoriaFilha\":" + EletronicaParser.paraJson(eletronica) + "}";
 
                     StringRequest eletronicaPOST = SingletonAPIManager.getInstance(context).enviarAPI(
                             "categorias",
+                            context,
                             Request.Method.POST,
                             bodyString,
                             new SingletonAPIManager.APIStringResposta() {
@@ -287,7 +290,7 @@ public class SingletonCategorias {
                                         Long id = jsonObject.getLong("ID");
                                         categoria.setId(id);
 
-                                        if (SingletonCategorias.getInstance(context).adicionarCategoriaLocal(categoria)) {
+                                        if (SingletonCategorias.getInstance().adicionarCategoriaLocal(categoria, context)) {
                                             interfaceSA.onSuccessEnvioAPI(categoria);
                                         }
 
@@ -303,7 +306,7 @@ public class SingletonCategorias {
                             }
                     );
 
-                    SingletonAPIManager.getInstance(context).getRequestQueue().add(eletronicaPOST);
+                    SingletonAPIManager.getInstance(context).getRequestQueue(context).add(eletronicaPOST);
                 }
 
                 break;
@@ -313,13 +316,14 @@ public class SingletonCategorias {
                 Roupa roupa = (Roupa) categoria;
                 Categoria categoriaRoupa = new Categoria(roupa.getNome());
 
-                if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+                if (SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
 
                     final String bodyString = "{\"Categoria\":\"roupa\",\"CategoriaMae\":" + CategoriasParser.paraJson(categoriaRoupa) +
                             ",\"CategoriaFilha\":" + RoupasParser.paraJson(roupa) + "}";
 
                     StringRequest roupaPOST = SingletonAPIManager.getInstance(context).enviarAPI(
                             "categorias",
+                            context,
                             Request.Method.POST,
                             bodyString,
                             new SingletonAPIManager.APIStringResposta() {
@@ -333,7 +337,7 @@ public class SingletonCategorias {
                                         Long id = jsonObject.getLong("ID");
                                         categoria.setId(id);
 
-                                        if (SingletonCategorias.getInstance(context).adicionarCategoriaLocal(categoria)) {
+                                        if (SingletonCategorias.getInstance().adicionarCategoriaLocal(categoria, context)) {
                                             interfaceSA.onSuccessEnvioAPI(categoria);
                                         }
 
@@ -349,7 +353,7 @@ public class SingletonCategorias {
                             }
                     );
 
-                    SingletonAPIManager.getInstance(context).getRequestQueue().add(roupaPOST);
+                    SingletonAPIManager.getInstance(context).getRequestQueue(context).add(roupaPOST);
                 }
 
                 break;
@@ -359,13 +363,14 @@ public class SingletonCategorias {
                 Livro livro = (Livro) categoria;
                 Categoria categoriaLivro = new Categoria(livro.getNome());
 
-                if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+                if (SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
 
                     final String bodyString = "{\"Categoria\":\"livros\",\"CategoriaMae\":" + CategoriasParser.paraJson(categoriaLivro) +
                             ",\"CategoriaFilha\":" + LivrosParser.paraJson(livro) + "}";
 
                     StringRequest livroPOST = SingletonAPIManager.getInstance(context).enviarAPI(
                             "categorias",
+                            context,
                             Request.Method.POST,
                             bodyString,
                             new SingletonAPIManager.APIStringResposta() {
@@ -379,7 +384,7 @@ public class SingletonCategorias {
                                         Long id = jsonObject.getLong("ID");
                                         categoria.setId(id);
 
-                                        if (SingletonCategorias.getInstance(context).adicionarCategoriaLocal(categoria)) {
+                                        if (SingletonCategorias.getInstance().adicionarCategoriaLocal(categoria, context)) {
                                             interfaceSA.onSuccessEnvioAPI(categoria);
                                         }
 
@@ -395,14 +400,14 @@ public class SingletonCategorias {
                             }
                     );
 
-                    SingletonAPIManager.getInstance(context).getRequestQueue().add(livroPOST);
+                    SingletonAPIManager.getInstance(context).getRequestQueue(context).add(livroPOST);
                 }
 
                 break;
         }
     }
 
-    private boolean adicionarCategoriaLocal(Categoria categoria) {
+    private boolean adicionarCategoriaLocal(Categoria categoria, Context context) {
 
         String categoriaClassPath = categoria.getClass().getName();
 
@@ -506,7 +511,7 @@ public class SingletonCategorias {
         return false;
     }
 
-    public boolean removerCategoriaLocal(Categoria categoria) {
+    public boolean removerCategoriaLocal(Categoria categoria, Context context) {
 
         String categoriaNome = categoria.getClass().getName();
 
@@ -560,7 +565,7 @@ public class SingletonCategorias {
         }
     }
 
-    public boolean editarCategoriaLocal(Categoria categoria) {
+    public boolean editarCategoriaLocal(Categoria categoria, Context context) {
 
         String categoriaNome = categoria.getClass().getName();
 

@@ -1,17 +1,14 @@
 package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.adaptadores;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.List;
 
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.DetalhesAnuncioActivity;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.R;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Anuncio;
 
@@ -46,14 +43,12 @@ public class AnunciosAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
+
         View item = view;
 
-        if (view == null)
-        {
+        if (view == null) {
             if (inflater == null)
-            {
                 inflater = LayoutInflater.from(context);
-            }
 
             item = inflater.inflate(R.layout.item_lv_anuncios, viewGroup, false);
         }
@@ -61,21 +56,10 @@ public class AnunciosAdapter extends BaseAdapter {
         TextView txtOfertaTitle = item.findViewById(R.id.txtOfertaA);
         TextView txtPropostaTitle = item.findViewById(R.id.txtPropostaA);
 
-        final Anuncio anuncio = listaAnuncios.get(i);
+        Anuncio anuncio = listaAnuncios.get(i);
 
         txtOfertaTitle.setText(anuncio.getTitulo());
-        txtPropostaTitle.setText(""+anuncio.getCatReceber());
-
-        Button btnVer = item.findViewById(R.id.btnVer);
-
-        btnVer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, DetalhesAnuncioActivity.class);
-                intent.putExtra(DetalhesAnuncioActivity.ID_ANUNCIO, anuncio.getId());
-                context.startActivity(intent);
-            }
-        });
+        txtPropostaTitle.setText(String.valueOf(anuncio.getCatReceber()));
 
         return item;
     }

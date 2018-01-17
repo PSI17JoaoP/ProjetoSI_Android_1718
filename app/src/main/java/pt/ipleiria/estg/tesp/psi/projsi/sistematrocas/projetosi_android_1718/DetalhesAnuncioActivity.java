@@ -3,18 +3,16 @@ package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.adaptadores.CategoriasAdapter;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.AnunciosListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.CategoriasListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Anuncio;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Brinquedo;
@@ -29,15 +27,15 @@ import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.sin
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonGenerosJogo;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonTiposRoupa;
 
-public class DetalhesAnuncioActivity extends NavDrawerActivity implements AnunciosListener,CategoriasListener{
+public class DetalhesAnuncioActivity extends NavDrawerActivity implements CategoriasListener{
 
     private ListView lvTroco;
     private ListView lvPor;
-    private TextView titulo;
-    private TextView dataCriacao;
-    private TextView dataConclusao;
+
+    private Anuncio anuncio;
 
     public static final String ID_ANUNCIO = "ID";
+    public static final String TITULO_ANUNCIO = "TITULO";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -45,38 +43,65 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Anunci
         super.onCreate(savedInstanceState);
         View.inflate(this, R.layout.activity_detalhes_anuncio, (ViewGroup) findViewById(R.id.app_content));
 
-        SingletonAnuncios.getInstance(this).setAnunciosListener(this);
-        SingletonAnuncios.getInstance(this).setCategoriasListener(this);
-
-        titulo = findViewById(R.id.txtDetalhesTitulo);
-        dataCriacao = findViewById(R.id.txtDetalhesDataCriacao);
-        dataConclusao = findViewById(R.id.txtDetalhesDataConclusao);
+        TextView titulo = findViewById(R.id.txtDetalhesTitulo);
+        TextView dataCriacao = findViewById(R.id.txtDetalhesDataCriacao);
+        TextView dataConclusao = findViewById(R.id.txtDetalhesDataConclusao);
 
         lvTroco = findViewById(R.id.lvDetalhesTroco);
         lvPor = findViewById(R.id.lvDetalhesPor);
 
-        Intent intent = getIntent();
-        Long idAnuncioTemp = intent.getLongExtra(ID_ANUNCIO, 4L);
+        if(getIntent().hasExtra(ID_ANUNCIO)) {
 
-        Anuncio anuncio = SingletonAnuncios.getInstance(this).pesquisarAnuncioID(idAnuncioTemp);
-/*
-        titulo.setText(anuncio.getTitulo());
-        dataCriacao.setText(anuncio.getDataCriacao());
-        if (anuncio.getDataConclusao().isEmpty())
-        {
-            dataConclusao.setText("ATIVO");
-        }else
-        {
-            dataConclusao.setText(anuncio.getDataConclusao());
+            Long anuncioId = getIntent().getLongExtra(ID_ANUNCIO, 0L);
+            anuncio = SingletonAnuncios.getInstance(this).pesquisarAnuncioID(anuncioId);
+
+            if (anuncio != null) {
+
+                titulo.setText(anuncio.getTitulo());
+                dataCriacao.setText(anuncio.getDataCriacao());
+
+                if (anuncio.getDataConclusao().isEmpty()) {
+                    dataConclusao.setText(anuncio.getEstado());
+                } else {
+                    dataConclusao.setText(anuncio.getDataConclusao());
+                }
+
+                FloatingActionButton fabDetalhesAnuncio = findViewById(R.id.fabDetalhesAnuncio);
+
+                SharedPreferences preferences = getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
+                Long userId = preferences.getLong("id", 0);
+
+                if (anuncio.getIdUser().toString().equals(userId.toString())) {
+                    fabDetalhesAnuncio.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //TODO: Botão de Eliminar Anúncio.
+                        }
+                    });
+                }
+
+                else {
+                    fabDetalhesAnuncio.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(getApplicationContext(), EnviarPropostaActivity.class);
+                            intent.putExtra(ID_ANUNCIO, anuncio.getId());
+                            intent.putExtra(TITULO_ANUNCIO, anuncio.getTitulo());
+                            startActivity(intent);
+                        }
+                    });
+                }
+
+                SingletonAnuncios.getInstance(this).setCategoriasListener(this);
+                SingletonAnuncios.getInstance(this).getCategoriasAnuncio(anuncioId, "Oferecer", this);
+                SingletonAnuncios.getInstance(this).getCategoriasAnuncio(anuncioId, "Receber", this);
+            }
         }
-*/
-        SingletonAnuncios.getInstance(this).getCategoriasAnuncio(idAnuncioTemp, "Oferecer");
-        SingletonAnuncios.getInstance(this).getCategoriasAnuncio(idAnuncioTemp, "Receber");
     }
 
     @Override
-    public void onObterCategoria(Categoria categoria, String tipo, String lista)
-    {
+    public void onObterCategoria(Categoria categoria, String tipo, String lista) {
+
         ArrayList<String> listLabels = new ArrayList<>();
         ArrayList<String> listValores = new ArrayList<>();
 
@@ -219,31 +244,5 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Anunci
         }else{
             lvPor.setAdapter(adapter);
         }
-    }
-
-    @Override
-    public void onSuccessAnunciosAPI(Anuncio anuncio)
-    {
-        if (anuncio != null)
-        {
-            titulo.setText(anuncio.getTitulo());
-            dataCriacao.setText(anuncio.getDataCriacao());
-            if (anuncio.getDataConclusao() == null) {
-                dataConclusao.setText("ATIVO");
-            } else {
-                dataConclusao.setText(anuncio.getDataConclusao());
-            }
-        }
-
-    }
-
-    @Override
-    public void onErrorAnunciosAPI(String message, Exception ex) {
-
-    }
-
-    @Override
-    public void onRefreshAnuncios(ArrayList<Anuncio> anuncios) {
-
     }
 }

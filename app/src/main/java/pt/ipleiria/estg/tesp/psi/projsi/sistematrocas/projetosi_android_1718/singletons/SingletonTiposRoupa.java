@@ -1,7 +1,6 @@
 package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons;
 
 import android.content.Context;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
@@ -9,7 +8,6 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.helpers.TipoRoupaBDTable;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.TiposRoupaListener;
@@ -21,7 +19,6 @@ import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.par
  */
 
 public class SingletonTiposRoupa {
-    private Context context;
     private static SingletonTiposRoupa INSTANCE = null;
     private ArrayList<TipoRoupa> tiposRoupa;
     private TipoRoupaBDTable bdTable;
@@ -36,24 +33,23 @@ public class SingletonTiposRoupa {
     }
 
     private SingletonTiposRoupa(Context context) {
-        this.context = context;
         tiposRoupa = new ArrayList<>();
         bdTable = new TipoRoupaBDTable(context);
         tiposRoupa = bdTable.select();
-        getTiposRoupaAPI();
+        getTiposRoupaAPI(context);
     }
 
-    private void getTiposRoupaAPI() {
+    private void getTiposRoupaAPI(final Context context) {
 
         if (tiposRoupa.isEmpty()) {
 
-            if (SingletonAPIManager.getInstance(context).ligadoInternet()) {
+            if (SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
 
-                JsonArrayRequest tiposAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("categorias/tipos", new SingletonAPIManager.APIJsonArrayResposta() {
+                JsonArrayRequest tiposAPI = SingletonAPIManager.getInstance(context).pedirVariosAPI("categorias/tipos", context, new SingletonAPIManager.APIJsonArrayResposta() {
                     @Override
                     public void Sucesso(JSONArray resultados) {
                         tiposRoupa = TiposRoupaParser.paraObjeto(resultados, context);
-                        adicionarTiposRoupaBD(tiposRoupa);
+                        adicionarTiposRoupaLocal(tiposRoupa);
 
                         if (tiposRoupaListener != null)
                             tiposRoupaListener.onRefreshTiposRoupa(tiposRoupa, context);
@@ -66,12 +62,12 @@ public class SingletonTiposRoupa {
                     }
                 });
 
-                SingletonAPIManager.getInstance(context).getRequestQueue().add(tiposAPI);
+                SingletonAPIManager.getInstance(context).getRequestQueue(context).add(tiposAPI);
             }
         }
     }
 
-    private void adicionarTiposRoupaBD(ArrayList<TipoRoupa> tiposRoupa) {
+    private void adicionarTiposRoupaLocal(ArrayList<TipoRoupa> tiposRoupa) {
         for (TipoRoupa tipoRoupa : tiposRoupa) {
             bdTable.insert(tipoRoupa);
         }
@@ -85,17 +81,17 @@ public class SingletonTiposRoupa {
         this.tiposRoupa = tiposRoupa;
     }
 
-    public boolean adicionarTipo(TipoRoupa tipo) {
+    public boolean adicionarTipoRoupaLocal(TipoRoupa tipo) {
         TipoRoupa tipoRoupaInserido = bdTable.insert(tipo);
 
         return tipoRoupaInserido != null && tiposRoupa.add(tipoRoupaInserido);
     }
 
-    public boolean removerTipo(TipoRoupa tipo) {
+    public boolean removerTipoRoupaLocal(TipoRoupa tipo) {
         return bdTable.delete(tipo.getId()) && tiposRoupa.remove(tipo);
     }
 
-    public boolean editarTipo(TipoRoupa tipo) {
+    public boolean editarTipoRoupaLocal(TipoRoupa tipo) {
         if(bdTable.update(tipo)) {
             TipoRoupa novoTipo = tiposRoupa.set(tipo.getId().intValue(), tipo);
 
@@ -105,12 +101,9 @@ public class SingletonTiposRoupa {
         }
     }
 
-    public TipoRoupa pesquisarTipoRoupaID(Long id)
-    {
-        for (TipoRoupa tipo : tiposRoupa)
-        {
-            if (tipo.getId().toString().equals(id.toString()))
-            {
+    public TipoRoupa pesquisarTipoRoupaID(Long id) {
+        for (TipoRoupa tipo : tiposRoupa) {
+            if (tipo.getId().toString().equals(id.toString())) {
                 return tipo;
             }
         }

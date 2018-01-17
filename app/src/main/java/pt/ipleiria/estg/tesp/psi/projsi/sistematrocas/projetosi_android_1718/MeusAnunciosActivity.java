@@ -2,11 +2,11 @@ package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -16,8 +16,6 @@ import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.mod
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonAnuncios;
 
 public class MeusAnunciosActivity extends NavDrawerActivity implements AnunciosListener{
-
-    private AnunciosAdapter anunciosAdapter;
 
     private ListView listaAnuncios;
 
@@ -30,14 +28,29 @@ public class MeusAnunciosActivity extends NavDrawerActivity implements AnunciosL
         listaAnuncios = findViewById(R.id.listMeusAnuncios);
 
         SingletonAnuncios.getInstance(this).setAnunciosListener(this);
-        SingletonAnuncios.getInstance(this).getAnunciosUser();
+        SingletonAnuncios.getInstance(this).getAnunciosUser(this);
 
-        listaAnuncios.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listaAnuncios.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //TODO: Intent para os detalhes do anúncio.
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Anuncio anuncio = (Anuncio) parent.getItemAtPosition(position);
+                Intent intent = new Intent(getApplicationContext(), DetalhesAnuncioActivity.class);
+                intent.putExtra(DetalhesAnuncioActivity.ID_ANUNCIO, anuncio.getId());
+                startActivity(intent);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
+    }
+
+    private void showNotification(String message) {
+        Snackbar snackbar = Snackbar
+                .make(findViewById(R.id.coordinatorLayoutMeusAnuncios), message, Snackbar.LENGTH_LONG);
+
+        snackbar.show();
     }
 
     public void onClickCriarAnuncio(View view) {
@@ -53,12 +66,12 @@ public class MeusAnunciosActivity extends NavDrawerActivity implements AnunciosL
     @Override
     public void onErrorAnunciosAPI(String message, Exception ex) {
         ex.printStackTrace();
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+        showNotification(message);
     }
 
     @Override
     public void onRefreshAnuncios(ArrayList<Anuncio> anuncios) {
-        anunciosAdapter = new AnunciosAdapter(this, anuncios);
+        AnunciosAdapter anunciosAdapter = new AnunciosAdapter(this, anuncios);
         listaAnuncios.setAdapter(anunciosAdapter);
         anunciosAdapter.refresh(anuncios);
     }
