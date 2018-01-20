@@ -31,9 +31,6 @@ import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.sin
 
 public class DetalhesAnuncioActivity extends NavDrawerActivity implements CategoriasListener{
 
-    private ListView lvTroco;
-    private ListView lvPor;
-
     private Anuncio anuncio;
 
     public static final String ID_ANUNCIO = "ID";
@@ -45,12 +42,11 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Catego
         super.onCreate(savedInstanceState);
         View.inflate(this, R.layout.activity_detalhes_anuncio, (ViewGroup) findViewById(R.id.app_content));
 
-        TextView titulo = findViewById(R.id.txtDetalhesTitulo);
-        TextView dataCriacao = findViewById(R.id.txtDetalhesDataCriacao);
-        TextView dataConclusao = findViewById(R.id.txtDetalhesDataConclusao);
+        TextView titulo = findViewById(R.id.textViewDetalhesAnuncioTituloAnuncio);
+        TextView dataCriacao = findViewById(R.id.textViewDetalhesAnuncioDataCriacao);
 
-        lvTroco = findViewById(R.id.lvDetalhesTroco);
-        lvPor = findViewById(R.id.lvDetalhesPor);
+        TextView textViewConcluido = findViewById(R.id.textViewDetalhesAnuncioConcluido);
+        TextView dataConclusao = findViewById(R.id.textViewDetalhesAnuncioDataConclusao);
 
         if(getIntent().hasExtra(ID_ANUNCIO)) {
 
@@ -59,23 +55,23 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Catego
 
             if (anuncio != null) {
 
+                SharedPreferences preferences = getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
+                Long userId = preferences.getLong("id", 0);
+
                 titulo.setText(anuncio.getTitulo());
                 dataCriacao.setText(anuncio.getDataCriacao());
 
                 if (anuncio.getDataConclusao() == null) {
-                    dataConclusao.setText(anuncio.getEstado());
+                    dataConclusao.setEnabled(false);
+                    textViewConcluido.setEnabled(false);
                 } else {
                     dataConclusao.setText(anuncio.getDataConclusao());
                 }
 
                 FloatingActionButton fabDetalhesAnuncio = findViewById(R.id.fabDetalhesAnuncio);
 
-                SharedPreferences preferences = getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
-                Long userId = preferences.getLong("id", 0);
-
                 if (anuncio.getIdUser().toString().equals(userId.toString())) {
-                    //TODO: Mudança da cor para Vermelho não está a funcionar.
-                    fabDetalhesAnuncio.setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
+                    fabDetalhesAnuncio.setBackgroundResource(android.R.color.holo_red_dark);
                     fabDetalhesAnuncio.setImageResource(android.R.drawable.ic_menu_delete);
 
                     fabDetalhesAnuncio.setOnClickListener(new View.OnClickListener() {
@@ -109,7 +105,7 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Catego
     }
 
     @Override
-    public void onObterCategoria(Categoria categoria, String tipo, String lista) {
+    public void onObterCategoria(Categoria categoria, String tipo, String tipoBem) {
 
         ArrayList<String> listLabels = new ArrayList<>();
         ArrayList<String> listValores = new ArrayList<>();
@@ -117,30 +113,32 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Catego
         switch (tipo)
         {
             case "Brinquedos":
+
                 Brinquedo brinquedo = (Brinquedo) categoria;
-                //labels
+
                 listLabels.add("Nome");
                 listLabels.add("Editora");
                 listLabels.add("Faixa Etária");
                 listLabels.add("Descrição");
 
-                //Valores
                 listValores.add(brinquedo.getNome());
                 listValores.add(brinquedo.getEditora());
                 listValores.add(brinquedo.getFaixaEtaria().toString());
                 listValores.add(brinquedo.getDescricao());
+
                 break;
+
             case "Jogos":
+
                 Jogo jogo = (Jogo) categoria;
 
-                //labels
                 listLabels.add("Nome");
                 listLabels.add("Editora");
                 listLabels.add("Faixa Etária");
                 listLabels.add("Descrição");
                 listLabels.add("Género");
                 listLabels.add("Produtora");
-                //Valores
+
                 listValores.add(jogo.getNome());
                 listValores.add(jogo.getEditora());
                 listValores.add(jogo.getFaixaEtaria().toString());
@@ -153,23 +151,27 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Catego
                 }
 
                 listValores.add(jogo.getProdutora());
+
                 break;
+
             case "Eletrónica":
+
                 Eletronica eletronica = (Eletronica) categoria;
 
-                //labels
                 listLabels.add("Nome");
                 listLabels.add("Descrição");
                 listLabels.add("Marca");
-                //Valores
+
                 listValores.add(eletronica.getNome());
                 listValores.add(eletronica.getDescricao());
                 listValores.add(eletronica.getMarca());
+
                 break;
+
             case "Computadores":
+
                 Computador computador = (Computador) categoria;
 
-                //labels
                 listLabels.add("Nome");
                 listLabels.add("Descrição");
                 listLabels.add("Marca");
@@ -179,7 +181,7 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Catego
                 listLabels.add("Placa Gráfica");
                 listLabels.add("Sistema Operativo");
                 listLabels.add("Portátil?");
-                //Valores
+
                 listValores.add(computador.getNome());
                 listValores.add(computador.getDescricao());
                 listValores.add(computador.getMarca());
@@ -189,17 +191,18 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Catego
                 listValores.add(computador.getGpu());
                 listValores.add(computador.getOs());
 
-                if (computador.getPortatil() == 0)
-                {
+                if (computador.getPortatil() == 0) {
                     listValores.add("Não");
-                }else{
+                } else {
                     listValores.add("Sim");
                 }
+
                 break;
+
             case "Smartphones":
+
                 Smartphone smartphone = (Smartphone) categoria;
 
-                //labels
                 listLabels.add("Nome");
                 listLabels.add("Descrição");
                 listLabels.add("Marca");
@@ -208,7 +211,7 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Catego
                 listLabels.add("Disco Rígido");
                 listLabels.add("Sistema Operativo");
                 listLabels.add("Tamanho");
-                //Valores
+
                 listValores.add(smartphone.getNome());
                 listValores.add(smartphone.getDescricao());
                 listValores.add(smartphone.getMarca());
@@ -217,32 +220,36 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Catego
                 listValores.add(smartphone.getHdd());
                 listValores.add(smartphone.getOs());
                 listValores.add(smartphone.getTamanho());
+
                 break;
+
             case "Livros":
+
                 Livro livro = (Livro) categoria;
 
-                //labels
                 listLabels.add("Nome");
                 listLabels.add("Título");
                 listLabels.add("Editora");
                 listLabels.add("Autor");
                 listLabels.add("ISBN");
-                //Valores
+
                 listValores.add(livro.getNome());
                 listValores.add(livro.getTitulo());
                 listValores.add(livro.getEditora());
                 listValores.add(livro.getAutor());
                 listValores.add(livro.getIsbn().toString());
+
                 break;
+
             case "Roupa":
+
                 Roupa roupa = (Roupa) categoria;
 
-                //labels
                 listLabels.add("Nome");
                 listLabels.add("Marca");
                 listLabels.add("Tamanho");
                 listLabels.add("Tipo");
-                //Valores
+
                 listValores.add(roupa.getNome());
                 listValores.add(roupa.getMarca());
                 listValores.add(roupa.getTamanho());
@@ -257,13 +264,14 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Catego
                 break;
         }
 
-        CategoriasAdapter adapter = new CategoriasAdapter(listLabels, listValores, this);
+        //CategoriasAdapter adapter = new CategoriasAdapter(listLabels, listValores, this);
 
-        if (lista.equals("Oferecer"))
-        {
-            lvTroco.setAdapter(adapter);
-        }else{
-            lvPor.setAdapter(adapter);
+        if (tipoBem.equals("Oferecer")) {
+
+        }
+
+        else if(tipoBem.equals("Receber")) {
+
         }
     }
 }

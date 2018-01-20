@@ -1,4 +1,4 @@
-package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms;
+package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.fragments;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.R;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Smartphone;
@@ -11,14 +11,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Spinner;
 
 /**
  * Created by JAPorelo on 16-12-2017.
- * Project ProjetoSI_Android_1718 - pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms
+ * Project ProjetoSI_Android_1718 - pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.fragments
  */
 
-public class SmartphonesFragment extends Fragment {
+public class SmartphonesFormFragment extends Fragment {
 
     private TextInputEditText textInputEditTextMarcaSmartphones;
     private EditText editTextDescricaoSmartphones;
@@ -28,14 +27,14 @@ public class SmartphonesFragment extends Fragment {
     private TextInputEditText textInputEditTextOSSmartphones;
     private TextInputEditText textInputEditTextTamanhoSmartphones;
 
-    public SmartphonesFragment() {
+    public SmartphonesFormFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_smartphones, container, false);
+        return inflater.inflate(R.layout.fragment_smartphones_form, container, false);
     }
 
     @Override

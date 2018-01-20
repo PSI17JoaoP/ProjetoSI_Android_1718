@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms.FormManager;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.fragments.MyFragmentManager;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.AnunciosListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Anuncio;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Categoria;
@@ -39,7 +39,7 @@ import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.sin
 public class CriarAnuncioActivity extends NavDrawerActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener, AnunciosListener {
 
     private HashMap<Integer, String> categoriasHashMap;
-
+    private FragmentManager fragmentManager;
     private Anuncio anuncio;
 
     @SuppressLint("UseSparseArrays")
@@ -62,6 +62,8 @@ public class CriarAnuncioActivity extends NavDrawerActivity implements AdapterVi
         ArrayAdapter<CharSequence> spinnerCategorias = new ArrayAdapter<CharSequence>(this,
                 R.layout.custom_spinner_item,
                 categoriasValues);
+
+        fragmentManager = getSupportFragmentManager();
 
         //---------------------------------Dropdowns (Spinners)---------------------------
         Spinner dropDownCategoriasTroco = findViewById(R.id.dropDownCategoriasTroco);
@@ -132,28 +134,24 @@ public class CriarAnuncioActivity extends NavDrawerActivity implements AdapterVi
 
     private void printForm(Integer position, @IdRes int containerId) {
 
-        FormManager formManager = new FormManager();
-
-        FragmentManager manager = getSupportFragmentManager();
-
         if(position > 0) {
 
             String categoria = categoriasHashMap.get(position);
 
             try {
 
-                Fragment form = formManager.selectForm(categoria, getResources().getStringArray(R.array.categorias_keys),
+                Fragment form = MyFragmentManager.getFragment(categoria, "Form", getResources().getStringArray(R.array.categorias_keys),
                         getApplicationContext());
 
                 if (form != null) {
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
 
                     FrameLayout fragmentContainer = findViewById(containerId);
 
                     if (fragmentContainer.getChildCount() == 0) {
                         transaction.add(containerId, form, categoria).commit();
                     } else {
-                        if (manager.findFragmentByTag(categoria) == null) {
+                        if (fragmentManager.findFragmentByTag(categoria) == null) {
                             transaction.replace(containerId, form, categoria).commit();
                         }
                     }
@@ -165,12 +163,12 @@ public class CriarAnuncioActivity extends NavDrawerActivity implements AdapterVi
             }
         } else {
 
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
 
             FrameLayout fragmentContainer = findViewById(containerId);
 
             if (fragmentContainer.getChildCount() != 0) {
-                Fragment fragment = manager.findFragmentById(containerId);
+                Fragment fragment = fragmentManager.findFragmentById(containerId);
 
                 if(fragment != null) {
                     transaction.remove(fragment).commit();
@@ -199,16 +197,13 @@ public class CriarAnuncioActivity extends NavDrawerActivity implements AdapterVi
         String nomeCategoriaTroco = editTextNomeCategoriaTroco.getText().toString().trim();
         String nomeCategoriaPor = editTextNomeCategoriaPor.getText().toString().trim();
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
         if(!anuncioTitulo.isEmpty()) {
 
             if(!nomeCategoriaTroco.isEmpty() && fragmentContainerFormTroco.getChildCount() != 0) {
 
                 if (!nomeCategoriaPor.isEmpty() && fragmentContainerFormPor.getChildCount() != 0) {
 
-                    criarAnuncio(fragmentManager, anuncioTitulo,
-                            R.id.fragmentFormCategoriaTroco, nomeCategoriaTroco, dropDownCategoriasTroco.getSelectedItemPosition(), numberPickerCategoriaTroco.getValue(),
+                    criarAnuncio(anuncioTitulo,  R.id.fragmentFormCategoriaTroco, nomeCategoriaTroco, dropDownCategoriasTroco.getSelectedItemPosition(), numberPickerCategoriaTroco.getValue(),
                             R.id.fragmentFormCategoriaPor, nomeCategoriaPor, dropDownCategoriasPor.getSelectedItemPosition(), numberPickerCategoriaPor.getValue());
                 }
 
@@ -221,8 +216,7 @@ public class CriarAnuncioActivity extends NavDrawerActivity implements AdapterVi
                 }
 
                 else {
-                    criarAnuncio(fragmentManager, anuncioTitulo,
-                            R.id.fragmentFormCategoriaTroco, nomeCategoriaTroco, dropDownCategoriasTroco.getSelectedItemPosition(), numberPickerCategoriaTroco.getValue(),
+                    criarAnuncio(anuncioTitulo, R.id.fragmentFormCategoriaTroco, nomeCategoriaTroco, dropDownCategoriasTroco.getSelectedItemPosition(), numberPickerCategoriaTroco.getValue(),
                             null, null, null, null);
                 }
             }
@@ -242,29 +236,25 @@ public class CriarAnuncioActivity extends NavDrawerActivity implements AdapterVi
     }
 
     //Método que obtém o anúncio, juntamente com as categorias que obtém dos fragmentos, e regista-o na BD e API.
-    private void criarAnuncio(@NonNull FragmentManager fragmentManager, @NonNull String anuncioTitulo,
-                                @IdRes @NonNull Integer containerIdFormTroco, @NonNull String nomeCategoriaTroco, @NonNull Integer categoriaTrocoKeyPosition, @NonNull Integer quantidadeCategoriaTroco,
+    private void criarAnuncio(@NonNull String anuncioTitulo, @IdRes @NonNull Integer containerIdFormTroco, @NonNull String nomeCategoriaTroco, @NonNull Integer categoriaTrocoKeyPosition, @NonNull Integer quantidadeCategoriaTroco,
                                 @IdRes @Nullable Integer containerIdFormPor, @Nullable String nomeCategoriaPor, @Nullable Integer categoriaPorKeyPosition, @Nullable Integer quantidadeCategoriaPor) {
 
-        FormManager formManager = new FormManager();
-
         if(containerIdFormPor != null && nomeCategoriaPor != null && quantidadeCategoriaPor != null && categoriaPorKeyPosition != null) {
-            Categoria categoriaTroco = getCategoria(fragmentManager, formManager, containerIdFormTroco, nomeCategoriaTroco, categoriaTrocoKeyPosition);
-            Categoria categoriaPor = getCategoria(fragmentManager, formManager, containerIdFormPor, nomeCategoriaPor, categoriaPorKeyPosition);
+            Categoria categoriaTroco = getCategoria(containerIdFormTroco, nomeCategoriaTroco, categoriaTrocoKeyPosition);
+            Categoria categoriaPor = getCategoria(containerIdFormPor, nomeCategoriaPor, categoriaPorKeyPosition);
 
             getCategoriaTroco(anuncioTitulo, categoriaTroco, quantidadeCategoriaTroco, categoriaPor, quantidadeCategoriaPor);
         }
 
         else if(containerIdFormPor == null && nomeCategoriaPor == null && quantidadeCategoriaPor == null) {
-            Categoria categoriaTroco = getCategoria(fragmentManager, formManager, containerIdFormTroco, nomeCategoriaTroco, categoriaTrocoKeyPosition);
+            Categoria categoriaTroco = getCategoria(containerIdFormTroco, nomeCategoriaTroco, categoriaTrocoKeyPosition);
 
             getCategoriaTroco(anuncioTitulo, categoriaTroco, quantidadeCategoriaTroco, null, null);
         }
     }
 
-    //Método que obtém a categoria do fragment, através do método getCategoria do objeto do tipo FormManager.
-    private Categoria getCategoria(@NonNull FragmentManager fragmentManager, @NonNull FormManager formManager,
-                                   @IdRes @NonNull Integer containerIdForm, @NonNull String nomeCategoria, @NonNull Integer categoriaKeyPosition) {
+    //Método que obtém a categoria do fragment, através do método getCategoria da classe MyFragmentManager.
+    private Categoria getCategoria(@IdRes @NonNull Integer containerIdForm, @NonNull String nomeCategoria, @NonNull Integer categoriaKeyPosition) {
 
         Categoria categoria = null;
 
@@ -273,7 +263,7 @@ public class CriarAnuncioActivity extends NavDrawerActivity implements AdapterVi
         String categoriaKey = categoriasHashMap.get(categoriaKeyPosition);
 
         try {
-            categoria = formManager.getCategoria(fragmentForm, getResources().getStringArray(R.array.categorias_keys), categoriaKey, nomeCategoria, getApplicationContext());
+            categoria = MyFragmentManager.getCategoria(fragmentForm, getResources().getStringArray(R.array.categorias_keys), categoriaKey, nomeCategoria, getApplicationContext());
         }
         catch (RuntimeException ex) {
             showNotification(ex.getMessage());

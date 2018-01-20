@@ -1,4 +1,4 @@
-package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms;
+package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.fragments;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.R;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Brinquedo;
@@ -14,23 +14,23 @@ import android.widget.EditText;
 
 /**
  * Created by JAPorelo on 16-12-2017.
- * Project ProjetoSI_Android_1718 - pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms
+ * Project ProjetoSI_Android_1718 - pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.fragments
  */
 
-public class BrinquedosFragment extends Fragment {
+public class BrinquedosFormFragment extends Fragment {
 
     private TextInputEditText textInputEditTextEditoraBrinquedos;
     private EditText editTextFaixaEtariaBrinquedos;
     private EditText editTextDescricaoBrinquedos;
 
-    public BrinquedosFragment() {
+    public BrinquedosFormFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_brinquedos, container, false);
+        return inflater.inflate(R.layout.fragment_brinquedos_form, container, false);
     }
 
     @Override

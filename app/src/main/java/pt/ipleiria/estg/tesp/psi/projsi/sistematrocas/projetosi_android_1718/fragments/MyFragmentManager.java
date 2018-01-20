@@ -1,8 +1,7 @@
-package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms;
+package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.fragments;
 
 import android.support.v4.app.Fragment;
 import android.content.Context;
-import android.support.v4.app.FragmentManager;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -10,18 +9,18 @@ import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.mod
 
 /**
  * Created by JAPorelo on 22-12-2017.
- * Project ProjetoSI_Android_1718 - pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms
+ * Project ProjetoSI_Android_1718 - pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.fragments
  */
 
-public class FormManager {
+public class MyFragmentManager {
 
-    private static final String PACKAGE_PATH = "pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms.";
+    private static final String PACKAGE_PATH = "pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.fragments.";
 
-    public Fragment selectForm(String categoriaForm, String[] categorias, Context context) throws ClassNotFoundException {
+    public static Fragment getFragment(String categoriaFragment, String tipoFragment, String[] categorias, Context context) throws ClassNotFoundException {
 
         for (String categoriaNome : categorias) {
-            if (categoriaForm.equals(categoriaNome)) {
-                if (Class.forName(PACKAGE_PATH + categoriaNome + "Fragment") != null) {
+            if (categoriaFragment.equals(categoriaNome)) {
+                if (Class.forName(PACKAGE_PATH + categoriaNome + tipoFragment + "Fragment") != null) {
                     return Fragment.instantiate(context, (PACKAGE_PATH + categoriaNome + "Fragment"));
                 }
             }
@@ -30,7 +29,7 @@ public class FormManager {
         return null;
     }
 
-    public Categoria getCategoria(Fragment fragmentForm, String[] categoriasForm, String categoriaKey, String nomeCategoria, Context context)
+    public static Categoria getCategoria(Fragment fragmentForm, String[] categoriasForm, String categoriaKey, String nomeCategoria, Context context)
             throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, NumberFormatException {
 
         for (String categoriaForm : categoriasForm) {

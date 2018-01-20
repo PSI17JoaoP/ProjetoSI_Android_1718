@@ -1,4 +1,4 @@
-package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms;
+package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.fragments;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.R;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.TiposRoupaListener;
@@ -18,30 +18,28 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 /**
  * Created by JAPorelo on 16-12-2017.
- * Project ProjetoSI_Android_1718 - pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms
+ * Project ProjetoSI_Android_1718 - pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.fragments
  */
 
 
-public class RoupaFragment extends Fragment implements TiposRoupaListener {
+public class RoupaFormFragment extends Fragment implements TiposRoupaListener {
 
     private TextInputEditText textInputEditTextMarcaRoupa;
     private TextInputEditText textInputEditTextTamanhoRoupa;
     private Spinner spinnerTipoRoupa;
 
-    public RoupaFragment() {
+    public RoupaFormFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_roupa, container, false);
+        return inflater.inflate(R.layout.fragment_roupa_form, container, false);
     }
 
     @Override

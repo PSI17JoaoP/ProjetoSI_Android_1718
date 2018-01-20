@@ -106,125 +106,124 @@ public class SingletonAnuncios {
 
     public void getCategoriasAnuncio(Long id, final String tipo, final Context context) {
 
-        JsonObjectRequest pedido = SingletonAPIManager.getInstance(context).pedirAPI("anuncios/" + id + "/categoria"+tipo, context, new SingletonAPIManager.APIJsonResposta() {
-            @Override
-            public void Sucesso(JSONObject resultado)
-            {
-                try {
-                    JSONObject categorias = resultado.getJSONObject("Categorias");
+        if (SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
 
-                    String tipoCategoria = resultado.getString("Flag");
+            JsonObjectRequest pedido = SingletonAPIManager.getInstance(context).pedirAPI("anuncios/" + id + "/categoria" + tipo, context, new SingletonAPIManager.APIJsonResposta() {
+                @Override
+                public void Sucesso(JSONObject resultado) {
+                    try {
+                        JSONObject categorias = resultado.getJSONObject("Categorias");
 
-                    JSONObject base = categorias.getJSONObject("Base");
-                    JSONArray filha = categorias.getJSONArray("Filhas");
+                        String tipoCategoria = resultado.getString("Flag");
 
-                    Categoria categoriaBase = CategoriasParser.paraObjeto(base, context);
+                        JSONObject base = categorias.getJSONObject("Base");
+                        JSONArray filha = categorias.getJSONArray("Filhas");
 
-                    JSONObject cat = new JSONObject();
+                        JSONObject cat = new JSONObject();
 
-                    switch (tipoCategoria)
-                    {
-                        case "Brinquedos":
-                            cat.put("id", base.get("id"));
-                            cat.put("nome", base.get("nome"));
-                            cat.put("editora", filha.getJSONObject(0).get("editora"));
-                            cat.put("faixa_etaria", filha.getJSONObject(0).get("faixa_etaria"));
-                            cat.put("descricao", filha.getJSONObject(0).get("descricao"));
+                        switch (tipoCategoria) {
+                            case "Brinquedos":
+                                cat.put("id", base.get("id"));
+                                cat.put("nome", base.get("nome"));
+                                cat.put("editora", filha.getJSONObject(0).get("editora"));
+                                cat.put("faixa_etaria", filha.getJSONObject(0).get("faixa_etaria"));
+                                cat.put("descricao", filha.getJSONObject(0).get("descricao"));
 
-                            Brinquedo categoriaB = BrinquedosParser.paraObjeto(cat, context);
-                            categoriasListener.onObterCategoria(categoriaB, tipoCategoria, tipo);
-                            break;
-                        case "Jogos":
-                            cat.put("id", base.get("id"));
-                            cat.put("nome", base.get("nome"));
-                            cat.put("editora", filha.getJSONObject(0).get("editora"));
-                            cat.put("faixa_etaria", filha.getJSONObject(0).get("faixa_etaria"));
-                            cat.put("descricao", filha.getJSONObject(0).get("descricao"));
-                            cat.put("id_genero", filha.getJSONObject(1).get("id_genero"));
-                            cat.put("produtora", filha.getJSONObject(1).get("produtora"));
+                                Brinquedo categoriaB = BrinquedosParser.paraObjeto(cat, context);
+                                categoriasListener.onObterCategoria(categoriaB, tipoCategoria, tipo);
+                                break;
+                            case "Jogos":
+                                cat.put("id", base.get("id"));
+                                cat.put("nome", base.get("nome"));
+                                cat.put("editora", filha.getJSONObject(0).get("editora"));
+                                cat.put("faixa_etaria", filha.getJSONObject(0).get("faixa_etaria"));
+                                cat.put("descricao", filha.getJSONObject(0).get("descricao"));
+                                cat.put("id_genero", filha.getJSONObject(1).get("id_genero"));
+                                cat.put("produtora", filha.getJSONObject(1).get("produtora"));
 
-                            Jogo categoriaJ = JogosParser.paraObjeto(cat, context);
-                            categoriasListener.onObterCategoria(categoriaJ, tipoCategoria, tipo);
-                            break;
-                        case "Eletrónica":
-                            cat.put("id", base.get("id"));
-                            cat.put("nome", base.get("nome"));
-                            cat.put("descricao", filha.getJSONObject(0).get("descricao"));
-                            cat.put("marca", filha.getJSONObject(0).get("marca"));
+                                Jogo categoriaJ = JogosParser.paraObjeto(cat, context);
+                                categoriasListener.onObterCategoria(categoriaJ, tipoCategoria, tipo);
+                                break;
+                            case "Eletrónica":
+                                cat.put("id", base.get("id"));
+                                cat.put("nome", base.get("nome"));
+                                cat.put("descricao", filha.getJSONObject(0).get("descricao"));
+                                cat.put("marca", filha.getJSONObject(0).get("marca"));
 
-                            Eletronica categoriaE = EletronicaParser.paraObjeto(cat, context);
-                            categoriasListener.onObterCategoria(categoriaE, tipoCategoria, tipo);
-                            break;
-                        case "Computadores":
-                            cat.put("id", base.get("id"));
-                            cat.put("nome", base.get("nome"));
-                            cat.put("descricao", filha.getJSONObject(0).get("descricao"));
-                            cat.put("marca", filha.getJSONObject(0).get("marca"));
-                            cat.put("processador", filha.getJSONObject(1).get("processador"));
-                            cat.put("ram", filha.getJSONObject(1).get("ram"));
-                            cat.put("hdd", filha.getJSONObject(1).get("hdd"));
-                            cat.put("gpu", filha.getJSONObject(1).get("gpu"));
-                            cat.put("os", filha.getJSONObject(1).get("os"));
-                            cat.put("portatil", filha.getJSONObject(1).get("portatil"));
+                                Eletronica categoriaE = EletronicaParser.paraObjeto(cat, context);
+                                categoriasListener.onObterCategoria(categoriaE, tipoCategoria, tipo);
+                                break;
+                            case "Computadores":
+                                cat.put("id", base.get("id"));
+                                cat.put("nome", base.get("nome"));
+                                cat.put("descricao", filha.getJSONObject(0).get("descricao"));
+                                cat.put("marca", filha.getJSONObject(0).get("marca"));
+                                cat.put("processador", filha.getJSONObject(1).get("processador"));
+                                cat.put("ram", filha.getJSONObject(1).get("ram"));
+                                cat.put("hdd", filha.getJSONObject(1).get("hdd"));
+                                cat.put("gpu", filha.getJSONObject(1).get("gpu"));
+                                cat.put("os", filha.getJSONObject(1).get("os"));
+                                cat.put("portatil", filha.getJSONObject(1).get("portatil"));
 
-                            Computador categoriaC = ComputadoresParser.paraObjeto(cat, context);
-                            categoriasListener.onObterCategoria(categoriaC, tipoCategoria, tipo);
-                            break;
-                        case "Smartphones":
-                            cat.put("id", base.get("id"));
-                            cat.put("nome", base.get("nome"));
-                            cat.put("descricao", filha.getJSONObject(0).get("descricao"));
-                            cat.put("marca", filha.getJSONObject(0).get("marca"));
-                            cat.put("processador", filha.getJSONObject(1).get("processador"));
-                            cat.put("ram", filha.getJSONObject(1).get("ram"));
-                            cat.put("hdd", filha.getJSONObject(1).get("hdd"));
-                            cat.put("os", filha.getJSONObject(1).get("os"));
-                            cat.put("tamanho", filha.getJSONObject(1).get("tamanho"));
+                                Computador categoriaC = ComputadoresParser.paraObjeto(cat, context);
+                                categoriasListener.onObterCategoria(categoriaC, tipoCategoria, tipo);
+                                break;
+                            case "Smartphones":
+                                cat.put("id", base.get("id"));
+                                cat.put("nome", base.get("nome"));
+                                cat.put("descricao", filha.getJSONObject(0).get("descricao"));
+                                cat.put("marca", filha.getJSONObject(0).get("marca"));
+                                cat.put("processador", filha.getJSONObject(1).get("processador"));
+                                cat.put("ram", filha.getJSONObject(1).get("ram"));
+                                cat.put("hdd", filha.getJSONObject(1).get("hdd"));
+                                cat.put("os", filha.getJSONObject(1).get("os"));
+                                cat.put("tamanho", filha.getJSONObject(1).get("tamanho"));
 
-                            Smartphone categoriaS = SmartphonesParser.paraObjeto(cat, context);
-                            categoriasListener.onObterCategoria(categoriaS, tipoCategoria, tipo);
-                            break;
-                        case "Livros":
-                            cat.put("id", base.get("id"));
-                            cat.put("nome", base.get("nome"));
-                            cat.put("titulo", filha.getJSONObject(0).get("titulo"));
-                            cat.put("editora", filha.getJSONObject(0).get("editora"));
-                            cat.put("autor", filha.getJSONObject(0).get("autor"));
-                            cat.put("isbn", filha.getJSONObject(0).get("isbn"));
+                                Smartphone categoriaS = SmartphonesParser.paraObjeto(cat, context);
+                                categoriasListener.onObterCategoria(categoriaS, tipoCategoria, tipo);
+                                break;
+                            case "Livros":
+                                cat.put("id", base.get("id"));
+                                cat.put("nome", base.get("nome"));
+                                cat.put("titulo", filha.getJSONObject(0).get("titulo"));
+                                cat.put("editora", filha.getJSONObject(0).get("editora"));
+                                cat.put("autor", filha.getJSONObject(0).get("autor"));
+                                cat.put("isbn", filha.getJSONObject(0).get("isbn"));
 
-                            Livro categoriaL = LivrosParser.paraObjeto(cat, context);
-                            categoriasListener.onObterCategoria(categoriaL, tipoCategoria, tipo);
-                            break;
-                        case "Roupa":
-                            cat.put("id", base.get("id"));
-                            cat.put("nome", base.get("nome"));
-                            cat.put("marca", filha.getJSONObject(0).get("marca"));
-                            cat.put("tamanho", filha.getJSONObject(0).get("tamanho"));
-                            cat.put("id_tipo", filha.getJSONObject(0).get("id_tipo"));
+                                Livro categoriaL = LivrosParser.paraObjeto(cat, context);
+                                categoriasListener.onObterCategoria(categoriaL, tipoCategoria, tipo);
+                                break;
+                            case "Roupa":
+                                cat.put("id", base.get("id"));
+                                cat.put("nome", base.get("nome"));
+                                cat.put("marca", filha.getJSONObject(0).get("marca"));
+                                cat.put("tamanho", filha.getJSONObject(0).get("tamanho"));
+                                cat.put("id_tipo", filha.getJSONObject(0).get("id_tipo"));
 
-                            Roupa categoriaR = RoupasParser.paraObjeto(cat, context);
-                            categoriasListener.onObterCategoria(categoriaR, tipoCategoria, tipo);
-                            break;
+                                Roupa categoriaR = RoupasParser.paraObjeto(cat, context);
+                                categoriasListener.onObterCategoria(categoriaR, tipoCategoria, tipo);
+                                break;
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
-            }
 
-            @Override
-            public void Erro(VolleyError erro) {
-                if (anunciosListener != null) {
-                    Integer code = 0;
+                @Override
+                public void Erro(VolleyError erro) {
+                    if (anunciosListener != null) {
+                        Integer code = 0;
 
-                    if (erro.networkResponse != null)
+                        if (erro.networkResponse != null)
                             code = erro.networkResponse.statusCode;
 
-                    anunciosListener.onErrorAnunciosAPI("Não foi possível obter os dados do bem do anúncio - " + code, erro);
+                        anunciosListener.onErrorAnunciosAPI("Não foi possível obter os dados do bem do anúncio - " + code, erro);
+                    }
                 }
-            }
-        });
+            });
 
-        SingletonAPIManager.getInstance(context).getRequestQueue(context).add(pedido);
+            SingletonAPIManager.getInstance(context).getRequestQueue(context).add(pedido);
+        }
     }
 
     public void getAnunciosUser(final Context context) {

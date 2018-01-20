@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms.RoupaFragment">
+    tools:context="pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.fragments.RoupaFormFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"

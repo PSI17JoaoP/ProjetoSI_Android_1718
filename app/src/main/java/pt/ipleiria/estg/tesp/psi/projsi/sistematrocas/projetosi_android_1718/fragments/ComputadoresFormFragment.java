@@ -1,4 +1,4 @@
-package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms;
+package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.fragments;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.R;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Computador;
@@ -14,14 +14,12 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import java.util.ArrayList;
-
 /**
  * Created by JAPorelo on 16-12-2017.
- * Project ProjetoSI_Android_1718 - pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms
+ * Project ProjetoSI_Android_1718 - pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.fragments
  */
 
-public class ComputadoresFragment extends Fragment {
+public class ComputadoresFormFragment extends Fragment {
 
     private TextInputEditText textInputEditTextMarcaComputadores;
     private EditText editTextDescricaoComputadores;
@@ -32,14 +30,14 @@ public class ComputadoresFragment extends Fragment {
     private TextInputEditText textInputEditTextOSComputadores;
     private Spinner spinnerPortatil;
 
-    public ComputadoresFragment() {
+    public ComputadoresFormFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_computadores, container, false);
+        return inflater.inflate(R.layout.fragment_computadores_form, container, false);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms;
+package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.fragments;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.R;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.GenerosJogosListener;
@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,10 +23,10 @@ import java.util.ArrayList;
 
 /**
  * Created by JAPorelo on 16-12-2017.
- * Project ProjetoSI_Android_1718 - pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms
+ * Project ProjetoSI_Android_1718 - pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.fragments
  */
 
-public class JogosFragment extends Fragment implements GenerosJogosListener {
+public class JogosFormFragment extends Fragment implements GenerosJogosListener {
 
     private EditText editTextFaixaEtariaJogos;
     private TextInputEditText textInputEditTextEditoraJogos;
@@ -35,14 +34,14 @@ public class JogosFragment extends Fragment implements GenerosJogosListener {
     private TextInputEditText textInputEditTextProdutoraJogos;
     private Spinner spinnerGeneroJogos;
 
-    public JogosFragment() {
+    public JogosFormFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_jogos, container, false);
+        return inflater.inflate(R.layout.fragment_jogos_form, container, false);
     }
 
     @Override

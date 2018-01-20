@@ -1,4 +1,4 @@
-package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms;
+package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.fragments;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.R;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Livro;
@@ -14,24 +14,24 @@ import android.widget.EditText;
 
 /**
  * Created by JAPorelo on 16-12-2017.
- * Project ProjetoSI_Android_1718 - pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms
+ * Project ProjetoSI_Android_1718 - pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.fragments
  */
 
-public class LivrosFragment extends Fragment {
+public class LivrosFormFragment extends Fragment {
 
     private TextInputEditText textInputEditTextTituloLivros;
     private TextInputEditText textInputEditTextEditoraLivros;
     private TextInputEditText textInputEditTextAutorLivros;
     private EditText editTextISBNLivros;
 
-    public LivrosFragment() {
+    public LivrosFormFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_livros, container, false);
+        return inflater.inflate(R.layout.fragment_livros_form, container, false);
     }
 
     @Override

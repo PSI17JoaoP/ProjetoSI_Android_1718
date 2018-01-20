@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms.SmartphonesFragment">
+    tools:context="pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.fragments.ComputadoresFormFragment">
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -10,7 +10,7 @@
         tools:ignore="UselessParent">
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/textInputLayoutMarcaSmartphones"
+            android:id="@+id/textInputLayoutMarcaComputadores"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -19,7 +19,7 @@
             android:layout_marginTop="10dp">
 
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/textInputEditTextMarcaSmartphones"
+                android:id="@+id/textInputEditTextMarcaComputadores"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/fragment_eletronica_marca" />
@@ -27,15 +27,15 @@
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/textInputLayoutDescricaoSmartphones"
+            android:id="@+id/textInputLayoutDescricaoComputadores"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/textInputLayoutMarcaSmartphones"
-            android:layout_below="@+id/textInputLayoutMarcaSmartphones"
+            android:layout_alignStart="@+id/textInputLayoutMarcaComputadores"
+            android:layout_below="@+id/textInputLayoutMarcaComputadores"
             android:layout_marginTop="10dp">
 
             <EditText
-                android:id="@+id/editTextDescricaoSmartphones"
+                android:id="@+id/editTextDescricaoComputadores"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -45,80 +45,88 @@
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/textInputLayoutProcessadorSmartphones"
+            android:id="@+id/textInputLayoutProcessadorComputadores"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/textInputLayoutDescricaoSmartphones"
-            android:layout_below="@+id/textInputLayoutDescricaoSmartphones"
+            android:layout_alignStart="@+id/textInputLayoutDescricaoComputadores"
+            android:layout_below="@+id/textInputLayoutDescricaoComputadores"
             android:layout_marginTop="10dp">
 
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/textInputEditTextProcessadorSmartphones"
+                android:id="@+id/textInputEditTextProcessadorComputadores"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/fragment_computadores_processador" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/textInputLayoutRAMSmartphones"
+            android:id="@+id/textInputLayoutRAMComputadores"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/textInputLayoutProcessadorSmartphones"
-            android:layout_below="@+id/textInputLayoutProcessadorSmartphones"
+            android:layout_alignStart="@+id/textInputLayoutProcessadorComputadores"
+            android:layout_below="@+id/textInputLayoutProcessadorComputadores"
             android:layout_centerVertical="true"
             android:layout_marginTop="10dp">
 
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/textInputEditTextRAMSmartphones"
+                android:id="@+id/textInputEditTextRAMComputadores"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/fragment_computadores_ram" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/textInputLayoutHDDSmartphones"
+            android:id="@+id/textInputLayoutHDDComputadores"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/textInputLayoutRAMSmartphones"
-            android:layout_below="@+id/textInputLayoutRAMSmartphones"
+            android:layout_alignStart="@+id/textInputLayoutRAMComputadores"
+            android:layout_below="@+id/textInputLayoutRAMComputadores"
             android:layout_marginTop="10dp">
 
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/textInputEditTextHDDSmartphones"
+                android:id="@+id/textInputEditTextHDDComputadores"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/fragment_computadores_hdd" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/textInputLayoutOSSmartphones"
+            android:id="@+id/textInputLayoutGPUComputadores"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/textInputLayoutHDDSmartphones"
-            android:layout_below="@+id/textInputLayoutHDDSmartphones"
+            android:layout_alignStart="@+id/textInputLayoutHDDComputadores"
+            android:layout_below="@+id/textInputLayoutHDDComputadores"
             android:layout_marginTop="10dp">
 
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/textInputEditTextOSSmartphones"
+                android:id="@+id/textInputEditTextGPUComputadores"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/fragment_computadores_gpu" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLayoutOSComputadores"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textInputLayoutGPUComputadores"
+            android:layout_below="@+id/textInputLayoutGPUComputadores"
+            android:layout_marginTop="10dp">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/textInputEditTextOSComputadores"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/fragment_computadores_os" />
         </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/textInputLayoutTamanhoSmartphones"
+        <Spinner
+            android:id="@+id/spinnerPortatil"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/textInputLayoutOSSmartphones"
-            android:layout_below="@+id/textInputLayoutOSSmartphones"
-            android:layout_marginTop="10dp">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/textInputEditTextTamanhoSmartphones"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/fragment_smartphones_tamanho" />
-        </android.support.design.widget.TextInputLayout>
+            android:layout_alignStart="@+id/textInputLayoutOSComputadores"
+            android:layout_below="@+id/textInputLayoutOSComputadores"
+            android:layout_marginTop="10dp" />
 
     </RelativeLayout>
 

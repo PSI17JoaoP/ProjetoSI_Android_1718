@@ -10,7 +10,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -26,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.forms.FormManager;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.fragments.MyFragmentManager;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.PropostasListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Categoria;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Proposta;
@@ -37,6 +36,7 @@ import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.sin
 public class EnviarPropostaActivity extends NavDrawerActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener, PropostasListener {
 
     private HashMap<Integer, String> categoriasHashMap;
+    private FragmentManager fragmentManager;
     private Proposta proposta;
 
     @SuppressLint("UseSparseArrays")
@@ -54,6 +54,8 @@ public class EnviarPropostaActivity extends NavDrawerActivity implements Adapter
         for (int cont = 0; cont < categoriasKeys.length; cont++) {
             categoriasHashMap.put(cont, categoriasKeys[cont]);
         }
+
+        fragmentManager = getSupportFragmentManager();
 
         //Array Adapter das categorias guardadas nos recursos XML
         ArrayAdapter<CharSequence> spinnerCategorias = new ArrayAdapter<CharSequence>(this,
@@ -88,28 +90,24 @@ public class EnviarPropostaActivity extends NavDrawerActivity implements Adapter
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-        FormManager formManager = new FormManager();
-
-        FragmentManager manager = getSupportFragmentManager();
-
         if(position > 0) {
 
             String categoria = categoriasHashMap.get(position);
 
             try {
 
-                Fragment form = formManager.selectForm(categoria, getResources().getStringArray(R.array.categorias_keys),
+                Fragment form = MyFragmentManager.getFragment(categoria, "Form", getResources().getStringArray(R.array.categorias_keys),
                         getApplicationContext());
 
                 if (form != null) {
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
 
                     FrameLayout fragmentContainer = findViewById(R.id.fragmentFormCategoria);
 
                     if (fragmentContainer.getChildCount() == 0) {
                         transaction.add(R.id.fragmentFormCategoria, form, categoria).commit();
                     } else {
-                        if (manager.findFragmentByTag(categoria) == null) {
+                        if (fragmentManager.findFragmentByTag(categoria) == null) {
                             transaction.replace(R.id.fragmentFormCategoria, form, categoria).commit();
                         }
                     }
@@ -121,12 +119,12 @@ public class EnviarPropostaActivity extends NavDrawerActivity implements Adapter
             }
         } else {
 
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
 
             FrameLayout fragmentContainer = findViewById(R.id.fragmentFormCategoria);
 
             if (fragmentContainer.getChildCount() != 0) {
-                Fragment fragment = manager.findFragmentById(R.id.fragmentFormCategoria);
+                Fragment fragment = fragmentManager.findFragmentById(R.id.fragmentFormCategoria);
 
                 if(fragment != null) {
                     transaction.remove(fragment).commit();
@@ -158,13 +156,9 @@ public class EnviarPropostaActivity extends NavDrawerActivity implements Adapter
 
         FrameLayout fragmentContainerForm = findViewById(R.id.fragmentFormCategoria);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
         if(!nomeCategoria.isEmpty() && fragmentContainerForm.getChildCount() != 0) {
 
-            FormManager formManager = new FormManager();
-
-            Categoria categoria = getCategoria(fragmentManager, formManager, nomeCategoria, dropDownEnviarPropostaCategorias.getSelectedItemPosition());
+            Categoria categoria = getCategoria(nomeCategoria, dropDownEnviarPropostaCategorias.getSelectedItemPosition());
 
             getCategoriaProposta(categoria, numberPickerCategoria.getValue());
         }
@@ -182,8 +176,8 @@ public class EnviarPropostaActivity extends NavDrawerActivity implements Adapter
         }
     }
 
-    //Método que obtém a categoria do fragment, através do método getCategoria do objeto do tipo FormManager.
-    private Categoria getCategoria(@NonNull FragmentManager fragmentManager, @NonNull FormManager formManager, @NonNull String nomeCategoria, @NonNull Integer categoriaKeyPosition) {
+    //Método que obtém a categoria do fragment, através do método getCategoria da classe MyFragmentManager.
+    private Categoria getCategoria(@NonNull String nomeCategoria, @NonNull Integer categoriaKeyPosition) {
 
         Categoria categoria = null;
 
@@ -192,7 +186,7 @@ public class EnviarPropostaActivity extends NavDrawerActivity implements Adapter
         String categoriaKey = categoriasHashMap.get(categoriaKeyPosition);
 
         try {
-            categoria = formManager.getCategoria(fragmentForm, getResources().getStringArray(R.array.categorias_keys), categoriaKey, nomeCategoria, getApplicationContext());
+            categoria = MyFragmentManager.getCategoria(fragmentForm, getResources().getStringArray(R.array.categorias_keys), categoriaKey, nomeCategoria, getApplicationContext());
         }
         catch (RuntimeException ex) {
             showNotification(ex.getMessage());
