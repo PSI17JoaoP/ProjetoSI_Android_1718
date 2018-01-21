@@ -1,14 +1,12 @@
 package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.adaptadores;
 
-import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.R;
 
@@ -16,52 +14,51 @@ import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.R;
  * Created by leona on 04/01/2018.
  */
 
-public class CategoriasAdapter extends BaseAdapter {
-    private ArrayList<String> listaLabels;
-    private ArrayList<String> listaValores;
-    private Context context;
-    private LayoutInflater inflater;
+public class CategoriasAdapter extends RecyclerView.Adapter<CategoriasAdapter.ViewHolder> {
 
-    public CategoriasAdapter(ArrayList<String> listaLabels, ArrayList<String> listaValores, Context context) {
-        this.listaLabels = listaLabels;
-        this.listaValores = listaValores;
-        this.context = context;
-    }
+    private HashMap<String, String> categoriasHashMap;
 
-    @Override
-    public int getCount() {
-        return listaLabels.size();
-    }
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
-    @Override
-    public Object getItem(int i) {
-        return listaValores.get(i);
-    }
+        public View item;
 
-    @Override
-    public long getItemId(int i) {
-        return i;
-    }
-
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup)
-    {
-        View item = view;
-
-        if (view == null) {
-            if (inflater == null) {
-                inflater = LayoutInflater.from(context);
-            }
-
-            item = inflater.inflate(R.layout.item_lv_detalhes, viewGroup, false);
+        ViewHolder(View item) {
+            super(item);
+            this.item = item;
         }
+    }
 
-        TextView txtLabel = item.findViewById(R.id.txtDetalhesLabel);
-        TextView txtValor = item.findViewById(R.id.txtDetalhesValor);
+    public CategoriasAdapter(HashMap<String, String> categoriasHashMap) {
+        this.categoriasHashMap = categoriasHashMap;
+    }
 
-        txtLabel.setText(listaLabels.get(i).toString());
-        txtValor.setText(listaValores.get(i).toString());
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
 
-        return item;
+    @Override
+    public int getItemCount() {
+        return categoriasHashMap.size();
+    }
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_lv_detalhes, parent, false);
+
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        TextView textViewLabel = holder.item.findViewById(R.id.textViewLabel);
+        TextView textViewValue = holder.item.findViewById(R.id.textViewValue);
+
+        Object[] keys = categoriasHashMap.keySet().toArray();
+        String key = (String) keys[position];
+
+        textViewLabel.setText(key);
+        textViewValue.setText(categoriasHashMap.get(key));
     }
 }

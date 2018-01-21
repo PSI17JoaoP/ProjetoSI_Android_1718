@@ -70,5 +70,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="detalhes_proposta_proposto">Proposto em:</string>
+    <string name="detalhes_proposta_anuncio">Proposta ao anúncio:</string>
+    <string name="detalhes_proposta_por">Por:</string>
 
 </resources>

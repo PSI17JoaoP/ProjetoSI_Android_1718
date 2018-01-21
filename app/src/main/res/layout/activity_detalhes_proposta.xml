@@ -7,6 +7,98 @@
     android:layout_height="match_parent"
     tools:context="pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.DetalhesPropostaActivity">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imageViewImagensProposta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                app:srcCompat="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/textViewDetalhesPropostaTitulo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/imageViewImagensProposta"
+                android:layout_below="@+id/imageViewImagensProposta"
+                android:layout_marginTop="20dp"
+                android:text="@string/detalhes_proposta_anuncio"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+            <TextView
+                android:id="@+id/textViewDetalhesPropostaTituloAnuncio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/textViewDetalhesPropostaTitulo"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@+id/textViewDetalhesPropostaTitulo"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+            <TextView
+                android:id="@+id/textViewDetalhesPropostaCliente"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/textViewDetalhesPropostaTitulo"
+                android:layout_below="@+id/textViewDetalhesPropostaTitulo"
+                android:layout_marginTop="20dp"
+                android:text="@string/detalhes_proposta_por"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <TextView
+                android:id="@+id/textViewDetalhesPropostaClienteProposta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/textViewDetalhesPropostaCliente"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@+id/textViewDetalhesPropostaCliente"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <TextView
+                android:id="@+id/textViewDetalhesPropostaProposto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/textViewDetalhesPropostaCliente"
+                android:layout_below="@+id/textViewDetalhesPropostaCliente"
+                android:layout_marginTop="10dp"
+                android:text="@string/detalhes_proposta_proposto"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <TextView
+                android:id="@+id/textViewDetalhesPropostaDataProposto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/textViewDetalhesPropostaProposto"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@+id/textViewDetalhesPropostaProposto"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/fragmentDetalhesProposta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/textViewDetalhesPropostaProposto"
+                android:layout_below="@+id/textViewDetalhesPropostaProposto"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:orientation="vertical"
+                tools:listitem="@layout/item_lv_detalhes" />
+
+        </RelativeLayout>
+    </ScrollView>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabAceitar"
         android:layout_width="wrap_content"
@@ -24,4 +116,5 @@
         android:layout_margin="@dimen/fab_margin"
         app:backgroundTint="@android:color/holo_red_dark"
         app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+
 </android.support.design.widget.CoordinatorLayout>

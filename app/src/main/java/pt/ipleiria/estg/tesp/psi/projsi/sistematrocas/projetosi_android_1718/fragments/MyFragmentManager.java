@@ -35,8 +35,8 @@ public class MyFragmentManager {
         for (String categoriaForm : categoriasForm) {
 
             if (categoriaKey.equals(categoriaForm)) {
-                if (Class.forName(PACKAGE_PATH + categoriaForm + "Fragment") != null) {
-                    Fragment fragment = Fragment.instantiate(context, (PACKAGE_PATH + categoriaForm + "Fragment"));
+                if (Class.forName(PACKAGE_PATH + categoriaForm + "FormFragment") != null) {
+                    Fragment fragment = Fragment.instantiate(context, (PACKAGE_PATH + categoriaForm + "FormFragment"));
                     if (fragmentForm.getClass().equals(fragment.getClass())) {
                         return (Categoria) fragmentForm.getClass().getMethod("getCategoria", nomeCategoria.getClass()).invoke(fragmentForm, nomeCategoria);
                     }
