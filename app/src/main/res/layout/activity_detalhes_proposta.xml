@@ -84,12 +84,31 @@
                 android:layout_toEndOf="@+id/textViewDetalhesPropostaProposto"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
+            <TextView
+                android:id="@+id/textViewDetalhesPropostaPropor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/textViewDetalhesPropostaProposto"
+                android:layout_below="@+id/textViewDetalhesPropostaProposto"
+                android:layout_marginTop="20dp"
+                android:text="@string/detalhes_proposta_bem_propor"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <TextView
+                android:id="@+id/textViewDetalhesPropostaProporNome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/textViewDetalhesPropostaPropor"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@+id/textViewDetalhesPropostaPropor"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/fragmentDetalhesProposta"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/textViewDetalhesPropostaProposto"
-                android:layout_below="@+id/textViewDetalhesPropostaProposto"
+                android:layout_alignStart="@+id/textViewDetalhesPropostaPropor"
+                android:layout_below="@+id/textViewDetalhesPropostaPropor"
                 android:layout_marginEnd="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"

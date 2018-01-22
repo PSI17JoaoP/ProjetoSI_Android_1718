@@ -8,4 +8,5 @@ import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.mod
 
 public interface CategoriasListener {
     void onObterCategoria(Categoria categoria, String tipoCategoria, String tipoBem);
+    void onErroObterCategoria(String message, Exception ex);
 }

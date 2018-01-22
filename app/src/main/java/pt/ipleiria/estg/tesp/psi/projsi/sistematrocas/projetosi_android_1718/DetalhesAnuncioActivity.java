@@ -237,4 +237,9 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Catego
             recyclerView.setAdapter(categoriasAdapter);
         }
     }
+
+    @Override
+    public void onErroObterCategoria(String message, Exception ex) {
+
+    }
 }
