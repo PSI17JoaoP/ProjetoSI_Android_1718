@@ -61,7 +61,7 @@ public class PropostasAdapter extends BaseAdapter {
         Proposta proposta = listaPropostas.get(i);
         txtPropostaTitle.setText(String.valueOf(proposta.getCatProposto()));
 
-        Anuncio anuncioProposta = SingletonAnuncios.getInstance(context).pesquisarAnuncioID(proposta.getIdAnuncio());
+        Anuncio anuncioProposta = SingletonAnuncios.getInstance(context).pesquisarAnuncioPorID(proposta.getIdAnuncio());
 
         if (anuncioProposta != null) {
             txtOfertaTitle.setText(anuncioProposta.getTitulo());

@@ -34,34 +34,29 @@ public class SingletonUsers {
         return users;
     }
 
-    public void setUsers(ArrayList<User> users) {
-        this.users = users;
-    }
+    public boolean adicionarUserLocal(User user) {
 
-    public boolean adicionarUser(User user)
-    {
         User userInserido = bdTable.insert(user);
 
         return userInserido != null && users.add(userInserido);
     }
 
-    public boolean removerUser(User user)
-    {
+    public boolean removerUserLocal(User user) {
         return bdTable.delete(user.getId()) && users.remove(user);
     }
 
-    public boolean editarUser(User user)
-    {
+    public boolean editarUserLocal(User user) {
+
         if(bdTable.update(user)) {
             User novoUser = users.set(user.getId().intValue(), user);
 
-            return users.contains(user);
+            return users.contains(novoUser);
         } else {
             return false;
         }
     }
 
-    public User pesquisarUserID(Long id)
+    public User pesquisarUserPorID(Long id)
     {
         return users.get(id.intValue());
     }

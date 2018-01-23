@@ -140,7 +140,7 @@ public class CriarAnuncioActivity extends NavDrawerActivity implements AdapterVi
 
             try {
 
-                Fragment form = MyFragmentManager.getFragment(categoria, "Form", getResources().getStringArray(R.array.categorias_keys),
+                Fragment form = MyFragmentManager.getFormFragment(categoria, getResources().getStringArray(R.array.categorias_keys),
                         getApplicationContext());
 
                 if (form != null) {

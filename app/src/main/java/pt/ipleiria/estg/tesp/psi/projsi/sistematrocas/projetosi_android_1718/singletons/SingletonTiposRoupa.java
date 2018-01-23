@@ -39,6 +39,10 @@ public class SingletonTiposRoupa {
         getTiposRoupaAPI(context);
     }
 
+    public ArrayList<TipoRoupa> getTiposRoupa() {
+        return tiposRoupa;
+    }
+
     private void getTiposRoupaAPI(final Context context) {
 
         if (tiposRoupa.isEmpty()) {
@@ -73,14 +77,6 @@ public class SingletonTiposRoupa {
         }
     }
 
-    public ArrayList<TipoRoupa> getTiposRoupa() {
-        return tiposRoupa;
-    }
-
-    public void setTiposRoupa(ArrayList<TipoRoupa> tiposRoupa) {
-        this.tiposRoupa = tiposRoupa;
-    }
-
     public boolean adicionarTipoRoupaLocal(TipoRoupa tipo) {
         TipoRoupa tipoRoupaInserido = bdTable.insert(tipo);
 
@@ -101,7 +97,7 @@ public class SingletonTiposRoupa {
         }
     }
 
-    public TipoRoupa pesquisarTipoRoupaID(Long id) {
+    public TipoRoupa pesquisarTipoRoupaPorID(Long id) {
         for (TipoRoupa tipo : tiposRoupa) {
             if (tipo.getId().toString().equals(id.toString())) {
                 return tipo;

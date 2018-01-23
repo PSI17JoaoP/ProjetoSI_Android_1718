@@ -15,10 +15,12 @@ import java.util.HashMap;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.adaptadores.CategoriasAdapter;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.AnunciosListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.CategoriasListener;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.ClientesListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.PropostasListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Anuncio;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Brinquedo;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Categoria;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Cliente;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Computador;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Eletronica;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.GeneroJogo;
@@ -29,11 +31,13 @@ import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.mod
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Smartphone;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.TipoRoupa;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonAnuncios;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonCategorias;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonClientes;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonGenerosJogo;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonPropostas;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonTiposRoupa;
 
-public class DetalhesPropostaActivity extends NavDrawerActivity implements AnunciosListener, PropostasListener, CategoriasListener{
+public class DetalhesPropostaActivity extends NavDrawerActivity implements AnunciosListener, PropostasListener, CategoriasListener, ClientesListener{
 
     private Anuncio anuncioProposta;
     private Proposta proposta;
@@ -57,10 +61,10 @@ public class DetalhesPropostaActivity extends NavDrawerActivity implements Anunc
         if(getIntent().hasExtra(ID_PROPOSTA)) {
 
             Long propostaId = getIntent().getLongExtra(ID_PROPOSTA, 0);
-            proposta = SingletonPropostas.getInstance(getApplicationContext()).pesquisarPropostaID(propostaId);
+            proposta = SingletonPropostas.getInstance(getApplicationContext()).pesquisarPropostaPorID(propostaId);
 
             if(proposta != null) {
-                anuncioProposta = SingletonAnuncios.getInstance(getApplicationContext()).pesquisarAnuncioID(proposta.getIdAnuncio());
+                anuncioProposta = SingletonAnuncios.getInstance(getApplicationContext()).pesquisarAnuncioPorID(proposta.getIdAnuncio());
 
                 textViewTitulo.setText(anuncioProposta.getTitulo());
                 textViewDataProposto.setText(proposta.getDataProposta());
@@ -88,8 +92,11 @@ public class DetalhesPropostaActivity extends NavDrawerActivity implements Anunc
                     }
                 });
 
-                SingletonPropostas.getInstance(getApplicationContext()).setCategoriasListener(this);
-                SingletonPropostas.getInstance(getApplicationContext()).getCategoriasProposta(proposta.getId(), getApplicationContext());
+                SingletonClientes.getInstance(getApplicationContext()).setClientesListener(this);
+                SingletonClientes.getInstance(getApplicationContext()).getClienteAPI(proposta.getIdUser(), getApplicationContext());
+
+                SingletonCategorias.getInstance().setCategoriasListener(this);
+                SingletonCategorias.getInstance().getCategoriasProposta(proposta.getId(), getApplicationContext());
             }
         }
     }
@@ -163,7 +170,7 @@ public class DetalhesPropostaActivity extends NavDrawerActivity implements Anunc
                 categoriaAtributos.put("Faixa Etária", jogo.getFaixaEtaria().toString());
                 categoriaAtributos.put("Descrição", jogo.getDescricao());
 
-                GeneroJogo generoJogo = SingletonGenerosJogo.getInstance(this).pesquisarGeneroJogosID(jogo.getIdGenero());
+                GeneroJogo generoJogo = SingletonGenerosJogo.getInstance(this).pesquisarGeneroJogosPorID(jogo.getIdGenero());
 
                 if(generoJogo != null) {
                     categoriaAtributos.put("Género", jogo.getDescricao());
@@ -228,7 +235,7 @@ public class DetalhesPropostaActivity extends NavDrawerActivity implements Anunc
                 categoriaAtributos.put("Marca", roupa.getMarca());
                 categoriaAtributos.put("Tamanho", roupa.getTamanho());
 
-                TipoRoupa tipoRoupa = SingletonTiposRoupa.getInstance(this).pesquisarTipoRoupaID(roupa.getId());
+                TipoRoupa tipoRoupa = SingletonTiposRoupa.getInstance(this).pesquisarTipoRoupaPorID(roupa.getId());
 
                 if(tipoRoupa != null) {
                     categoriaAtributos.put("Tipo", tipoRoupa.getNome());
@@ -251,6 +258,17 @@ public class DetalhesPropostaActivity extends NavDrawerActivity implements Anunc
 
     @Override
     public void onErroObterCategoria(String message, Exception ex) {
+
+    }
+
+    @Override
+    public void OnSucessoObterCliente(Cliente cliente) {
+        TextView textViewCliente = findViewById(R.id.textViewDetalhesPropostaClienteProposta);
+        textViewCliente.setText(cliente.getNomeCompleto());
+    }
+
+    @Override
+    public void OnErroObterCliente(String message, Exception ex) {
 
     }
 }

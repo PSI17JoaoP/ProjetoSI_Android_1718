@@ -15,24 +15,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.helpers.PropostaBDTable;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.CategoriasListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.PropostasListener;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Brinquedo;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Computador;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Eletronica;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Jogo;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Livro;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Proposta;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Roupa;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Smartphone;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.parsers.BrinquedosParser;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.parsers.ComputadoresParser;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.parsers.EletronicaParser;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.parsers.JogosParser;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.parsers.LivrosParser;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.parsers.PropostasParser;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.parsers.RoupasParser;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.parsers.SmartphonesParser;
 
 /**
  * Created by leona on 21/11/2017.
@@ -43,8 +28,9 @@ public class SingletonPropostas {
     private ArrayList<Proposta> propostas;
     private PropostaBDTable bdTable;
 
+    private SharedPreferences preferences;
+
     private PropostasListener propostasListener;
-    private CategoriasListener categoriasListener;
 
     public static SingletonPropostas getInstance(Context context) {
         if (INSTANCE == null)
@@ -54,9 +40,10 @@ public class SingletonPropostas {
     }
 
     private SingletonPropostas(Context context) {
+        preferences = context.getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
         propostas = new ArrayList<>();
         bdTable = new PropostaBDTable(context);
-        propostas = bdTable.select();
+        propostas = bdTable.select(" WHERE " + PropostaBDTable.ESTADO_PROPOSTA + " = ?", new String[] {"PENDENTE"});
         getPropostasAnunciosUser(context);
     }
 
@@ -68,7 +55,6 @@ public class SingletonPropostas {
 
         if(propostas.isEmpty()) {
 
-            SharedPreferences preferences = context.getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
             String username = preferences.getString("username", "");
 
             if (SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
@@ -82,10 +68,8 @@ public class SingletonPropostas {
 
                             if (propostasJson.length() > 0) {
 
-                                if(propostas.isEmpty()) {
-                                    propostas = PropostasParser.paraObjeto(propostasJson, context);
-                                    adicionarPropostasLocal(propostas);
-                                }
+                                propostas = PropostasParser.paraObjeto(propostasJson, context);
+                                adicionarPropostasLocal(propostas);
 
                                 if (propostasListener != null)
                                     propostasListener.onRefreshPropostas(propostas);
@@ -109,161 +93,6 @@ public class SingletonPropostas {
         } else {
             if (propostasListener != null)
                 propostasListener.onRefreshPropostas(propostas);
-        }
-    }
-
-    public void getCategoriasProposta(Long id, final Context context) {
-
-        if(SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
-
-            JsonObjectRequest getCategoriasProposta = SingletonAPIManager.getInstance(context).pedirAPI("propostas/" + id + "/categorias", context, new SingletonAPIManager.APIJsonResposta() {
-
-                @Override
-                public void Sucesso(JSONObject resultado) {
-
-                    try {
-                        JSONObject categorias = resultado.getJSONObject("Categorias");
-
-                        String categoriaNome = resultado.getString("Categoria");
-
-                        JSONObject categoriaBase = categorias.getJSONObject("Base");
-                        JSONArray categoriaFilha = categorias.getJSONArray("Filhas");
-
-                        JSONObject categoria = new JSONObject();
-
-                        switch (categoriaNome)
-                        {
-                            case "Brinquedos":
-
-                                categoria.put("id", categoriaBase.get("id"));
-                                categoria.put("nome", categoriaBase.get("nome"));
-                                categoria.put("editora", categoriaFilha.getJSONObject(0).get("editora"));
-                                categoria.put("faixa_etaria", categoriaFilha.getJSONObject(0).get("faixa_etaria"));
-                                categoria.put("descricao", categoriaFilha.getJSONObject(0).get("descricao"));
-
-                                Brinquedo brinquedo = BrinquedosParser.paraObjeto(categoria, context);
-
-                                if(categoriasListener != null)
-                                    categoriasListener.onObterCategoria(brinquedo, categoriaNome, null);
-
-                                break;
-
-                            case "Jogos":
-
-                                categoria.put("id", categoriaBase.get("id"));
-                                categoria.put("nome", categoriaBase.get("nome"));
-                                categoria.put("editora", categoriaFilha.getJSONObject(0).get("editora"));
-                                categoria.put("faixa_etaria", categoriaFilha.getJSONObject(0).get("faixa_etaria"));
-                                categoria.put("descricao", categoriaFilha.getJSONObject(0).get("descricao"));
-                                categoria.put("id_genero", categoriaFilha.getJSONObject(1).get("id_genero"));
-                                categoria.put("produtora", categoriaFilha.getJSONObject(1).get("produtora"));
-
-                                Jogo jogo = JogosParser.paraObjeto(categoria, context);
-
-                                if(categoriasListener != null)
-                                    categoriasListener.onObterCategoria(jogo, categoriaNome, null);
-
-                                break;
-
-                            case "Eletrónica":
-
-                                categoria.put("id", categoriaBase.get("id"));
-                                categoria.put("nome", categoriaBase.get("nome"));
-                                categoria.put("descricao", categoriaFilha.getJSONObject(0).get("descricao"));
-                                categoria.put("marca", categoriaFilha.getJSONObject(0).get("marca"));
-
-                                Eletronica eletronica = EletronicaParser.paraObjeto(categoria, context);
-
-                                if(categoriasListener != null)
-                                    categoriasListener.onObterCategoria(eletronica, categoriaNome, null);
-
-                                break;
-
-                            case "Computadores":
-
-                                categoria.put("id", categoriaBase.get("id"));
-                                categoria.put("nome", categoriaBase.get("nome"));
-                                categoria.put("descricao", categoriaFilha.getJSONObject(0).get("descricao"));
-                                categoria.put("marca", categoriaFilha.getJSONObject(0).get("marca"));
-                                categoria.put("processador", categoriaFilha.getJSONObject(1).get("processador"));
-                                categoria.put("ram", categoriaFilha.getJSONObject(1).get("ram"));
-                                categoria.put("hdd", categoriaFilha.getJSONObject(1).get("hdd"));
-                                categoria.put("gpu", categoriaFilha.getJSONObject(1).get("gpu"));
-                                categoria.put("os", categoriaFilha.getJSONObject(1).get("os"));
-                                categoria.put("portatil", categoriaFilha.getJSONObject(1).get("portatil"));
-
-                                Computador computador = ComputadoresParser.paraObjeto(categoria, context);
-
-                                if(categoriasListener != null)
-                                    categoriasListener.onObterCategoria(computador, categoriaNome, null);
-
-                                break;
-
-                            case "Smartphones":
-
-                                categoria.put("id", categoriaBase.get("id"));
-                                categoria.put("nome", categoriaBase.get("nome"));
-                                categoria.put("descricao", categoriaFilha.getJSONObject(0).get("descricao"));
-                                categoria.put("marca", categoriaFilha.getJSONObject(0).get("marca"));
-                                categoria.put("processador", categoriaFilha.getJSONObject(1).get("processador"));
-                                categoria.put("ram", categoriaFilha.getJSONObject(1).get("ram"));
-                                categoria.put("hdd", categoriaFilha.getJSONObject(1).get("hdd"));
-                                categoria.put("os", categoriaFilha.getJSONObject(1).get("os"));
-                                categoria.put("tamanho", categoriaFilha.getJSONObject(1).get("tamanho"));
-
-                                Smartphone smartphone = SmartphonesParser.paraObjeto(categoria, context);
-
-                                if(categoriasListener != null)
-                                    categoriasListener.onObterCategoria(smartphone, categoriaNome, null);
-
-                                break;
-
-                            case "Livros":
-
-                                categoria.put("id", categoriaBase.get("id"));
-                                categoria.put("nome", categoriaBase.get("nome"));
-                                categoria.put("titulo", categoriaFilha.getJSONObject(0).get("titulo"));
-                                categoria.put("editora", categoriaFilha.getJSONObject(0).get("editora"));
-                                categoria.put("autor", categoriaFilha.getJSONObject(0).get("autor"));
-                                categoria.put("isbn", categoriaFilha.getJSONObject(0).get("isbn"));
-
-                                Livro livro = LivrosParser.paraObjeto(categoria, context);
-
-                                if(categoriasListener != null)
-                                    categoriasListener.onObterCategoria(livro, categoriaNome, null);
-
-                                break;
-
-                            case "Roupa":
-
-                                categoria.put("id", categoriaBase.get("id"));
-                                categoria.put("nome", categoriaBase.get("nome"));
-                                categoria.put("marca", categoriaFilha.getJSONObject(0).get("marca"));
-                                categoria.put("tamanho", categoriaFilha.getJSONObject(0).get("tamanho"));
-                                categoria.put("id_tipo", categoriaFilha.getJSONObject(0).get("id_tipo"));
-
-                                Roupa roupa = RoupasParser.paraObjeto(categoria, context);
-
-                                if(categoriasListener != null)
-                                    categoriasListener.onObterCategoria(roupa, categoriaNome, null);
-
-                                break;
-                        }
-
-                    } catch (JSONException e) {
-                        if(categoriasListener != null)
-                            categoriasListener.onErroObterCategoria("Ocorreu um erro no processamento da categoria.", e);
-                    }
-                }
-
-                @Override
-                public void Erro(VolleyError erro) {
-                    if(categoriasListener != null)
-                        categoriasListener.onErroObterCategoria("Não foi possivél obter a categoria.", erro);
-                }
-            });
-
-            SingletonAPIManager.getInstance(context).getRequestQueue(context).add(getCategoriasProposta);
         }
     }
 
@@ -360,9 +189,6 @@ public class SingletonPropostas {
         }
     }
 
-    //------------------------------------------------------------
-    //LOCAL A PARTIR DAQUI
-
     public void adicionarPropostasLocal(ArrayList<Proposta> propostas) {
         for(Proposta proposta : propostas) {
             bdTable.insert(proposta);
@@ -387,7 +213,7 @@ public class SingletonPropostas {
         return propostas.contains(proposta);
     }
 
-    public Proposta pesquisarPropostaID(Long id) {
+    public Proposta pesquisarPropostaPorID(Long id) {
         for (Proposta proposta : propostas) {
             if (proposta.getId().toString().equals(id.toString()))
                 return proposta;
@@ -396,8 +222,7 @@ public class SingletonPropostas {
         return null;
     }
 
-    public Proposta pesquisarPropostaPosicao(int i)
-    {
+    public Proposta pesquisarPropostaPorPosicao(int i) {
         return propostas.get(i);
     }
 
@@ -407,9 +232,5 @@ public class SingletonPropostas {
 
     public void setPropostasListener(PropostasListener propostasListener) {
         this.propostasListener = propostasListener;
-    }
-
-    public void setCategoriasListener(CategoriasListener categoriasListener) {
-        this.categoriasListener = categoriasListener;
     }
 }

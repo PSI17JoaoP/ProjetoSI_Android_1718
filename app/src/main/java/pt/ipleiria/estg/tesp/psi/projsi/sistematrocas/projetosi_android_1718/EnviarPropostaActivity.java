@@ -96,7 +96,7 @@ public class EnviarPropostaActivity extends NavDrawerActivity implements Adapter
 
             try {
 
-                Fragment form = MyFragmentManager.getFragment(categoria, "Form", getResources().getStringArray(R.array.categorias_keys),
+                Fragment form = MyFragmentManager.getFormFragment(categoria, getResources().getStringArray(R.array.categorias_keys),
                         getApplicationContext());
 
                 if (form != null) {

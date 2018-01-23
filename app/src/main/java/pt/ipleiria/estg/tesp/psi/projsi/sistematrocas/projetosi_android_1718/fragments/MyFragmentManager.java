@@ -16,12 +16,12 @@ public class MyFragmentManager {
 
     private static final String PACKAGE_PATH = "pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.fragments.";
 
-    public static Fragment getFragment(String categoriaFragment, String tipoFragment, String[] categorias, Context context) throws ClassNotFoundException {
+    public static Fragment getFormFragment(String categoriaFragment, String[] categorias, Context context) throws ClassNotFoundException {
 
         for (String categoriaNome : categorias) {
             if (categoriaFragment.equals(categoriaNome)) {
-                if (Class.forName(PACKAGE_PATH + categoriaNome + tipoFragment + "Fragment") != null) {
-                    return Fragment.instantiate(context, (PACKAGE_PATH + categoriaNome + "Fragment"));
+                if (Class.forName(PACKAGE_PATH + categoriaNome + "FormFragment") != null) {
+                    return Fragment.instantiate(context, (PACKAGE_PATH + categoriaNome + "FormFragment"));
                 }
             }
         }

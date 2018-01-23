@@ -15,9 +15,11 @@ import java.util.HashMap;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.adaptadores.CategoriasAdapter;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.CategoriasListener;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.ClientesListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Anuncio;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Brinquedo;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Categoria;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Cliente;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Computador;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Eletronica;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.GeneroJogo;
@@ -27,10 +29,12 @@ import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.mod
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Smartphone;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.TipoRoupa;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonAnuncios;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonCategorias;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonClientes;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonGenerosJogo;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonTiposRoupa;
 
-public class DetalhesAnuncioActivity extends NavDrawerActivity implements CategoriasListener{
+public class DetalhesAnuncioActivity extends NavDrawerActivity implements CategoriasListener, ClientesListener{
 
     private Anuncio anuncio;
 
@@ -54,7 +58,7 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Catego
         if(getIntent().hasExtra(ID_ANUNCIO)) {
 
             Long anuncioId = getIntent().getLongExtra(ID_ANUNCIO, 0L);
-            anuncio = SingletonAnuncios.getInstance(getApplicationContext()).pesquisarAnuncioID(anuncioId);
+            anuncio = SingletonAnuncios.getInstance(getApplicationContext()).pesquisarAnuncioPorID(anuncioId);
 
             if (anuncio != null) {
 
@@ -99,11 +103,14 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Catego
                     });
                 }
 
-                SingletonAnuncios.getInstance(getApplicationContext()).setCategoriasListener(this);
-                SingletonAnuncios.getInstance(getApplicationContext()).getCategoriasAnuncio(anuncioId, "Oferecer", getApplicationContext());
+                SingletonClientes.getInstance(getApplicationContext()).setClientesListener(this);
+                SingletonClientes.getInstance(getApplicationContext()).getClienteAPI(anuncio.getIdUser(), getApplicationContext());
+
+                SingletonCategorias.getInstance().setCategoriasListener(this);
+                SingletonCategorias.getInstance().getCategoriasAnuncio(anuncioId, "Oferecer", getApplicationContext());
 
                 if(anuncio.getCatReceber() != null) {
-                    SingletonAnuncios.getInstance(getApplicationContext()).getCategoriasAnuncio(anuncioId, "Receber", getApplicationContext());
+                    SingletonCategorias.getInstance().getCategoriasAnuncio(anuncioId, "Receber", getApplicationContext());
                 }
             }
         }
@@ -137,7 +144,7 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Catego
                 categoriaAtributos.put("Faixa Etária", jogo.getFaixaEtaria().toString());
                 categoriaAtributos.put("Descrição", jogo.getDescricao());
 
-                GeneroJogo generoJogo = SingletonGenerosJogo.getInstance(this).pesquisarGeneroJogosID(jogo.getIdGenero());
+                GeneroJogo generoJogo = SingletonGenerosJogo.getInstance(this).pesquisarGeneroJogosPorID(jogo.getIdGenero());
 
                 if(generoJogo != null) {
                     categoriaAtributos.put("Género", jogo.getDescricao());
@@ -202,7 +209,7 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Catego
                 categoriaAtributos.put("Marca", roupa.getMarca());
                 categoriaAtributos.put("Tamanho", roupa.getTamanho());
 
-                TipoRoupa tipoRoupa = SingletonTiposRoupa.getInstance(this).pesquisarTipoRoupaID(roupa.getId());
+                TipoRoupa tipoRoupa = SingletonTiposRoupa.getInstance(this).pesquisarTipoRoupaPorID(roupa.getId());
 
                 if(tipoRoupa != null) {
                     categoriaAtributos.put("Tipo", tipoRoupa.getNome());
@@ -240,6 +247,17 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Catego
 
     @Override
     public void onErroObterCategoria(String message, Exception ex) {
+
+    }
+
+    @Override
+    public void OnSucessoObterCliente(Cliente cliente) {
+        TextView textViewCliente = findViewById(R.id.textViewDetalhesAnuncioClienteAnuncio);
+        textViewCliente.setText(cliente.getNomeCompleto());
+    }
+
+    @Override
+    public void OnErroObterCliente(String message, Exception ex) {
 
     }
 }

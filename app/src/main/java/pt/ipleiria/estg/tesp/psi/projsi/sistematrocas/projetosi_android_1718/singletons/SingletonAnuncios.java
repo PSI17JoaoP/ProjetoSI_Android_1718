@@ -17,25 +17,8 @@ import java.util.ArrayList;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.helpers.AnuncioBDTable;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.AnunciosListener;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.CategoriasListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Anuncio;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Brinquedo;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Categoria;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Computador;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Eletronica;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Jogo;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Livro;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Roupa;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Smartphone;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.parsers.AnunciosParser;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.parsers.BrinquedosParser;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.parsers.CategoriasParser;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.parsers.ComputadoresParser;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.parsers.EletronicaParser;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.parsers.JogosParser;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.parsers.LivrosParser;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.parsers.RoupasParser;
-import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.parsers.SmartphonesParser;
 
 /**
  * Created by leona on 21/11/2017.
@@ -49,7 +32,6 @@ public class SingletonAnuncios {
     private SharedPreferences preferences;
 
     private AnunciosListener anunciosListener;
-    private CategoriasListener categoriasListener;
 
     public static synchronized SingletonAnuncios getInstance(Context context) {
         if (INSTANCE == null)
@@ -64,6 +46,10 @@ public class SingletonAnuncios {
         bdTable = new AnuncioBDTable(context);
         anuncios = bdTable.select();
         getAnunciosAPI(context);
+    }
+
+    public ArrayList<Anuncio> getAnuncios() {
+        return anuncios;
     }
 
     private void getAnunciosAPI(final Context context) {
@@ -104,129 +90,8 @@ public class SingletonAnuncios {
         }
     }
 
-    public void getCategoriasAnuncio(Long id, final String tipo, final Context context) {
-
-        if (SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
-
-            JsonObjectRequest pedido = SingletonAPIManager.getInstance(context).pedirAPI("anuncios/" + id + "/categoria" + tipo, context, new SingletonAPIManager.APIJsonResposta() {
-                @Override
-                public void Sucesso(JSONObject resultado) {
-                    try {
-                        JSONObject categorias = resultado.getJSONObject("Categorias");
-
-                        String tipoCategoria = resultado.getString("Flag");
-
-                        JSONObject base = categorias.getJSONObject("Base");
-                        JSONArray filha = categorias.getJSONArray("Filhas");
-
-                        JSONObject cat = new JSONObject();
-
-                        switch (tipoCategoria) {
-                            case "Brinquedos":
-                                cat.put("id", base.get("id"));
-                                cat.put("nome", base.get("nome"));
-                                cat.put("editora", filha.getJSONObject(0).get("editora"));
-                                cat.put("faixa_etaria", filha.getJSONObject(0).get("faixa_etaria"));
-                                cat.put("descricao", filha.getJSONObject(0).get("descricao"));
-
-                                Brinquedo categoriaB = BrinquedosParser.paraObjeto(cat, context);
-                                categoriasListener.onObterCategoria(categoriaB, tipoCategoria, tipo);
-                                break;
-                            case "Jogos":
-                                cat.put("id", base.get("id"));
-                                cat.put("nome", base.get("nome"));
-                                cat.put("editora", filha.getJSONObject(0).get("editora"));
-                                cat.put("faixa_etaria", filha.getJSONObject(0).get("faixa_etaria"));
-                                cat.put("descricao", filha.getJSONObject(0).get("descricao"));
-                                cat.put("id_genero", filha.getJSONObject(1).get("id_genero"));
-                                cat.put("produtora", filha.getJSONObject(1).get("produtora"));
-
-                                Jogo categoriaJ = JogosParser.paraObjeto(cat, context);
-                                categoriasListener.onObterCategoria(categoriaJ, tipoCategoria, tipo);
-                                break;
-                            case "Eletrónica":
-                                cat.put("id", base.get("id"));
-                                cat.put("nome", base.get("nome"));
-                                cat.put("descricao", filha.getJSONObject(0).get("descricao"));
-                                cat.put("marca", filha.getJSONObject(0).get("marca"));
-
-                                Eletronica categoriaE = EletronicaParser.paraObjeto(cat, context);
-                                categoriasListener.onObterCategoria(categoriaE, tipoCategoria, tipo);
-                                break;
-                            case "Computadores":
-                                cat.put("id", base.get("id"));
-                                cat.put("nome", base.get("nome"));
-                                cat.put("descricao", filha.getJSONObject(0).get("descricao"));
-                                cat.put("marca", filha.getJSONObject(0).get("marca"));
-                                cat.put("processador", filha.getJSONObject(1).get("processador"));
-                                cat.put("ram", filha.getJSONObject(1).get("ram"));
-                                cat.put("hdd", filha.getJSONObject(1).get("hdd"));
-                                cat.put("gpu", filha.getJSONObject(1).get("gpu"));
-                                cat.put("os", filha.getJSONObject(1).get("os"));
-                                cat.put("portatil", filha.getJSONObject(1).get("portatil"));
-
-                                Computador categoriaC = ComputadoresParser.paraObjeto(cat, context);
-                                categoriasListener.onObterCategoria(categoriaC, tipoCategoria, tipo);
-                                break;
-                            case "Smartphones":
-                                cat.put("id", base.get("id"));
-                                cat.put("nome", base.get("nome"));
-                                cat.put("descricao", filha.getJSONObject(0).get("descricao"));
-                                cat.put("marca", filha.getJSONObject(0).get("marca"));
-                                cat.put("processador", filha.getJSONObject(1).get("processador"));
-                                cat.put("ram", filha.getJSONObject(1).get("ram"));
-                                cat.put("hdd", filha.getJSONObject(1).get("hdd"));
-                                cat.put("os", filha.getJSONObject(1).get("os"));
-                                cat.put("tamanho", filha.getJSONObject(1).get("tamanho"));
-
-                                Smartphone categoriaS = SmartphonesParser.paraObjeto(cat, context);
-                                categoriasListener.onObterCategoria(categoriaS, tipoCategoria, tipo);
-                                break;
-                            case "Livros":
-                                cat.put("id", base.get("id"));
-                                cat.put("nome", base.get("nome"));
-                                cat.put("titulo", filha.getJSONObject(0).get("titulo"));
-                                cat.put("editora", filha.getJSONObject(0).get("editora"));
-                                cat.put("autor", filha.getJSONObject(0).get("autor"));
-                                cat.put("isbn", filha.getJSONObject(0).get("isbn"));
-
-                                Livro categoriaL = LivrosParser.paraObjeto(cat, context);
-                                categoriasListener.onObterCategoria(categoriaL, tipoCategoria, tipo);
-                                break;
-                            case "Roupa":
-                                cat.put("id", base.get("id"));
-                                cat.put("nome", base.get("nome"));
-                                cat.put("marca", filha.getJSONObject(0).get("marca"));
-                                cat.put("tamanho", filha.getJSONObject(0).get("tamanho"));
-                                cat.put("id_tipo", filha.getJSONObject(0).get("id_tipo"));
-
-                                Roupa categoriaR = RoupasParser.paraObjeto(cat, context);
-                                categoriasListener.onObterCategoria(categoriaR, tipoCategoria, tipo);
-                                break;
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void Erro(VolleyError erro) {
-                    if (anunciosListener != null) {
-                        Integer code = 0;
-
-                        if (erro.networkResponse != null)
-                            code = erro.networkResponse.statusCode;
-
-                        anunciosListener.onErrorAnunciosAPI("Não foi possível obter os dados do bem do anúncio - " + code, erro);
-                    }
-                }
-            });
-
-            SingletonAPIManager.getInstance(context).getRequestQueue(context).add(pedido);
-        }
-    }
-
     public void getAnunciosUser(final Context context) {
+
         Long userId = preferences.getLong("id", 0);
 
         if (SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
@@ -269,6 +134,7 @@ public class SingletonAnuncios {
     }
 
     public void getAnunciosSugeridos(final Context context) {
+
         String username = preferences.getString("username", "");
 
         if (SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
@@ -398,9 +264,6 @@ public class SingletonAnuncios {
         }
     }
 
-    //------------------------------------------------------------
-    //LOCAL A PARTIR DAQUI
-
     public void adicionarAnunciosLocal(ArrayList<Anuncio> anuncioList) {
         for(Anuncio anuncio : anuncioList) {
             bdTable.insert(anuncio);
@@ -425,7 +288,7 @@ public class SingletonAnuncios {
         return anuncios.contains(anuncio);
     }
 
-    public Anuncio pesquisarAnuncioID(Long id) {
+    public Anuncio pesquisarAnuncioPorID(Long id) {
         for (Anuncio anuncio : anuncios) {
             if (anuncio.getId().toString().equals(id.toString())) {
                 return anuncio;
@@ -435,12 +298,8 @@ public class SingletonAnuncios {
         return null;
     }
 
-    public Anuncio pesquisarAnuncioPosicao(Integer i) {
+    public Anuncio pesquisarAnuncioPorPosicao(Integer i) {
         return anuncios.get(i);
-    }
-
-    public ArrayList<Anuncio> getAnuncios() {
-        return anuncios;
     }
 
     public Integer getAnunciosCount() {
@@ -449,9 +308,5 @@ public class SingletonAnuncios {
 
     public void setAnunciosListener(AnunciosListener anunciosListener) {
         this.anunciosListener = anunciosListener;
-    }
-
-    public void setCategoriasListener(CategoriasListener categoriasListener) {
-        this.categoriasListener = categoriasListener;
     }
 }

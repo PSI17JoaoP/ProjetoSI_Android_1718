@@ -39,6 +39,10 @@ public class SingletonGenerosJogo {
         getGenerosJogosAPI(context);
     }
 
+    public ArrayList<GeneroJogo> getGeneroJogos() {
+        return generosJogos;
+    }
+
     private void getGenerosJogosAPI(final Context context) {
 
         if(generosJogos.isEmpty()) {
@@ -72,14 +76,6 @@ public class SingletonGenerosJogo {
         }
     }
 
-    public ArrayList<GeneroJogo> getGeneroJogos() {
-        return generosJogos;
-    }
-
-    public void setGeneroJogos(ArrayList<GeneroJogo> generosJogos) {
-        this.generosJogos = generosJogos;
-    }
-
     public boolean adicionarGeneroJogoLocal(GeneroJogo genero) {
         GeneroJogo generoInserido = bdTable.insert(genero);
 
@@ -100,7 +96,7 @@ public class SingletonGenerosJogo {
         }
     }
 
-    public GeneroJogo pesquisarGeneroJogosID(Long id) {
+    public GeneroJogo pesquisarGeneroJogosPorID(Long id) {
         for (GeneroJogo genero : generosJogos) {
             if (genero.getId().toString().equals(id.toString())) {
                 return genero;

@@ -32,7 +32,7 @@ public class ClienteBDTable extends BDHelper<Cliente> {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createTableClientes = "CREATE TABLE " + TABLE_NAME +
-                "(" + ID_USER_CLIENTE + "INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "(" + ID_USER_CLIENTE + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 NOME_COMPLETO_CLIENTE + " TEXT NOT NULL," +
                 DATA_NASCIMENTO_CLIENTE+ " DATE NOT NULL," +
                 TELEFONE_CLIENTE + " INTEGER NOT NULL," +
