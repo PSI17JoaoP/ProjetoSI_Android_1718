@@ -5,17 +5,23 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.adaptadores.CategoriasAdapter;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.CategoriasListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.ClientesListener;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.ImagesListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Anuncio;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Brinquedo;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Categoria;
@@ -34,7 +40,7 @@ import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.sin
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonGenerosJogo;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonTiposRoupa;
 
-public class DetalhesAnuncioActivity extends NavDrawerActivity implements CategoriasListener, ClientesListener{
+public class DetalhesAnuncioActivity extends NavDrawerActivity implements CategoriasListener, ClientesListener, ImagesListener{
 
     private Anuncio anuncio;
 
@@ -102,6 +108,9 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Catego
                         }
                     });
                 }
+
+                SingletonAnuncios.getInstance(getApplicationContext()).setImagesListener(this);
+                SingletonAnuncios.getInstance(getApplicationContext()).getImagensAnuncio(anuncio.getId(), getApplicationContext());
 
                 SingletonClientes.getInstance(getApplicationContext()).setClientesListener(this);
                 SingletonClientes.getInstance(getApplicationContext()).getClienteAPI(anuncio.getIdUser(), getApplicationContext());
@@ -245,9 +254,17 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Catego
         }
     }
 
+    private void showNotification(String message) {
+        Snackbar snackbar = Snackbar
+                .make(findViewById(R.id.coordinatorLayoutDetalhesAnuncio), message, Snackbar.LENGTH_LONG);
+
+        snackbar.show();
+    }
+
     @Override
     public void onErroObterCategoria(String message, Exception ex) {
-
+        ex.printStackTrace();
+        showNotification(message);
     }
 
     @Override
@@ -258,6 +275,28 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Catego
 
     @Override
     public void OnErroObterCliente(String message, Exception ex) {
+        ex.printStackTrace();
+        showNotification(message);
+    }
 
+    @Override
+    public void OnSucessoObterImagens(ArrayList<byte[]> imagensBytes) {
+
+        ImageView imageViewAnuncio = findViewById(R.id.imageViewImagensAnuncio);
+
+        byte[] imagem = imagensBytes.get(0);
+
+        Glide.with(this)
+            .fromBytes()
+            .asBitmap()
+            .fitCenter()
+            .load(imagem)
+            .into(imageViewAnuncio);
+    }
+
+    @Override
+    public void OnErrorObterImagens(String message, Exception ex) {
+        ex.printStackTrace();
+        showNotification(message);
     }
 }

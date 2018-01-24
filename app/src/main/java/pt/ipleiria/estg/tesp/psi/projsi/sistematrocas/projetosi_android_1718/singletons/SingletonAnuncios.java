@@ -2,6 +2,7 @@ package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.si
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Base64;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.helpers.AnuncioBDTable;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.AnunciosListener;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.ImagesListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Anuncio;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.parsers.AnunciosParser;
 
@@ -32,6 +34,7 @@ public class SingletonAnuncios {
     private SharedPreferences preferences;
 
     private AnunciosListener anunciosListener;
+    private ImagesListener imagesListener;
 
     public static synchronized SingletonAnuncios getInstance(Context context) {
         if (INSTANCE == null)
@@ -160,6 +163,53 @@ public class SingletonAnuncios {
         }
     }
 
+    public void getImagensAnuncio(final Long id, final Context context) {
+
+        if(SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
+
+            JsonObjectRequest anunciosUserAPI = SingletonAPIManager.getInstance(context).pedirAPI("anuncios/" + String.valueOf(id) + "/imagens", context, new SingletonAPIManager.APIJsonResposta() {
+                @Override
+                public void Sucesso(JSONObject resultado) {
+
+                    try {
+
+                        JSONArray imagensJSON = resultado.getJSONArray("Imagens");
+
+                        if(imagensJSON.length() > 0) {
+
+                            ArrayList<byte[]> imagens = new ArrayList<>();
+
+                            for (int primeiroContador = 0; primeiroContador < imagensJSON.length(); primeiroContador++)
+                            {
+                                String imagemBase64 = (String) imagensJSON.get(primeiroContador);
+                                byte[] imagemBytes = Base64.decode(imagemBase64, Base64.DEFAULT);
+
+                                imagens.add(imagemBytes);
+                            }
+
+                            if (!imagens.isEmpty()) {
+                                if (imagesListener != null)
+                                    imagesListener.OnSucessoObterImagens(imagens);
+                            }
+                        }
+
+                    } catch (JSONException e) {
+                        if (imagesListener != null)
+                            imagesListener.OnErrorObterImagens("Ocorreu um erro no processamento das imagens.", e);
+                    }
+                }
+
+                @Override
+                public void Erro(VolleyError erro) {
+                    if (imagesListener != null)
+                        imagesListener.OnErrorObterImagens("Não foi possível pedir as imagens do(s) anúncio(s) à API.", erro);
+                }
+            });
+
+            SingletonAPIManager.getInstance(context).getRequestQueue(context).add(anunciosUserAPI);
+        }
+    }
+
     public void adicionarAnuncio(Anuncio anuncio, final Context context) {
 
         if (SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
@@ -264,23 +314,23 @@ public class SingletonAnuncios {
         }
     }
 
-    public void adicionarAnunciosLocal(ArrayList<Anuncio> anuncioList) {
+    private void adicionarAnunciosLocal(ArrayList<Anuncio> anuncioList) {
         for(Anuncio anuncio : anuncioList) {
             bdTable.insert(anuncio);
         }
     }
 
-    public boolean adicionarAnuncioLocal(Anuncio anuncio) {
+    private boolean adicionarAnuncioLocal(Anuncio anuncio) {
         Anuncio anuncioInserido = bdTable.insert(anuncio);
 
         return anuncioInserido != null && anuncios.add(anuncioInserido);
     }
 
-    public boolean removerAnuncioLocal(Anuncio anuncio) {
+    private boolean removerAnuncioLocal(Anuncio anuncio) {
         return bdTable.delete(anuncio.getId()) && anuncios.remove(anuncio);
     }
 
-    public boolean editarAnuncioLocal(Anuncio anuncio, int posicao) {
+    private boolean editarAnuncioLocal(Anuncio anuncio, int posicao) {
         if(bdTable.update(anuncio)) {
             anuncios.set(posicao, anuncio);
         }
@@ -308,5 +358,9 @@ public class SingletonAnuncios {
 
     public void setAnunciosListener(AnunciosListener anunciosListener) {
         this.anunciosListener = anunciosListener;
+    }
+
+    public void setImagesListener(ImagesListener imagesListener) {
+        this.imagesListener = imagesListener;
     }
 }

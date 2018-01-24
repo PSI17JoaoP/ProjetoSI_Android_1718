@@ -7,7 +7,10 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +19,7 @@ import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.ada
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.AnunciosListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.CategoriasListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.ClientesListener;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.ImagesListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.PropostasListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Anuncio;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Brinquedo;
@@ -37,7 +41,7 @@ import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.sin
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonPropostas;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonTiposRoupa;
 
-public class DetalhesPropostaActivity extends NavDrawerActivity implements AnunciosListener, PropostasListener, CategoriasListener, ClientesListener{
+public class DetalhesPropostaActivity extends NavDrawerActivity implements AnunciosListener, PropostasListener, CategoriasListener, ClientesListener, ImagesListener{
 
     private Anuncio anuncioProposta;
     private Proposta proposta;
@@ -91,6 +95,9 @@ public class DetalhesPropostaActivity extends NavDrawerActivity implements Anunc
                         SingletonPropostas.getInstance(getApplicationContext()).alterarProposta(proposta, getApplicationContext());
                     }
                 });
+
+                SingletonPropostas.getInstance(getApplicationContext()).setImagesListener(this);
+                SingletonPropostas.getInstance(getApplicationContext()).getImagensProposta(proposta.getId(), getApplicationContext());
 
                 SingletonClientes.getInstance(getApplicationContext()).setClientesListener(this);
                 SingletonClientes.getInstance(getApplicationContext()).getClienteAPI(proposta.getIdUser(), getApplicationContext());
@@ -258,7 +265,8 @@ public class DetalhesPropostaActivity extends NavDrawerActivity implements Anunc
 
     @Override
     public void onErroObterCategoria(String message, Exception ex) {
-
+        ex.printStackTrace();
+        showNotification(message);
     }
 
     @Override
@@ -269,6 +277,28 @@ public class DetalhesPropostaActivity extends NavDrawerActivity implements Anunc
 
     @Override
     public void OnErroObterCliente(String message, Exception ex) {
+        ex.printStackTrace();
+        showNotification(message);
+    }
 
+    @Override
+    public void OnSucessoObterImagens(ArrayList<byte[]> imagensBytes) {
+
+        ImageView imageViewProposta = findViewById(R.id.imageViewImagensProposta);
+
+        byte[] imagem = imagensBytes.get(0);
+
+        Glide.with(this)
+            .fromBytes()
+            .asBitmap()
+            .fitCenter()
+            .load(imagem)
+            .into(imageViewProposta);
+    }
+
+    @Override
+    public void OnErrorObterImagens(String message, Exception ex) {
+        ex.printStackTrace();
+        showNotification(message);
     }
 }

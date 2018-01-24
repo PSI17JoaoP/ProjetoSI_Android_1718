@@ -2,6 +2,7 @@ package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.si
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Base64;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
@@ -15,6 +16,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.helpers.PropostaBDTable;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.ImagesListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.PropostasListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Proposta;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.parsers.PropostasParser;
@@ -31,6 +33,7 @@ public class SingletonPropostas {
     private SharedPreferences preferences;
 
     private PropostasListener propostasListener;
+    private ImagesListener imagesListener;
 
     public static SingletonPropostas getInstance(Context context) {
         if (INSTANCE == null)
@@ -93,6 +96,53 @@ public class SingletonPropostas {
         } else {
             if (propostasListener != null)
                 propostasListener.onRefreshPropostas(propostas);
+        }
+    }
+
+    public void getImagensProposta(final Long id, final Context context) {
+
+        if(SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
+
+            JsonObjectRequest imagensProposta = SingletonAPIManager.getInstance(context).pedirAPI("propostas/" + String.valueOf(id) + "/imagens", context, new SingletonAPIManager.APIJsonResposta() {
+                @Override
+                public void Sucesso(JSONObject resultado) {
+
+                    try {
+
+                        JSONArray imagensJSON = resultado.getJSONArray("Imagens");
+
+                        if(imagensJSON.length() > 0) {
+
+                            ArrayList<byte[]> imagens = new ArrayList<>();
+
+                            for (int primeiroContador = 0; primeiroContador < imagensJSON.length(); primeiroContador++)
+                            {
+                                String imagemBase64 = (String) imagensJSON.get(primeiroContador);
+                                byte[] imagemBytes = Base64.decode(imagemBase64, Base64.DEFAULT);
+
+                                imagens.add(imagemBytes);
+                            }
+
+                            if (!imagens.isEmpty()) {
+                                if (imagesListener != null)
+                                    imagesListener.OnSucessoObterImagens(imagens);
+                            }
+                        }
+
+                    } catch (JSONException e) {
+                        if (imagesListener != null)
+                            imagesListener.OnErrorObterImagens("Ocorreu um erro no processamento das imagens.", e);
+                    }
+                }
+
+                @Override
+                public void Erro(VolleyError erro) {
+                    if (imagesListener != null)
+                        imagesListener.OnErrorObterImagens("Não foi possível pedir as imagens da(s) proposta(s) à API.", erro);
+                }
+            });
+
+            SingletonAPIManager.getInstance(context).getRequestQueue(context).add(imagensProposta);
         }
     }
 
@@ -189,23 +239,23 @@ public class SingletonPropostas {
         }
     }
 
-    public void adicionarPropostasLocal(ArrayList<Proposta> propostas) {
+    private void adicionarPropostasLocal(ArrayList<Proposta> propostas) {
         for(Proposta proposta : propostas) {
             bdTable.insert(proposta);
         }
     }
 
-    public boolean adicionarPropostaLocal(Proposta proposta) {
+    private boolean adicionarPropostaLocal(Proposta proposta) {
         Proposta propostaInserida = bdTable.insert(proposta);
 
         return propostaInserida != null && propostas.add(propostaInserida);
     }
 
-    public boolean removerPropostaLocal(Proposta proposta) {
+    private boolean removerPropostaLocal(Proposta proposta) {
         return bdTable.delete(proposta.getId()) && propostas.remove(proposta);
     }
 
-    public boolean editarPropostaLocal(Proposta proposta, int posicao) {
+    private boolean editarPropostaLocal(Proposta proposta, int posicao) {
         if(bdTable.update(proposta)) {
             propostas.set(posicao, proposta);
         }
@@ -232,5 +282,9 @@ public class SingletonPropostas {
 
     public void setPropostasListener(PropostasListener propostasListener) {
         this.propostasListener = propostasListener;
+    }
+
+    public void setImagesListener(ImagesListener imagesListener) {
+        this.imagesListener = imagesListener;
     }
 }
