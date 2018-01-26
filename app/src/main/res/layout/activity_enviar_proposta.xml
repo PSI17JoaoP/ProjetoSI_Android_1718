@@ -7,7 +7,13 @@
     android:layout_height="match_parent"
     tools:context="pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.EnviarPropostaActivity">
 
-    <include layout="@layout/content_enviar_proposta" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/content_enviar_proposta" />
+
+    </ScrollView>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabEnviarProposta"
