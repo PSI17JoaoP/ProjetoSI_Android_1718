@@ -48,11 +48,4 @@ public class MyFragmentManager {
 
         return null;
     }
-
-    public static String getImagemBase64(byte[] imagensBytes) {
-
-        byte[] imagemBase64Bytes = Base64.encode(imagensBytes, Base64.DEFAULT);
-
-        return new String(imagemBase64Bytes);
-    }
 }

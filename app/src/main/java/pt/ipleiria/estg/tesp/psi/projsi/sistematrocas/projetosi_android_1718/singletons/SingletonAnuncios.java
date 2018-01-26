@@ -2,7 +2,6 @@ package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.si
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Base64;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
@@ -22,6 +21,7 @@ import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.hel
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.AnunciosListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.ImagesListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Anuncio;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.ImageManager;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.parsers.AnunciosParser;
 
 /**
@@ -181,30 +181,30 @@ public class SingletonAnuncios {
 
                             ArrayList<byte[]> imagens = new ArrayList<>();
 
-                            for (int primeiroContador = 0; primeiroContador < imagensJSON.length(); primeiroContador++)
+                            for (int contador = 0; contador < imagensJSON.length(); contador++)
                             {
-                                String imagemBase64 = (String) imagensJSON.get(primeiroContador);
-                                byte[] imagemBytes = Base64.decode(imagemBase64, Base64.DEFAULT);
+                                String imagemBase64 = (String) imagensJSON.get(contador);
+                                byte[] imagemBytes = ImageManager.fromBase64(imagemBase64);
 
                                 imagens.add(imagemBytes);
                             }
 
                             if (!imagens.isEmpty()) {
                                 if (imagesListener != null)
-                                    imagesListener.OnSucessoObterImagens(imagens);
+                                    imagesListener.OnSucessoImagensAPI(imagens);
                             }
                         }
 
                     } catch (JSONException e) {
                         if (imagesListener != null)
-                            imagesListener.OnErrorObterImagens("Ocorreu um erro no processamento das imagens.", e);
+                            imagesListener.OnErrorImagensAPI("Ocorreu um erro no processamento das imagens.", e);
                     }
                 }
 
                 @Override
                 public void Erro(VolleyError erro) {
                     if (imagesListener != null)
-                        imagesListener.OnErrorObterImagens("Não foi possível pedir as imagens do(s) anúncio(s) à API.", erro);
+                        imagesListener.OnErrorImagensAPI("Não foi possível pedir as imagens do(s) anúncio(s) à API.", erro);
                 }
             });
 
@@ -265,11 +265,33 @@ public class SingletonAnuncios {
                             @Override
                             public void Sucesso(String resposta) {
 
+                                try {
+                                    ArrayList<byte[]> imagens = new ArrayList<>();
+
+                                    JSONArray imagensJSON = new JSONArray(resposta);
+
+                                    for (int contador = 0; contador < imagensJSON.length(); contador++) {
+                                        JSONObject imagemJSON = imagensJSON.getJSONObject(contador);
+                                        String imagemBase64 = imagemJSON.getString(id + "_" + contador + ".png");
+                                        byte[] imagemBytes = ImageManager.fromBase64(imagemBase64);
+                                        imagens.add(imagemBytes);
+                                    }
+
+                                    if (!imagens.isEmpty()) {
+                                        if(imagesListener != null)
+                                            imagesListener.OnSucessoImagensAPI(imagens);
+                                    }
+
+                                } catch (JSONException e) {
+                                    if(imagesListener != null)
+                                        imagesListener.OnErrorImagensAPI("Ocorreu um erro no processamento das imagens devolvidas pela API.", e);
+                                }
                             }
 
                             @Override
                             public void Erro(VolleyError erro) {
-
+                                if(imagesListener != null)
+                                    imagesListener.OnErrorImagensAPI("Não foi possivél enviar as imagens do anúncio para a API.", erro);
                             }
                         });
 
@@ -277,7 +299,8 @@ public class SingletonAnuncios {
             }
 
         } catch (JSONException e) {
-            e.printStackTrace();
+            if(imagesListener != null)
+                imagesListener.OnErrorImagensAPI("Ocorreu um erro no processamento das imagens a enviar para a API.", e);
         }
     }
 

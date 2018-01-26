@@ -8,6 +8,6 @@ import java.util.ArrayList;
  */
 
 public interface ImagesListener {
-    void OnSucessoObterImagens(ArrayList<byte[]> imagensBytes);
-    void OnErrorObterImagens(String message, Exception ex);
+    void OnSucessoImagensAPI(ArrayList<byte[]> imagensBytes);
+    void OnErrorImagensAPI(String message, Exception ex);
 }

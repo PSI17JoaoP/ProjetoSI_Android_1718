@@ -118,35 +118,36 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/linearLayoutCriarAnuncioImagensTroco"
+        <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginTop="10dp">
 
             <LinearLayout
-                android:id="@+id/linearLayoutCriarAnuncioImagensTrocoAnuncio"
+                android:id="@+id/linearLayoutCriarAnuncioImagens"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/imageViewCriarAnuncioImagemTroco"
+                <LinearLayout
+                    android:id="@+id/linearLayoutCriarAnuncioImagensAnuncio"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent" />
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                </LinearLayout>
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fabCriarAnuncioImagens"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|end"
+                    android:src="@android:drawable/ic_menu_camera"
+                    app:backgroundTint="@color/colorPrimary" />
 
             </LinearLayout>
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fabCriarAnuncioImagensTroco"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center|end"
-                android:layout_margin="@dimen/fab_margin"
-                android:src="@android:drawable/ic_menu_camera"
-                app:backgroundTint="@color/colorPrimary" />
-
-        </LinearLayout>
+        </HorizontalScrollView>
 
         <FrameLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -234,37 +235,6 @@
                 android:layout_height="match_parent"
                 android:layout_width="0dp"
                 android:layout_weight=".15"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayoutCriarAnuncioImagensPor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:weightSum="1"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:id="@+id/linearLayoutCriarAnuncioImagensPorAnuncio"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/imageViewCriarAnuncioImagemPor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent" />
-
-            </LinearLayout>
-
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fabCriarAnuncioImagensPor"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center|end"
-                android:layout_margin="@dimen/fab_margin"
-                android:src="@android:drawable/ic_menu_camera"
-                app:backgroundTint="@color/colorPrimary" />
 
         </LinearLayout>
 

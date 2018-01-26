@@ -280,22 +280,22 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Catego
     }
 
     @Override
-    public void OnSucessoObterImagens(ArrayList<byte[]> imagensBytes) {
+    public void OnSucessoImagensAPI(ArrayList<byte[]> imagensBytes) {
 
         ImageView imageViewAnuncio = findViewById(R.id.imageViewImagensAnuncio);
 
         byte[] imagem = imagensBytes.get(0);
 
         Glide.with(this)
-            .fromBytes()
-            .asBitmap()
-            .fitCenter()
-            .load(imagem)
-            .into(imageViewAnuncio);
+                .fromBytes()
+                .asBitmap()
+                .fitCenter()
+                .load(imagem)
+                .into(imageViewAnuncio);
     }
 
     @Override
-    public void OnErrorObterImagens(String message, Exception ex) {
+    public void OnErrorImagensAPI(String message, Exception ex) {
         ex.printStackTrace();
         showNotification(message);
     }

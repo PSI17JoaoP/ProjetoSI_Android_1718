@@ -86,36 +86,38 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/linearLayoutEnviarPropostaImagens"
+
+        <HorizontalScrollView
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
 
             <LinearLayout
-                android:id="@+id/linearLayoutEnviarPropostaImagensProposta"
+                android:id="@+id/linearLayoutEnviarPropostaImagens"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/imageViewEnviarPropostaImagem"
+                <LinearLayout
+                    android:id="@+id/linearLayoutEnviarPropostaImagensProposta"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent" />
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                </LinearLayout>
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fabEnviarPropostaImagens"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|end"
+                    android:src="@android:drawable/ic_menu_camera"
+                    app:backgroundTint="@color/colorPrimary"/>
 
             </LinearLayout>
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fabEnviarPropostaImagens"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center|end"
-                android:layout_margin="@dimen/fab_margin"
-                android:src="@android:drawable/ic_menu_camera"
-                app:backgroundTint="@color/colorPrimary"/>
+        </HorizontalScrollView>
 
-        </LinearLayout>
 
         <FrameLayout
             xmlns:android="http://schemas.android.com/apk/res/android"

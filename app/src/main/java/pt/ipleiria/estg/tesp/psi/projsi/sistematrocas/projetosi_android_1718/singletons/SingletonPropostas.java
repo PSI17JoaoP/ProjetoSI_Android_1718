@@ -2,7 +2,6 @@ package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.si
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Base64;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
@@ -20,6 +19,7 @@ import java.util.ArrayList;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.helpers.PropostaBDTable;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.ImagesListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.PropostasListener;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.ImageManager;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Proposta;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.parsers.PropostasParser;
 
@@ -120,27 +120,27 @@ public class SingletonPropostas {
                             for (int primeiroContador = 0; primeiroContador < imagensJSON.length(); primeiroContador++)
                             {
                                 String imagemBase64 = (String) imagensJSON.get(primeiroContador);
-                                byte[] imagemBytes = Base64.decode(imagemBase64, Base64.DEFAULT);
+                                byte[] imagemBytes = ImageManager.fromBase64(imagemBase64);
 
                                 imagens.add(imagemBytes);
                             }
 
                             if (!imagens.isEmpty()) {
                                 if (imagesListener != null)
-                                    imagesListener.OnSucessoObterImagens(imagens);
+                                    imagesListener.OnSucessoImagensAPI(imagens);
                             }
                         }
 
                     } catch (JSONException e) {
                         if (imagesListener != null)
-                            imagesListener.OnErrorObterImagens("Ocorreu um erro no processamento das imagens.", e);
+                            imagesListener.OnErrorImagensAPI("Ocorreu um erro no processamento das imagens.", e);
                     }
                 }
 
                 @Override
                 public void Erro(VolleyError erro) {
                     if (imagesListener != null)
-                        imagesListener.OnErrorObterImagens("Não foi possível pedir as imagens da(s) proposta(s) à API.", erro);
+                        imagesListener.OnErrorImagensAPI("Não foi possível pedir as imagens da(s) proposta(s) à API.", erro);
                 }
             });
 
@@ -181,7 +181,7 @@ public class SingletonPropostas {
         }
     }
 
-    public void enviarImagensProposta(final Long id, final ArrayList<String> imagensBase64, final Context context) {
+    public void enviarImagensProposta(final Long propostaId, final Long anuncioId, final ArrayList<String> imagensBase64, final Context context) {
 
         GsonBuilder gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.IDENTITY);
 
@@ -195,16 +195,38 @@ public class SingletonPropostas {
 
             if(SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
 
-                StringRequest enviarImagensAnuncio = SingletonAPIManager.getInstance(context).enviarAPI("propostas/" + String.valueOf(id) + "/imagens", context,
+                StringRequest enviarImagensAnuncio = SingletonAPIManager.getInstance(context).enviarAPI("propostas/" + String.valueOf(propostaId) + "/imagens", context,
                         Request.Method.POST, imagensString, new SingletonAPIManager.APIStringResposta() {
                             @Override
                             public void Sucesso(String resposta) {
 
+                                try {
+                                    ArrayList<byte[]> imagens = new ArrayList<>();
+
+                                    JSONArray imagensJSON = new JSONArray(resposta);
+
+                                    for (int contador = 0; contador < imagensJSON.length(); contador++) {
+                                        JSONObject imagemJSON = imagensJSON.getJSONObject(contador);
+                                        String imagemBase64 = imagemJSON.getString(anuncioId + "_" + propostaId + "_" + contador + ".png");
+                                        byte[] imagemBytes = ImageManager.fromBase64(imagemBase64);
+                                        imagens.add(imagemBytes);
+                                    }
+
+                                    if (!imagens.isEmpty()) {
+                                        if(imagesListener != null)
+                                            imagesListener.OnSucessoImagensAPI(imagens);
+                                    }
+
+                                } catch (JSONException e) {
+                                    if(imagesListener != null)
+                                        imagesListener.OnErrorImagensAPI("Ocorreu um erro no processamento das imagens devolvidas pela API.", e);
+                                }
                             }
 
                             @Override
                             public void Erro(VolleyError erro) {
-
+                                if(imagesListener != null)
+                                    imagesListener.OnErrorImagensAPI("Não foi possivél enviar as imagens da proposta para a API.", erro);
                             }
                         });
 
@@ -212,7 +234,8 @@ public class SingletonPropostas {
             }
 
         } catch (JSONException e) {
-            e.printStackTrace();
+            if(imagesListener != null)
+                imagesListener.OnErrorImagensAPI("Ocorreu um erro no processamento das imagens a enviar para a API.", e);
         }
     }
 

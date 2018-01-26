@@ -282,22 +282,22 @@ public class DetalhesPropostaActivity extends NavDrawerActivity implements Anunc
     }
 
     @Override
-    public void OnSucessoObterImagens(ArrayList<byte[]> imagensBytes) {
+    public void OnSucessoImagensAPI(ArrayList<byte[]> imagensBytes) {
 
         ImageView imageViewProposta = findViewById(R.id.imageViewImagensProposta);
 
         byte[] imagem = imagensBytes.get(0);
 
         Glide.with(this)
-            .fromBytes()
-            .asBitmap()
-            .fitCenter()
-            .load(imagem)
-            .into(imageViewProposta);
+                .fromBytes()
+                .asBitmap()
+                .fitCenter()
+                .load(imagem)
+                .into(imageViewProposta);
     }
 
     @Override
-    public void OnErrorObterImagens(String message, Exception ex) {
+    public void OnErrorImagensAPI(String message, Exception ex) {
         ex.printStackTrace();
         showNotification(message);
     }

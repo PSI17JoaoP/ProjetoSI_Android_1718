@@ -26,23 +26,24 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.ImageViewTarget;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.fragments.MyFragmentManager;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.ImagesListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.PropostasListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Categoria;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.ImageManager;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Proposta;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonActivityAPIResponse;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonCategorias;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonPropostas;
 
-public class EnviarPropostaActivity extends NavDrawerActivity implements AdapterView.OnItemSelectedListener, PropostasListener {
+public class EnviarPropostaActivity extends NavDrawerActivity implements AdapterView.OnItemSelectedListener, PropostasListener, ImagesListener {
 
     private HashMap<Integer, String> categoriasHashMap;
     private FragmentManager fragmentManager;
@@ -51,11 +52,13 @@ public class EnviarPropostaActivity extends NavDrawerActivity implements Adapter
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
 
+    private static final int WIDTH_TO_DOWNSAMPLE = 1200;
+    private static final int HEIGHT_TO_DOWNSAMPLE = 1200;
+
     @SuppressLint("UseSparseArrays")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_enviar_proposta);
         View.inflate(this, R.layout.activity_enviar_proposta, (ViewGroup) findViewById(R.id.app_content));
 
         String[] categoriasValues = getResources().getStringArray(R.array.categorias_values);
@@ -163,15 +166,11 @@ public class EnviarPropostaActivity extends NavDrawerActivity implements Adapter
 
                     try
                     {
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        imagem.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        byte[] imagemBytes = ImageManager.toByteArray(imagem);
 
-                        byte[] imagemBytes = stream.toByteArray();
+                        byte[] downsampledImagemBytes = ImageManager.downscaleImage(imagemBytes, WIDTH_TO_DOWNSAMPLE, HEIGHT_TO_DOWNSAMPLE);
 
-                        stream.flush();
-                        stream.close();
-
-                        String imagemBase64 = MyFragmentManager.getImagemBase64(imagemBytes);
+                        String imagemBase64 = ImageManager.toBase64(downsampledImagemBytes);
                         imagensProposta.add(imagemBase64);
 
                         LinearLayout linearLayoutImagens = findViewById(R.id.linearLayoutEnviarPropostaImagensProposta);
@@ -182,13 +181,13 @@ public class EnviarPropostaActivity extends NavDrawerActivity implements Adapter
                         linearLayoutImagens.addView(imageViewImagem);
 
                         Glide.with(getApplicationContext())
-                                .load(imagemBytes)
+                                .load(downsampledImagemBytes)
                                 .asBitmap()
-                                .override(240, 240)
+                                .override(240, ImageViewTarget.SIZE_ORIGINAL)
                                 .into(imageViewImagem);
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    } catch (RuntimeException e) {
+                        showNotification(e.getMessage());
                     }
                 }
             }
@@ -246,15 +245,14 @@ public class EnviarPropostaActivity extends NavDrawerActivity implements Adapter
 
     }
 
-    private void showNotification(String message) {
-        Snackbar snackbar = Snackbar
-                .make(findViewById(R.id.coordinatorLayoutEnviarProposta), message, Snackbar.LENGTH_LONG);
-
-        snackbar.show();
-    }
-
-    //Método que obtém a categoria do fragment, através do método getCategoria da classe MyFragmentManager.
-    private Categoria getCategoria(@NonNull String nomeCategoria, @NonNull Integer categoriaKeyPosition) {
+    /**
+     * Método que obtém a categoria do fragment, através do método getCategoria da classe MyFragmentManager.
+     *
+     * @param nomeCategoria Nome da categoria.
+     * @param categoriaKeyPosition Posição da key do HashMap de categorias.
+     * @return Categoria obtida.
+     */
+    private Categoria getCategoria(String nomeCategoria, Integer categoriaKeyPosition) {
 
         Categoria categoria = null;
 
@@ -276,7 +274,13 @@ public class EnviarPropostaActivity extends NavDrawerActivity implements Adapter
         return categoria;
     }
 
-    private void getCategoriaProposta(@NonNull final Categoria categoria, @NonNull final Integer quantidade) {
+    /**
+     * Método que executa o pedido de envio da categoria da proposta obtida à API, através do método adicionarCategoria da classe SingletonCategorias.
+     *
+     * @param categoria Categoria obtida.
+     * @param quantidade Quantidade de bem da categoria obtida.
+     */
+    private void getCategoriaProposta(final Categoria categoria, final Integer quantidade) {
 
         SingletonCategorias.getInstance().adicionarCategoria(categoria, getApplicationContext(), new SingletonActivityAPIResponse() {
             @Override
@@ -292,7 +296,13 @@ public class EnviarPropostaActivity extends NavDrawerActivity implements Adapter
         });
     }
 
-    private void getProposta(@NonNull final Categoria categoria, @NonNull final Integer quantidade) {
+    /**
+     * Obtém a proposta com o bem da Categoria especificada e os respetivos dados.
+     *
+     * @param categoria Categoria obtida.
+     * @param quantidade Quantidade de bem da categoria obtida.
+     */
+    private void getProposta(final Categoria categoria, final Integer quantidade) {
 
         SharedPreferences preferences = getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
         Long userID = preferences.getLong("id", 0);
@@ -308,7 +318,12 @@ public class EnviarPropostaActivity extends NavDrawerActivity implements Adapter
         }
     }
 
-    private void saveProposta(Proposta proposta) {
+    /**
+     *  Método que executa o pedido de envio da proposta à API, através do método adicionarProposta da classe SingletonPropostas.
+     *
+     * @param proposta Proposta obtida.
+     */
+    private void saveProposta(final Proposta proposta) {
 
         //Guardada como variável global, para ser visivel no onRefreshPropostas.
         this.proposta = proposta;
@@ -324,9 +339,20 @@ public class EnviarPropostaActivity extends NavDrawerActivity implements Adapter
         }
     }
 
+    private void showNotification(String message) {
+        Snackbar snackbar = Snackbar
+                .make(findViewById(R.id.coordinatorLayoutEnviarProposta), message, Snackbar.LENGTH_LONG);
+
+        snackbar.show();
+    }
+
     @Override
     public void onSuccessPropostasAPI(Proposta proposta) {
+
         showNotification("SUCESSO - Envio da proposta para a API.");
+
+        SingletonPropostas.getInstance(getApplicationContext()).setImagesListener(this);
+        SingletonPropostas.getInstance(getApplicationContext()).enviarImagensProposta(proposta.getId(), proposta.getIdAnuncio(), imagensProposta, getApplicationContext());
     }
 
     @Override
@@ -340,5 +366,17 @@ public class EnviarPropostaActivity extends NavDrawerActivity implements Adapter
         if (!propostas.contains(proposta)) {
             SingletonPropostas.getInstance(getApplicationContext()).adicionarProposta(proposta, getApplicationContext());
         }
+    }
+
+    @Override
+    public void OnSucessoImagensAPI(ArrayList<byte[]> imagensBytes) {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void OnErrorImagensAPI(String message, Exception ex) {
+        ex.printStackTrace();
+        showNotification(message);
     }
 }
