@@ -8,6 +8,8 @@ import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -176,6 +178,41 @@ public class SingletonPropostas {
                     });
 
             SingletonAPIManager.getInstance(context).getRequestQueue(context).add(propostasAPI);
+        }
+    }
+
+    public void enviarImagensProposta(final Long id, final ArrayList<String> imagensBase64, final Context context) {
+
+        GsonBuilder gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.IDENTITY);
+
+        JSONObject imagens = new JSONObject();
+
+        try {
+
+            imagens.put("Imagens", imagensBase64.toArray());
+
+            String imagensString = gson.create().toJson(imagens);
+
+            if(SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
+
+                StringRequest enviarImagensAnuncio = SingletonAPIManager.getInstance(context).enviarAPI("propostas/" + String.valueOf(id) + "/imagens", context,
+                        Request.Method.POST, imagensString, new SingletonAPIManager.APIStringResposta() {
+                            @Override
+                            public void Sucesso(String resposta) {
+
+                            }
+
+                            @Override
+                            public void Erro(VolleyError erro) {
+
+                            }
+                        });
+
+                SingletonAPIManager.getInstance(context).getRequestQueue(context).add(enviarImagensAnuncio);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 

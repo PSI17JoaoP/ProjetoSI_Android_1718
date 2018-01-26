@@ -2,8 +2,10 @@ package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.fr
 
 import android.support.v4.app.Fragment;
 import android.content.Context;
+import android.util.Base64;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Categoria;
 
@@ -45,5 +47,12 @@ public class MyFragmentManager {
         }
 
         return null;
+    }
+
+    public static String getImagemBase64(byte[] imagensBytes) {
+
+        byte[] imagemBase64Bytes = Base64.encode(imagensBytes, Base64.DEFAULT);
+
+        return new String(imagemBase64Bytes);
     }
 }

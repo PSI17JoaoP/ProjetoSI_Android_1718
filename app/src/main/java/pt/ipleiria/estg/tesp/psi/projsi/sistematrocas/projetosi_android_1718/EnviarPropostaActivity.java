@@ -2,8 +2,11 @@ package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,10 +19,16 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,11 +42,14 @@ import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.sin
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonCategorias;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonPropostas;
 
-public class EnviarPropostaActivity extends NavDrawerActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener, PropostasListener {
+public class EnviarPropostaActivity extends NavDrawerActivity implements AdapterView.OnItemSelectedListener, PropostasListener {
 
     private HashMap<Integer, String> categoriasHashMap;
     private FragmentManager fragmentManager;
     private Proposta proposta;
+    private ArrayList<String> imagensProposta;
+
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
 
     @SuppressLint("UseSparseArrays")
     @Override
@@ -83,8 +95,104 @@ public class EnviarPropostaActivity extends NavDrawerActivity implements Adapter
         numberPickerCategoria.setValue(1);
         numberPickerCategoria.setWrapSelectorWheel(true);
 
-        FloatingActionButton fab = findViewById(R.id.fabEnviarProposta);
-        fab.setOnClickListener(this);
+        FloatingActionButton fabEnviarProposta = findViewById(R.id.fabEnviarProposta);
+        fabEnviarProposta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Spinner dropDownEnviarPropostaCategorias = findViewById(R.id.dropDownEnviarPropostaCategorias);
+                NumberPicker numberPickerCategoria = findViewById(R.id.numberPickerCategoria);
+
+                EditText editTextEnviarPropostaNomeCategoria = findViewById(R.id.editTextEnviarPropostaNomeCategoria);
+                String nomeCategoria = editTextEnviarPropostaNomeCategoria.getText().toString().trim();
+
+                FrameLayout fragmentContainerForm = findViewById(R.id.fragmentFormCategoria);
+
+                if(!nomeCategoria.isEmpty() && fragmentContainerForm.getChildCount() != 0) {
+
+                    Categoria categoria = getCategoria(nomeCategoria, dropDownEnviarPropostaCategorias.getSelectedItemPosition());
+
+                    getCategoriaProposta(categoria, numberPickerCategoria.getValue());
+                }
+
+                else if(nomeCategoria.isEmpty()) {
+                    showNotification("Preencha o nome do bem a propôr.");
+                }
+
+                else if(fragmentContainerForm.getChildCount() == 0) {
+                    showNotification("Selecione a categoria do bem a propôr.");
+                }
+
+                else {
+                    showNotification("O nome e categoria do bem não podem estar vazios.");
+                }
+            }
+        });
+
+        imagensProposta = new ArrayList<>();
+
+        FloatingActionButton fabImagens = findViewById(R.id.fabEnviarPropostaImagens);
+        fabImagens.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(imagensProposta.size() <= 3) {
+
+                    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                    if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                        startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+
+            Bundle extras = data.getExtras();
+
+            if(extras != null) {
+
+                Bitmap imagem = (Bitmap) extras.get("data");
+
+                if (imagem != null) {
+
+                    try
+                    {
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        imagem.compress(Bitmap.CompressFormat.PNG, 100, stream);
+
+                        byte[] imagemBytes = stream.toByteArray();
+
+                        stream.flush();
+                        stream.close();
+
+                        String imagemBase64 = MyFragmentManager.getImagemBase64(imagemBytes);
+                        imagensProposta.add(imagemBase64);
+
+                        LinearLayout linearLayoutImagens = findViewById(R.id.linearLayoutEnviarPropostaImagensProposta);
+
+                        ImageView imageViewImagem = new ImageView(getApplicationContext());
+                        imageViewImagem.setId(imagensProposta.size() + 1);
+
+                        linearLayoutImagens.addView(imageViewImagem);
+
+                        Glide.with(getApplicationContext())
+                                .load(imagemBytes)
+                                .asBitmap()
+                                .override(240, 240)
+                                .into(imageViewImagem);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -143,37 +251,6 @@ public class EnviarPropostaActivity extends NavDrawerActivity implements Adapter
                 .make(findViewById(R.id.coordinatorLayoutEnviarProposta), message, Snackbar.LENGTH_LONG);
 
         snackbar.show();
-    }
-
-    @Override
-    public void onClick(View view) {
-
-        Spinner dropDownEnviarPropostaCategorias = findViewById(R.id.dropDownEnviarPropostaCategorias);
-        NumberPicker numberPickerCategoria = findViewById(R.id.numberPickerCategoria);
-
-        EditText editTextEnviarPropostaNomeCategoria = findViewById(R.id.editTextEnviarPropostaNomeCategoria);
-        String nomeCategoria = editTextEnviarPropostaNomeCategoria.getText().toString().trim();
-
-        FrameLayout fragmentContainerForm = findViewById(R.id.fragmentFormCategoria);
-
-        if(!nomeCategoria.isEmpty() && fragmentContainerForm.getChildCount() != 0) {
-
-            Categoria categoria = getCategoria(nomeCategoria, dropDownEnviarPropostaCategorias.getSelectedItemPosition());
-
-            getCategoriaProposta(categoria, numberPickerCategoria.getValue());
-        }
-
-        else if(nomeCategoria.isEmpty()) {
-            showNotification("Preencha o nome do bem a propôr.");
-        }
-
-        else if(fragmentContainerForm.getChildCount() == 0) {
-            showNotification("Selecione a categoria do bem a propôr.");
-        }
-
-        else {
-            showNotification("O nome e categoria do bem não podem estar vazios.");
-        }
     }
 
     //Método que obtém a categoria do fragment, através do método getCategoria da classe MyFragmentManager.

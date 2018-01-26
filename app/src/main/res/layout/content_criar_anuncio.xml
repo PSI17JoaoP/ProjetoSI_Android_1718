@@ -119,19 +119,26 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/linearLayoutCriarAnuncioImagemTroco"
+            android:id="@+id/linearLayoutCriarAnuncioImagensTroco"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/imageViewCriarAnuncioImagemTroco"
+            <LinearLayout
+                android:id="@+id/linearLayoutCriarAnuncioImagensTrocoAnuncio"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="10dp" />
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageViewCriarAnuncioImagemTroco"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
 
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fabCriarAnuncioImagemTroco"
+                android:id="@+id/fabCriarAnuncioImagensTroco"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|end"
@@ -231,20 +238,27 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/linearLayoutCriarAnuncioImagemPor"
+            android:id="@+id/linearLayoutCriarAnuncioImagensPor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:weightSum="1"
             android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/imageViewCriarAnuncioImagemPor"
+            <LinearLayout
+                android:id="@+id/linearLayoutCriarAnuncioImagensPorAnuncio"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="10dp" />
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageViewCriarAnuncioImagemPor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
 
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fabCriarAnuncioImagemPor"
+                android:id="@+id/fabCriarAnuncioImagensPor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|end"

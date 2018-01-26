@@ -87,19 +87,27 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/linearLayoutEnviarPropostaImagem"
+            android:id="@+id/linearLayoutEnviarPropostaImagens"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/imageViewEnviarPropostaImagem"
+            <LinearLayout
+                android:id="@+id/linearLayoutEnviarPropostaImagensProposta"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="10dp" />
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageViewEnviarPropostaImagem"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
 
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fabEnviarPropostaImagem"
+                android:id="@+id/fabEnviarPropostaImagens"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|end"
