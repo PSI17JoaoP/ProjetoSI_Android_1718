@@ -183,20 +183,16 @@ public class SingletonPropostas {
 
     public void enviarImagensProposta(final Long propostaId, final Long anuncioId, final ArrayList<String> imagensBase64, final Context context) {
 
-        GsonBuilder gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.IDENTITY);
-
         JSONObject imagens = new JSONObject();
 
         try {
 
             imagens.put("Imagens", new JSONArray(imagensBase64.toArray()));
 
-            String imagensString = gson.create().toJson(imagens);
-
             if(SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
 
                 StringRequest enviarImagensAnuncio = SingletonAPIManager.getInstance(context).enviarAPI("propostas/" + String.valueOf(propostaId) + "/imagens", context,
-                        Request.Method.POST, imagensString, new SingletonAPIManager.APIStringResposta() {
+                        Request.Method.POST, imagens.toString(), new SingletonAPIManager.APIStringResposta() {
                             @Override
                             public void Sucesso(String resposta) {
 
