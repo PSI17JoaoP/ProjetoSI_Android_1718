@@ -189,7 +189,7 @@ public class SingletonPropostas {
 
         try {
 
-            imagens.put("Imagens", imagensBase64.toArray());
+            imagens.put("Imagens", new JSONArray(imagensBase64));
 
             String imagensString = gson.create().toJson(imagens);
 
@@ -226,7 +226,7 @@ public class SingletonPropostas {
                             @Override
                             public void Erro(VolleyError erro) {
                                 if(imagesListener != null)
-                                    imagesListener.OnErrorImagensAPI("Não foi possivél enviar as imagens da proposta para a API.", erro);
+                                    imagesListener.OnErrorImagensAPI("Não foi possivél enviar as imagens da proposta para a API.\nAPI: " + erro.getMessage(), erro);
                             }
                         });
 

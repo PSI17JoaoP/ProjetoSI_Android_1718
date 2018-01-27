@@ -254,7 +254,7 @@ public class SingletonAnuncios {
 
         try {
 
-            imagens.put("Imagens", imagensBase64.toArray());
+            imagens.put("Imagens", new JSONArray(imagensBase64));
 
             String imagensString = gson.create().toJson(imagens);
 
@@ -291,7 +291,7 @@ public class SingletonAnuncios {
                             @Override
                             public void Erro(VolleyError erro) {
                                 if(imagesListener != null)
-                                    imagesListener.OnErrorImagensAPI("Não foi possivél enviar as imagens do anúncio para a API.", erro);
+                                    imagesListener.OnErrorImagensAPI("Não foi possivél enviar as imagens do anúncio para a API.\nAPI: " + erro.getMessage(), erro);
                             }
                         });
 
