@@ -59,7 +59,7 @@ public class SingletonClientes {
                 @Override
                 public void Erro(VolleyError erro) {
                     if(clientesListener != null)
-                        clientesListener.OnErroObterCliente("Ocorreu um erro no processamento do cliente.", erro);
+                        clientesListener.OnErroObterCliente("Não foi possivél obter os dados do cliente.", erro);
                 }
             });
 
