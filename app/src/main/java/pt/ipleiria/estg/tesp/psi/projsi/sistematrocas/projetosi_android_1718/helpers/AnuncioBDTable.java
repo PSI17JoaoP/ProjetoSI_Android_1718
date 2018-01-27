@@ -127,9 +127,9 @@ public class AnuncioBDTable extends BDHelper<Anuncio> {
                 anuncios.add(anuncio);
             }
             while (cursor.moveToNext());
-
-            cursor.close();
         }
+
+        cursor.close();
 
         return anuncios;
     }
@@ -149,33 +149,30 @@ public class AnuncioBDTable extends BDHelper<Anuncio> {
             {
                 Anuncio anuncio;
 
-                if(cursor.getString(10) != null) {
+                String titulo = cursor.getString(1);
+                Long userId = cursor.getLong(2);
+                Long categoriaOferecerId = cursor.getLong(3);
+                Integer quantidadeOferecer = cursor.getInt(4);
+                Long categoriaReceberId = cursor.getLong(5);
+                Integer quantidadeReceber = cursor.getInt(6);
+                String estado = cursor.getString(7);
+                String comentarios = cursor.getString(8);
+                String dataCriacao = cursor.getString(9);
+                String dataConclusao = cursor.getString(10);
 
-                    anuncio = new Anuncio(
-                            cursor.getString(1),
-                            cursor.getLong(2),
-                            cursor.getLong(3),
-                            cursor.getInt(4),
-                            cursor.getLong(5),
-                            cursor.getInt(6),
-                            cursor.getString(7),
-                            cursor.getString(8),
-                            cursor.getString(9),
-                            cursor.getString(10)
-                    );
+                if(dataConclusao != null) {
+
+                    anuncio = new Anuncio(titulo, userId,
+                            categoriaOferecerId, quantidadeOferecer,
+                            categoriaReceberId, quantidadeReceber,
+                            estado, dataCriacao, dataConclusao, comentarios);
+
                 } else {
 
-                    anuncio = new Anuncio(
-                            cursor.getString(1),
-                            cursor.getLong(2),
-                            cursor.getLong(3),
-                            cursor.getInt(4),
-                            cursor.getLong(5),
-                            cursor.getInt(6),
-                            cursor.getString(7),
-                            cursor.getString(8),
-                            cursor.getString(9)
-                    );
+                    anuncio = new Anuncio(titulo, userId,
+                            categoriaOferecerId, quantidadeOferecer,
+                            categoriaReceberId, quantidadeReceber,
+                            estado, dataCriacao, comentarios);
                 }
 
                 anuncio.setId(cursor.getLong(0));
@@ -183,9 +180,9 @@ public class AnuncioBDTable extends BDHelper<Anuncio> {
                 anuncios.add(anuncio);
             }
             while (cursor.moveToNext());
-
-            cursor.close();
         }
+
+        cursor.close();
 
         return anuncios;
     }

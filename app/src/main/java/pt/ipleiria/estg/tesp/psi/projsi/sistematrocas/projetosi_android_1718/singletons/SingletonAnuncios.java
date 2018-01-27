@@ -254,7 +254,7 @@ public class SingletonAnuncios {
 
         try {
 
-            imagens.put("Imagens", new JSONArray(imagensBase64));
+            imagens.put("Imagens", new JSONArray(imagensBase64.toArray()));
 
             String imagensString = gson.create().toJson(imagens);
 
