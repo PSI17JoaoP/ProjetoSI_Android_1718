@@ -81,6 +81,9 @@ public class NavDrawerActivity extends AppCompatActivity implements NavigationVi
 
             case R.id.nav_pesquisar:
 
+                Intent intentPesquisa = new Intent(getApplicationContext(), PesquisaActivity.class);
+                startActivity(intentPesquisa);
+
                 break;
 
             case R.id.nav_historico:

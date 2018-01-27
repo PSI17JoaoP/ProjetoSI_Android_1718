@@ -53,6 +53,11 @@
             android:name=".DetalhesPropostaActivity"
             android:label="@string/title_activity_detalhes"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".PesquisaActivity"
+            android:label="@string/pesquisa"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan"/>
     </application>
 
 </manifest>

@@ -68,12 +68,12 @@
     <string name="detalhes_anuncio_inicio">Inicio:</string>
     <string name="detalhes_anuncio_concluido">Concluido:</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="detalhes_proposta_proposto">Proposto em:</string>
     <string name="detalhes_proposta_anuncio">Proposta ao anúncio:</string>
     <string name="detalhes_proposta_por">Por:</string>
     <string name="detalhes_proposta_bem_propor">Bem a propôr:</string>
     <string name="detalhes_anuncio_aberto_sugestoes">Aberto para sugestões.</string>
 
+    <string name="pesquisa">Pesquisa</string>
+    <string name="pesquisa_titulo">Titulo</string>
 </resources>

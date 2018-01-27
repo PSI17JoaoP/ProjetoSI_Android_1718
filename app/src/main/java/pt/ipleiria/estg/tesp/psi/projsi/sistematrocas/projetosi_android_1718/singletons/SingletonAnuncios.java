@@ -370,6 +370,55 @@ public class SingletonAnuncios {
         }
     }
 
+    public void pesquisarAnuncios(String titulo, String regiao, String categoria, final Context context)
+    {
+        String url = "anuncios";
+
+        if (!titulo.isEmpty()){
+            url = url + "/titulo/"+titulo;
+        }
+        if (regiao != null){
+            url = url + "/regiao/"+regiao;
+        }
+        if (categoria != null){
+            url = url + "/categoria/"+categoria;
+        }
+
+        if (SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
+
+            JsonObjectRequest pesquisa = SingletonAPIManager.getInstance(context).pedirAPI(url, context, new SingletonAPIManager.APIJsonResposta() {
+                @Override
+                public void Sucesso(JSONObject resultado) {
+
+                    try {
+                        JSONArray dados = resultado.getJSONArray("Anuncios");
+
+                        if (anunciosListener != null)
+                            anunciosListener.onRefreshAnuncios(AnunciosParser.paraObjeto(dados, context));
+                    } catch (JSONException e) {
+                        anunciosListener.onErrorAnunciosAPI("Ocorreu um erro no processamento dos anúncios obtidos na pesquisa.", e);
+                    }
+                }
+
+                @Override
+                public void Erro(VolleyError erro) {
+
+                    if (anunciosListener != null) {
+                        Integer code = 0;
+
+                        if (erro.networkResponse != null)
+                            code = erro.networkResponse.statusCode;
+
+                        anunciosListener.onErrorAnunciosAPI("Não foi possível sincronizar os anúncios com a API - " + code, erro);
+                        anunciosListener.onRefreshAnuncios(new ArrayList<Anuncio>());
+                    }
+                }
+            });
+
+            SingletonAPIManager.getInstance(context).getRequestQueue(context).add(pesquisa);
+        }
+    }
+
     private void adicionarAnunciosLocal(ArrayList<Anuncio> anuncioList) {
         for(Anuncio anuncio : anuncioList) {
             bdTable.insert(anuncio);
