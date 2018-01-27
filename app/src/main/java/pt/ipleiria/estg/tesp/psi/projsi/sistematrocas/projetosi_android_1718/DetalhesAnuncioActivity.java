@@ -118,8 +118,11 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Catego
                 SingletonCategorias.getInstance().setCategoriasListener(this);
                 SingletonCategorias.getInstance().getCategoriasAnuncio(anuncioId, "Oferecer", getApplicationContext());
 
-                if(anuncio.getCatReceber() != null) {
+                if(anuncio.getCatReceber() != 0) {
                     SingletonCategorias.getInstance().getCategoriasAnuncio(anuncioId, "Receber", getApplicationContext());
+                } else {
+                    TextView textViewNomePor = findViewById(R.id.textViewDetalhesAnuncioPorCategoria);
+                    textViewNomePor.setText(R.string.detalhes_anuncio_aberto_sugestoes);
                 }
             }
         }

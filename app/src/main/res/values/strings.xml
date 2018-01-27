@@ -74,5 +74,6 @@
     <string name="detalhes_proposta_anuncio">Proposta ao anúncio:</string>
     <string name="detalhes_proposta_por">Por:</string>
     <string name="detalhes_proposta_bem_propor">Bem a propôr:</string>
+    <string name="detalhes_anuncio_aberto_sugestoes">Aberto para sugestões.</string>
 
 </resources>
