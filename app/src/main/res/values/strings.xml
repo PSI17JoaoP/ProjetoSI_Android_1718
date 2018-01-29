@@ -74,6 +74,9 @@
     <string name="detalhes_proposta_bem_propor">Bem a propôr:</string>
     <string name="detalhes_anuncio_aberto_sugestoes">Aberto para sugestões.</string>
 
+    <string name="title_activity_historico">Histórico</string>
+
+    <string name="detalhes_estado">Estado:</string>
     <string name="pesquisa">Pesquisa</string>
     <string name="pesquisa_titulo">Titulo</string>
 </resources>

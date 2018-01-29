@@ -88,6 +88,9 @@ public class NavDrawerActivity extends AppCompatActivity implements NavigationVi
 
             case R.id.nav_historico:
 
+                Intent intentHistorico = new Intent(getApplicationContext(), HistoricoActivity.class);
+                startActivity(intentHistorico);
+
                 break;
 
             case R.id.nav_logout:
