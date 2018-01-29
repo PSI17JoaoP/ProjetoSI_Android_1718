@@ -101,6 +101,45 @@ public class SingletonPropostas {
         }
     }
 
+    public void getPropostasUser(final Context context)
+    {
+        if (SingletonAPIManager.getInstance(context).ligadoInternet(context))
+        {
+            String username = preferences.getString("username", "");
+
+            JsonObjectRequest propostasAPI = SingletonAPIManager.getInstance(context).pedirAPI("propostas/" + username, context, new SingletonAPIManager.APIJsonResposta() {
+
+                @Override
+                public void Sucesso(JSONObject resultado) {
+                    try {
+                        JSONArray propostasJson = resultado.getJSONArray("Propostas");
+
+                        if (propostasJson.length() > 0) {
+
+                            propostas = PropostasParser.paraObjeto(propostasJson, context);
+                            //adicionarPropostasLocal(propostas);
+
+                            if (propostasListener != null)
+                                propostasListener.onRefreshPropostas(propostas);
+                        }
+
+                    } catch (JSONException e) {
+                        if (propostasListener != null)
+                            propostasListener.onErrorPropostasAPI("Ocorreu um erro no processamento das propostas recebidas da API.", e);
+                    }
+                }
+
+                @Override
+                public void Erro(VolleyError erro) {
+                    if (propostasListener != null)
+                        propostasListener.onErrorPropostasAPI("Não foi possível sincronizar as propostas com a API.", erro);
+                }
+            });
+
+            SingletonAPIManager.getInstance(context).getRequestQueue(context).add(propostasAPI);
+        }
+    }
+
     public void getImagensProposta(final Long id, final Context context) {
 
         if(SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
