@@ -98,7 +98,6 @@ public class DetalhesPropostaActivity extends NavDrawerActivity implements Anunc
                     @Override
                     public void onClick(View view) {
                         proposta.setEstado("RECUSADA");
-                        //anuncioProposta.setEstado("FECHADO");
 
                         SingletonPropostas.getInstance(getApplicationContext()).alterarProposta(proposta, getApplicationContext());
                     }
