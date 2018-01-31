@@ -12,7 +12,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.adaptadores.CategoriasAdapter;
@@ -80,7 +82,13 @@ public class DetalhesPropostaActivity extends NavDrawerActivity implements Anunc
                     @Override
                     public void onClick(View view) {
                         proposta.setEstado("ACEITE");
-                        anuncioProposta.setEstado("FECHADO");
+                        anuncioProposta.setEstado("CONCLUIDO");
+
+                        Calendar c = Calendar.getInstance();
+                        SimpleDateFormat df = new SimpleDateFormat("yyyy-M-dd");
+                        String data = df.format(c.getTime());
+
+                        anuncioProposta.setDataConclusao(data);
 
                         SingletonPropostas.getInstance(getApplicationContext()).alterarProposta(proposta, getApplicationContext());
                     }
@@ -90,7 +98,7 @@ public class DetalhesPropostaActivity extends NavDrawerActivity implements Anunc
                     @Override
                     public void onClick(View view) {
                         proposta.setEstado("RECUSADA");
-                        anuncioProposta.setEstado("FECHADO");
+                        //anuncioProposta.setEstado("FECHADO");
 
                         SingletonPropostas.getInstance(getApplicationContext()).alterarProposta(proposta, getApplicationContext());
                     }
