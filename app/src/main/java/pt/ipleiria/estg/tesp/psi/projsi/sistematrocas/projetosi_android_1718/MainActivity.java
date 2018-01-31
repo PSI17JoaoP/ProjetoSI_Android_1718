@@ -66,7 +66,7 @@ public class MainActivity extends NavDrawerActivity implements AnunciosListener,
                 if(anuncio != null) {
                     Intent intent = new Intent(getApplicationContext(), DetalhesAnuncioActivity.class);
                     intent.putExtra(DetalhesAnuncioActivity.ID_ANUNCIO, anuncio.getId());
-                    startActivity(intent);
+                    startActivityForResult(intent, RC_ANUNCIO);
                 }
             }
         });
@@ -103,18 +103,13 @@ public class MainActivity extends NavDrawerActivity implements AnunciosListener,
     {
         if (requestCode == RC_ANUNCIO)
         {
-            /*
-            if (resultCode == 200)
+            if (resultCode == RC_SUCESSO)
             {
-                //Toast.makeText(this, "Livro criado com sucesso", Toast.LENGTH_SHORT).show();
-                Snackbar.make(findViewById(R.id.lvListaLivros), "Livro criado com sucesso", Snackbar.LENGTH_SHORT).show();
-                adaptador.notifyDataSetChanged();
-            }else if(resultCode == 400)
+                Snackbar.make(findViewById(R.id.coordinatorLayoutMain), R.string.msg_envio_proposta, Snackbar.LENGTH_SHORT).show();
+            }else if(resultCode == RC_ERRO)
             {
-                //Toast.makeText(this, "Erro ao criar o livro", Toast.LENGTH_SHORT).show();
-                Snackbar.make(findViewById(R.id.lvListaLivros), "Erro ao criar o livro", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(R.id.coordinatorLayoutMain), R.string.msg_enviar_proposta, Snackbar.LENGTH_SHORT).show();
             }
-            */
         }else if (requestCode == RC_PROPOSTA)
         {
             if (resultCode == RC_SUCESSO)
@@ -122,7 +117,6 @@ public class MainActivity extends NavDrawerActivity implements AnunciosListener,
                 Snackbar.make(findViewById(R.id.coordinatorLayoutMain), "A proposta ao anúncio " + data.getStringExtra("titulo") + " foi " + data.getStringExtra("estado") + ".", Snackbar.LENGTH_LONG).show();
                 Proposta proposta = SingletonPropostas.getInstance(this).pesquisarPropostaPorID(data.getLongExtra("id", 0));
                 propostasAdapter.remover(proposta);
-                //propostasAdapter.notifyDataSetChanged();
             }else if(resultCode == RC_ERRO)
             {
                 Snackbar.make(findViewById(R.id.coordinatorLayoutMain), R.string.msg_erro_aceitar_recusar, Snackbar.LENGTH_SHORT).show();

@@ -49,6 +49,10 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Catego
 
     private static final int NUMERO_COLUNAS = 2;
 
+    private static final int RC_ENVIAR = 861;
+    public static final int RC_SUCESSO = 200;
+    public static final int RC_ERRO = 400;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -104,7 +108,7 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Catego
                             Intent intent = new Intent(getApplicationContext(), EnviarPropostaActivity.class);
                             intent.putExtra(ID_ANUNCIO, anuncio.getId());
                             intent.putExtra(TITULO_ANUNCIO, anuncio.getTitulo());
-                            startActivity(intent);
+                            startActivityForResult(intent, RC_ENVIAR);
                         }
                     });
                 }
@@ -124,6 +128,24 @@ public class DetalhesAnuncioActivity extends NavDrawerActivity implements Catego
                     TextView textViewNomePor = findViewById(R.id.textViewDetalhesAnuncioPorCategoria);
                     textViewNomePor.setText(R.string.detalhes_anuncio_aberto_sugestoes);
                 }
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == RC_ENVIAR)
+        {
+            if (resultCode == RC_SUCESSO)
+            {
+                Intent returnIntent = new Intent();
+                setResult(MainActivity.RC_SUCESSO, returnIntent);
+                finish();
+            }else if (resultCode == RC_ERRO)
+            {
+                Intent returnIntent = new Intent();
+                setResult(MainActivity.RC_ERRO, returnIntent);
+                finish();
             }
         }
     }

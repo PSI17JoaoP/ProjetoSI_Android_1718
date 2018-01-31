@@ -349,7 +349,7 @@ public class EnviarPropostaActivity extends NavDrawerActivity implements Adapter
     @Override
     public void onSuccessPropostasAPI(Proposta proposta) {
 
-        showNotification("SUCESSO - Envio da proposta para a API.");
+        //showNotification("SUCESSO - Envio da proposta para a API.");
 
         SingletonPropostas.getInstance(getApplicationContext()).setImagesListener(this);
         SingletonPropostas.getInstance(getApplicationContext()).enviarImagensProposta(proposta.getId(), proposta.getIdAnuncio(), imagensProposta, getApplicationContext());
@@ -370,13 +370,17 @@ public class EnviarPropostaActivity extends NavDrawerActivity implements Adapter
 
     @Override
     public void OnSucessoImagensAPI(ArrayList<byte[]> imagensBytes) {
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
+        Intent returnIntent = new Intent();
+        setResult(DetalhesAnuncioActivity.RC_SUCESSO, returnIntent);
+        finish();
     }
 
     @Override
     public void OnErrorImagensAPI(String message, Exception ex) {
         ex.printStackTrace();
-        showNotification(message);
+        //showNotification(message);
+        Intent returnIntent = new Intent();
+        setResult(DetalhesAnuncioActivity.RC_ERRO, returnIntent);
+        finish();
     }
 }

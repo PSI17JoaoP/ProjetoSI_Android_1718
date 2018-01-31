@@ -86,4 +86,6 @@
     <string name="detalhes_dialog_regiao">Região: </string>
 
     <string name="msg_erro_aceitar_recusar">Erro ao aceitar/recusar proposta</string>
+    <string name="msg_enviar_proposta">Erro ao enviar a proposta</string>
+    <string name="msg_envio_proposta">Proposta enviada com sucesso</string>
 </resources>
