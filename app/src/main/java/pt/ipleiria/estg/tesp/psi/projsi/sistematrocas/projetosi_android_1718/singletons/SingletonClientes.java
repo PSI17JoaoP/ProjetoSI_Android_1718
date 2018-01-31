@@ -5,12 +5,14 @@ import android.content.Context;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.helpers.ClienteBDTable;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.ClientesListener;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.ContatoListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Cliente;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.parsers.ClientesParser;
 
@@ -24,6 +26,11 @@ public class SingletonClientes {
     private ClienteBDTable bdTable;
 
     private ClientesListener clientesListener;
+    private ContatoListener contatoListener;
+
+    public void setContatoListener(ContatoListener contatoListener) {
+        this.contatoListener = contatoListener;
+    }
 
     public static SingletonClientes getInstance(Context context) {
         if (INSTANCE == null)
@@ -60,6 +67,41 @@ public class SingletonClientes {
                 public void Erro(VolleyError erro) {
                     if(clientesListener != null)
                         clientesListener.OnErroObterCliente("Não foi possivél obter os dados do cliente.", erro);
+                }
+            });
+
+            SingletonAPIManager.getInstance(context).getRequestQueue(context).add(getCliente);
+        }
+    }
+
+    public void getClienteContato(Long idAnuncio, final Context context) {
+
+        if(SingletonAPIManager.getInstance(context).ligadoInternet(context)) {
+
+            JsonObjectRequest getCliente = SingletonAPIManager.getInstance(context).pedirAPI("clientes/contato/" + idAnuncio, context, new SingletonAPIManager.APIJsonResposta() {
+                @Override
+                public void Sucesso(JSONObject resultado) {
+
+                    String nome = "";
+                    String telefone = "";
+                    String regiao = "";
+
+                    try {
+                        nome = resultado.getString("Nome");
+                        telefone = resultado.getString("Telefone");
+                        regiao = resultado.getString("Regiao");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    if(contatoListener != null)
+                        contatoListener.onSuccess(nome, telefone, regiao);
+                }
+
+                @Override
+                public void Erro(VolleyError erro) {
+                    if(contatoListener != null)
+                        contatoListener.OnError("Não foi possivél obter os dados do cliente.", erro);
                 }
             });
 

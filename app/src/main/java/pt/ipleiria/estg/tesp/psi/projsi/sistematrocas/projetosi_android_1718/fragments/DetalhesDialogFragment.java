@@ -9,13 +9,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.R;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.ContatoListener;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.singletons.SingletonClientes;
 
 
-public class DetalhesDialogFragment extends DialogFragment
+public class DetalhesDialogFragment extends DialogFragment implements ContatoListener
 {
     Long idAnuncio;
+
+    TextView txtNome;
+    TextView txtTelefone;
+    TextView txtRegiao;
 
     public static DetalhesDialogFragment newInstance(Long id)
     {
@@ -37,6 +44,9 @@ public class DetalhesDialogFragment extends DialogFragment
 
         setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Holo_Light_Dialog);
 
+        SingletonClientes.getInstance(getContext()).setContatoListener(this);
+        SingletonClientes.getInstance(getContext()).getClienteContato(idAnuncio, getContext());
+
     }
 
     @Override
@@ -46,14 +56,29 @@ public class DetalhesDialogFragment extends DialogFragment
 
         getDialog().setTitle(R.string.detalhes_dialog);
 
-        TextView nome= v.findViewById(R.id.dialog_nome);
-        TextView telefone= v.findViewById(R.id.dialog_telefone);
-        TextView regiao= v.findViewById(R.id.dialog_regiao);
 
+        txtNome= v.findViewById(R.id.dialog_nome);
+        txtTelefone= v.findViewById(R.id.dialog_telefone);
+        txtRegiao= v.findViewById(R.id.dialog_regiao);
+/*
         nome.setText("Teste");
         telefone.setText("910000000");
         regiao.setText("Leiria");
+        */
 
         return v;
+    }
+
+    @Override
+    public void onSuccess(String nome, String telefone, String regiao)
+    {
+        txtNome.setText(nome);
+        txtTelefone.setText(telefone);
+        txtRegiao.setText(regiao);
+    }
+
+    @Override
+    public void OnError(String message, Exception ex) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 }
