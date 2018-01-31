@@ -84,4 +84,6 @@
     <string name="detalhes_dialog_nome">Nome a Contatar: </string>
     <string name="detalhes_dialog_telefone">Nº de telefone: </string>
     <string name="detalhes_dialog_regiao">Região: </string>
+
+    <string name="msg_erro_aceitar_recusar">Erro ao aceitar/recusar proposta</string>
 </resources>

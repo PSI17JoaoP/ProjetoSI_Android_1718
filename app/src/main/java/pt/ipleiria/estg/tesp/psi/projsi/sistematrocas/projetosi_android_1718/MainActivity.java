@@ -25,6 +25,13 @@ public class MainActivity extends NavDrawerActivity implements AnunciosListener,
     private ListView lvAnuncios;
     private ListView lvPropostas;
 
+    private static final int RC_ANUNCIO = 1;
+    private static final int RC_PROPOSTA = 2;
+    public static final int RC_SUCESSO = 200;
+    public static final int RC_ERRO = 400;
+
+    private PropostasAdapter propostasAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +79,7 @@ public class MainActivity extends NavDrawerActivity implements AnunciosListener,
                 if(proposta != null) {
                     Intent intent = new Intent(getApplicationContext(), DetalhesPropostaActivity.class);
                     intent.putExtra(DetalhesPropostaActivity.ID_PROPOSTA, proposta.getId());
-                    startActivity(intent);
+                    startActivityForResult(intent, RC_PROPOSTA);
                 }
             }
         });
@@ -89,6 +96,38 @@ public class MainActivity extends NavDrawerActivity implements AnunciosListener,
             this.gestorAnuncios =  ... savedInstanceState.getSerializable(...);
             this.gestorPropostas =  ... savedInstanceState.getSerializable(...);
         }*/
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (requestCode == RC_ANUNCIO)
+        {
+            /*
+            if (resultCode == 200)
+            {
+                //Toast.makeText(this, "Livro criado com sucesso", Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(R.id.lvListaLivros), "Livro criado com sucesso", Snackbar.LENGTH_SHORT).show();
+                adaptador.notifyDataSetChanged();
+            }else if(resultCode == 400)
+            {
+                //Toast.makeText(this, "Erro ao criar o livro", Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(R.id.lvListaLivros), "Erro ao criar o livro", Snackbar.LENGTH_SHORT).show();
+            }
+            */
+        }else if (requestCode == RC_PROPOSTA)
+        {
+            if (resultCode == RC_SUCESSO)
+            {
+                Snackbar.make(findViewById(R.id.coordinatorLayoutMain), "A proposta ao anúncio " + data.getStringExtra("titulo") + " foi " + data.getStringExtra("estado") + ".", Snackbar.LENGTH_LONG).show();
+                Proposta proposta = SingletonPropostas.getInstance(this).pesquisarPropostaPorID(data.getLongExtra("id", 0));
+                propostasAdapter.remover(proposta);
+                //propostasAdapter.notifyDataSetChanged();
+            }else if(resultCode == RC_ERRO)
+            {
+                Snackbar.make(findViewById(R.id.coordinatorLayoutMain), R.string.msg_erro_aceitar_recusar, Snackbar.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void showNotification(String message) {
@@ -128,7 +167,7 @@ public class MainActivity extends NavDrawerActivity implements AnunciosListener,
 
     @Override
     public void onRefreshPropostas(ArrayList<Proposta> propostas) {
-        PropostasAdapter propostasAdapter = new PropostasAdapter(this, propostas);
+        propostasAdapter = new PropostasAdapter(this, propostas);
         lvPropostas.setAdapter(propostasAdapter);
     }
 }

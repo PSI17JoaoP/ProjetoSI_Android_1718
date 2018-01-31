@@ -28,6 +28,12 @@ public class PropostasAdapter extends BaseAdapter {
         this.listaPropostas = listaPropostas;
     }
 
+    public void remover(Proposta proposta)
+    {
+        listaPropostas.remove(proposta);
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
         return this.listaPropostas.size();

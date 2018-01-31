@@ -1,5 +1,6 @@
 package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -124,13 +125,22 @@ public class DetalhesPropostaActivity extends NavDrawerActivity implements Anunc
 
     @Override
     public void onSuccessAnunciosAPI(Anuncio anuncio) {
-        showNotification("A proposta ao anúncio " + anuncio.getTitulo() + " foi " + proposta.getEstado().toLowerCase() + ".");
+        //showNotification("A proposta ao anúncio " + anuncio.getTitulo() + " foi " + proposta.getEstado().toLowerCase() + ".");
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("id", proposta.getId());
+        returnIntent.putExtra("titulo", anuncio.getTitulo());
+        returnIntent.putExtra("estado", proposta.getEstado().toLowerCase());
+        setResult(MainActivity.RC_SUCESSO, returnIntent);
+        finish();
     }
 
     @Override
     public void onErrorAnunciosAPI(String message, Exception ex) {
         ex.printStackTrace();
-        showNotification(message);
+        //showNotification(message);
+        Intent returnIntent = new Intent();
+        setResult(MainActivity.RC_ERRO, returnIntent);
+        finish();
     }
 
     @Override
