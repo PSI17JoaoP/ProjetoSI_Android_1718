@@ -77,7 +77,7 @@ public class HistoricoActivity extends NavDrawerActivity implements AnunciosList
 
     @Override
     public void onRefreshAnuncios(final ArrayList<Anuncio> anuncios) {
-        //Collections.reverse(anuncios);
+        Collections.reverse(anuncios);
 
         AnunciosHAdapter anunciosAdapter = new AnunciosHAdapter(this, anuncios);
         lvAnuncios.setAdapter(anunciosAdapter);
