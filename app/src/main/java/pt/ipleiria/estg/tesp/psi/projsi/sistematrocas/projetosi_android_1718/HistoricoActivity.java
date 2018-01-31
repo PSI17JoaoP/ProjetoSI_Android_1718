@@ -1,9 +1,13 @@
 package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TabHost;
 
@@ -15,6 +19,7 @@ import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.ada
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.adaptadores.AnunciosHAdapter;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.adaptadores.PropostasAdapter;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.adaptadores.PropostasHAdapter;
+import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.fragments.DetalhesDialogFragment;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.AnunciosListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.listeners.PropostasListener;
 import pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718.modelos.Anuncio;
@@ -27,6 +32,7 @@ public class HistoricoActivity extends NavDrawerActivity implements AnunciosList
     private ListView lvAnuncios;
     private ListView lvPropostas;
 
+    private static final String ESTADO_CONCLUIDO = "CONCLUIDO";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,10 +76,32 @@ public class HistoricoActivity extends NavDrawerActivity implements AnunciosList
     }
 
     @Override
-    public void onRefreshAnuncios(ArrayList<Anuncio> anuncios) {
-        Collections.reverse(anuncios);
+    public void onRefreshAnuncios(final ArrayList<Anuncio> anuncios) {
+        //Collections.reverse(anuncios);
+
         AnunciosHAdapter anunciosAdapter = new AnunciosHAdapter(this, anuncios);
         lvAnuncios.setAdapter(anunciosAdapter);
+
+        lvAnuncios.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Anuncio anuncio = anuncios.get(i);
+
+                if (anuncio.getEstado().equals(ESTADO_CONCLUIDO))
+                {
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+                    if (prev != null) {
+                        ft.remove(prev);
+                    }
+                    ft.addToBackStack(null);
+
+                    // Create and show the dialog.
+                    DialogFragment newFragment = DetalhesDialogFragment.newInstance(anuncio.getId());
+                    newFragment.show(getSupportFragmentManager(), "dialog");
+                }
+            }
+        });
     }
 
     @Override

@@ -79,4 +79,9 @@
     <string name="detalhes_estado">Estado:</string>
     <string name="pesquisa">Pesquisa</string>
     <string name="pesquisa_titulo">Titulo</string>
+
+    <string name="detalhes_dialog">Detalhes de Contato</string>
+    <string name="detalhes_dialog_nome">Nome a Contatar: </string>
+    <string name="detalhes_dialog_telefone">Nº de telefone: </string>
+    <string name="detalhes_dialog_regiao">Região: </string>
 </resources>
