@@ -48,12 +48,12 @@ public class RoupaFormFragment extends Fragment implements TiposRoupaListener {
         textInputEditTextTamanhoRoupa = view.findViewById(R.id.textInputEditTextTamanhoRoupa);
         spinnerTipoRoupa = view.findViewById(R.id.spinnerTipoRoupa);
 
-        SingletonTiposRoupa.getInstance(getContext()).setTiposRoupaListener(this);
+        SingletonTiposRoupa.getInstance(getActivity().getApplicationContext()).setTiposRoupaListener(this);
 
-        ArrayList<TipoRoupa> tiposRoupa = SingletonTiposRoupa.getInstance(getContext()).getTiposRoupa();
+        ArrayList<TipoRoupa> tiposRoupa = SingletonTiposRoupa.getInstance(getActivity().getApplicationContext()).getTiposRoupa();
 
         if(!tiposRoupa.isEmpty()) {
-            ArrayAdapter<TipoRoupa> spinnerTamanhos = new ArrayAdapter<>(getContext(),
+            ArrayAdapter<TipoRoupa> spinnerTamanhos = new ArrayAdapter<>(getActivity().getApplicationContext(),
                     R.layout.custom_spinner_item,
                     tiposRoupa);
 
@@ -86,12 +86,12 @@ public class RoupaFormFragment extends Fragment implements TiposRoupaListener {
     @Override
     public void onErrorTiposRoupaAPI(String message, Exception ex) {
         ex.printStackTrace();
-        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onRefreshTiposRoupa(ArrayList<TipoRoupa> tiposRoupa, Context context) {
-        ArrayAdapter<TipoRoupa> spinnerTamanhos = new ArrayAdapter<>(getContext(),
+        ArrayAdapter<TipoRoupa> spinnerTamanhos = new ArrayAdapter<>(getActivity().getApplicationContext(),
                 R.layout.custom_spinner_item,
                 tiposRoupa);
 

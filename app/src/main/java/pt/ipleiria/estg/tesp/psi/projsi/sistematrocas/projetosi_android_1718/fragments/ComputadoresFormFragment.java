@@ -52,7 +52,7 @@ public class ComputadoresFormFragment extends Fragment {
 
         String[] boolArray = {"Sim", "Não"};
 
-        ArrayAdapter<String> spinnerBoolPortatil = new ArrayAdapter<String>(getContext(),
+        ArrayAdapter<String> spinnerBoolPortatil = new ArrayAdapter<String>(getActivity().getApplicationContext(),
                 R.layout.custom_spinner_item,
                 boolArray);
 

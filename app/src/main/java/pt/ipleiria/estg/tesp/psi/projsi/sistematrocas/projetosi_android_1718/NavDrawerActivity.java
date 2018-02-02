@@ -53,42 +53,6 @@ public class NavDrawerActivity extends AppCompatActivity implements NavigationVi
         txtEmail.setText(preferences.getString("email", "email@email.com"));
 
         navigationView.setNavigationItemSelectedListener(this);
-
-        /*MqttClient myClient;
-        try{
-            String clientID= preferences.getString("username","Utilizador");
-
-            myClient = new MqttClient("tcp://10.0.2.2:1883", clientID, null);
-
-            myClient.setCallback(new MqttCallback() {
-
-                @Override
-                public void messageArrived(String topic, MqttMessage message) throws Exception {
-                    String messageBody = new String(message.getPayload());
-                    Toast.makeText(getApplicationContext(), messageBody, Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void deliveryComplete(IMqttDeliveryToken token) {
-
-                }
-
-                @Override
-                public void connectionLost(Throwable exception) {
-
-                }
-            });
-
-            //--------------------------------------
-            MqttConnectOptions connOp = new MqttConnectOptions();
-            connOp.setCleanSession(true);
-            connOp.setUserName(clientID);
-            //connOp.setPassword("password");
-            myClient.connect(connOp);
-
-        } catch (MqttException e) {
-            e.printStackTrace();
-        }*/
     }
 
 

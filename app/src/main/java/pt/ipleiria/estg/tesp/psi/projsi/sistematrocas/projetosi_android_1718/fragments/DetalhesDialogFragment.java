@@ -44,8 +44,8 @@ public class DetalhesDialogFragment extends DialogFragment implements ContatoLis
 
         setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Holo_Light_Dialog);
 
-        SingletonClientes.getInstance(getContext()).setContatoListener(this);
-        SingletonClientes.getInstance(getContext()).getClienteContato(idAnuncio, getContext());
+        SingletonClientes.getInstance(getActivity().getApplicationContext()).setContatoListener(this);
+        SingletonClientes.getInstance(getActivity().getApplicationContext()).getClienteContato(idAnuncio,getActivity().getApplicationContext());
 
     }
 
@@ -79,6 +79,6 @@ public class DetalhesDialogFragment extends DialogFragment implements ContatoLis
 
     @Override
     public void OnError(String message, Exception ex) {
-        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 }

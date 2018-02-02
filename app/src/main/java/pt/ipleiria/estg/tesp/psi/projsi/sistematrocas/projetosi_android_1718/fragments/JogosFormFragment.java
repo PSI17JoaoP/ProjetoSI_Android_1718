@@ -52,12 +52,12 @@ public class JogosFormFragment extends Fragment implements GenerosJogosListener 
         textInputEditTextProdutoraJogos = view.findViewById(R.id.textInputEditTextProdutoraJogos);
         spinnerGeneroJogos = view.findViewById(R.id.spinnerGeneroJogos);
 
-        SingletonGenerosJogo.getInstance(getContext()).setGenerosJogosListener(this);
+        SingletonGenerosJogo.getInstance(getActivity().getApplicationContext()).setGenerosJogosListener(this);
 
-        ArrayList<GeneroJogo> generosJogos = SingletonGenerosJogo.getInstance(getContext()).getGeneroJogos();
+        ArrayList<GeneroJogo> generosJogos = SingletonGenerosJogo.getInstance(getActivity().getApplicationContext()).getGeneroJogos();
 
         if(!generosJogos.isEmpty()) {
-            ArrayAdapter<GeneroJogo> spinnerGeneros = new ArrayAdapter<>(getContext(),
+            ArrayAdapter<GeneroJogo> spinnerGeneros = new ArrayAdapter<>(getActivity().getApplicationContext(),
                     R.layout.custom_spinner_item,
                     generosJogos);
 
@@ -100,12 +100,12 @@ public class JogosFormFragment extends Fragment implements GenerosJogosListener 
     @Override
     public void onErrorGenerosJogosAPI(String message, Exception ex) {
         ex.printStackTrace();
-        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onRefreshGenerosJogos(ArrayList<GeneroJogo> generosJogos, Context context) {
-        ArrayAdapter<GeneroJogo> spinnerGeneros = new ArrayAdapter<>(getContext(),
+        ArrayAdapter<GeneroJogo> spinnerGeneros = new ArrayAdapter<>(getActivity().getApplicationContext(),
                 R.layout.custom_spinner_item,
                 generosJogos);
 

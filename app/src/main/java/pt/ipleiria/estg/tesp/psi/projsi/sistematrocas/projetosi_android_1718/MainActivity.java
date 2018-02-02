@@ -1,6 +1,8 @@
 package pt.ipleiria.estg.tesp.psi.projsi.sistematrocas.projetosi_android_1718;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.view.View;
@@ -8,6 +10,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TabHost;
+import android.widget.Toast;
+
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.util.ArrayList;
 
@@ -96,6 +106,42 @@ public class MainActivity extends NavDrawerActivity implements AnunciosListener,
             this.gestorAnuncios =  ... savedInstanceState.getSerializable(...);
             this.gestorPropostas =  ... savedInstanceState.getSerializable(...);
         }*/
+
+        SharedPreferences preferences;
+        preferences = getSharedPreferences("APP_SETTINGS", Context.MODE_PRIVATE);
+        MqttClient myClient;
+        try{
+            String clientID= preferences.getString("username","Utilizador");
+
+            myClient = new MqttClient("tcp://10.0.2.2:1883", clientID, null);
+
+            myClient.setCallback(new MqttCallback() {
+
+                @Override
+                public void messageArrived(String topic, MqttMessage message) throws Exception {
+                    String messageBody = new String(message.getPayload());
+                    Toast.makeText(MainActivity.this, messageBody, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void deliveryComplete(IMqttDeliveryToken token) {
+
+                }
+
+                @Override
+                public void connectionLost(Throwable exception) {
+
+                }
+            });
+
+            //--------------------------------------
+            MqttConnectOptions connOp = new MqttConnectOptions();
+            connOp.setCleanSession(true);
+            myClient.connect(connOp);
+            myClient.subscribe("InsertAnuncio", 0);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
