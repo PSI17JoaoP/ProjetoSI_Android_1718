@@ -14,6 +14,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 
 public class NavDrawerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -44,6 +53,42 @@ public class NavDrawerActivity extends AppCompatActivity implements NavigationVi
         txtEmail.setText(preferences.getString("email", "email@email.com"));
 
         navigationView.setNavigationItemSelectedListener(this);
+
+        /*MqttClient myClient;
+        try{
+            String clientID= preferences.getString("username","Utilizador");
+
+            myClient = new MqttClient("tcp://10.0.2.2:1883", clientID, null);
+
+            myClient.setCallback(new MqttCallback() {
+
+                @Override
+                public void messageArrived(String topic, MqttMessage message) throws Exception {
+                    String messageBody = new String(message.getPayload());
+                    Toast.makeText(getApplicationContext(), messageBody, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void deliveryComplete(IMqttDeliveryToken token) {
+
+                }
+
+                @Override
+                public void connectionLost(Throwable exception) {
+
+                }
+            });
+
+            //--------------------------------------
+            MqttConnectOptions connOp = new MqttConnectOptions();
+            connOp.setCleanSession(true);
+            connOp.setUserName(clientID);
+            //connOp.setPassword("password");
+            myClient.connect(connOp);
+
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }*/
     }
 
 
